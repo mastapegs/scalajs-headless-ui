@@ -1,7 +1,7 @@
 package com.example
 
 import com.raquo.laminar.api.L._
-import com.example.headless.Sidebar
+import com.example.headless.{Counter, Sidebar}
 import com.example.renderers._
 import org.scalajs.dom
 
@@ -10,11 +10,14 @@ object App {
   private val router = AppRouter.router
 
   private val rendererVar: Var[SidebarRenderer] = Var(InlineSidebarRenderer)
+  private val counterRendererVar: Var[CounterRenderer] = Var(InlineCounterRenderer)
 
   def main(args: Array[String]): Unit = {
     val container = dom.document.querySelector("#appContainer")
     render(container, appElement())
   }
+
+  private val counter = new Counter()
 
   private val sidebar = new Sidebar(
     pages = Page.all,
@@ -37,7 +40,12 @@ object App {
               case "coreui" => CoreUiSidebarRenderer
               case _        => InlineSidebarRenderer
             }
+            val cr: CounterRenderer = v match {
+              case "coreui" => CoreUiCounterRenderer
+              case _        => InlineCounterRenderer
+            }
             rendererVar.set(r)
+            counterRendererVar.set(cr)
           }
         }
       )
@@ -65,7 +73,11 @@ object App {
     case Page.Dashboard =>
       div(
         h1(marginBottom("16px"), "Dashboard"),
-        p("Welcome to the dashboard. This is the main overview page.")
+        p("Welcome to the dashboard. This is the main overview page."),
+        div(
+          marginTop("24px"),
+          child <-- counterRendererVar.signal.map(_.render(counter))
+        )
       )
     case Page.Metrics =>
       div(
