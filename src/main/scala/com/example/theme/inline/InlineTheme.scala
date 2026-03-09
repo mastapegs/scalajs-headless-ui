@@ -1,4 +1,4 @@
-package com.example.theme
+package com.example.theme.inline
 
 import com.raquo.laminar.api.L._
 import org.scalajs.dom
@@ -7,6 +7,7 @@ import com.example.headless.Counter
 import com.example.headless.Sidebar
 import com.example.headless.TopBar
 import com.example.Page
+import com.example.theme.Theme
 
 object InlineTheme extends Theme {
   def counter(counter: Counter): HtmlElement = div(
