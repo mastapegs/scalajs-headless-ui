@@ -1,7 +1,7 @@
 package com.example
 
 import com.raquo.laminar.api.L._
-import com.example.headless.{Counter, Sidebar}
+import com.example.headless.{Counter, Sidebar, TopBar}
 import com.example.renderers._
 import org.scalajs.dom
 
@@ -9,8 +9,11 @@ object App {
 
   private val router = AppRouter.router
 
+  private val rendererKeyVar: Var[String] = Var("inline")
+
   private val rendererVar: Var[SidebarRenderer] = Var(InlineSidebarRenderer)
   private val counterRendererVar: Var[CounterRenderer] = Var(InlineCounterRenderer)
+  private val topBarRendererVar: Var[TopBarRenderer] = Var(InlineTopBarRenderer)
 
   def main(args: Array[String]): Unit = {
     val container = dom.document.querySelector("#appContainer")
@@ -25,49 +28,28 @@ object App {
     onNavigate = page => router.pushState(page)
   )
 
-  private def rendererToggle(): HtmlElement =
-    div(
-      display.flex,
-      alignItems.center,
-      gap("8px"),
-      label("Renderer:"),
-      select(
-        option(value("inline"), "Inline Styles"),
-        option(value("coreui"), "CoreUI"),
-        inContext { el =>
-          onChange.mapTo(el.ref.value) --> { v =>
-            val r: SidebarRenderer = v match {
-              case "coreui" => CoreUiSidebarRenderer
-              case _        => InlineSidebarRenderer
-            }
-            val cr: CounterRenderer = v match {
-              case "coreui" => CoreUiCounterRenderer
-              case _        => InlineCounterRenderer
-            }
-            rendererVar.set(r)
-            counterRendererVar.set(cr)
-          }
-        }
-      )
-    )
-
-  private def topBar(): HtmlElement =
-    headerTag(
-      display.flex,
-      alignItems.center,
-      justifyContent.spaceBetween,
-      position.fixed,
-      top("0"),
-      left("0"),
-      width("100%"),
-      height("56px"),
-      backgroundColor("#2c3e50"),
-      color("white"),
-      padding("0 24px"),
-      zIndex(100),
-      span(fontSize("18px"), fontWeight("600"), "UI Template"),
-      rendererToggle()
-    )
+  private val topBar = new TopBar(
+    brandName = "UI Template",
+    currentRenderer = rendererKeyVar.signal,
+    onRendererChange = { v =>
+      rendererKeyVar.set(v)
+      val r: SidebarRenderer = v match {
+        case "coreui" => CoreUiSidebarRenderer
+        case _        => InlineSidebarRenderer
+      }
+      val cr: CounterRenderer = v match {
+        case "coreui" => CoreUiCounterRenderer
+        case _        => InlineCounterRenderer
+      }
+      val tr: TopBarRenderer = v match {
+        case "coreui" => CoreUiTopBarRenderer
+        case _        => InlineTopBarRenderer
+      }
+      rendererVar.set(r)
+      counterRendererVar.set(cr)
+      topBarRendererVar.set(tr)
+    }
+  )
 
   private def pageContent(page: Page): HtmlElement = page match {
     case Page.Dashboard =>
@@ -101,7 +83,7 @@ object App {
 
   private def appElement(): HtmlElement =
     div(
-      topBar(),
+      child <-- topBarRendererVar.signal.map(_.render(topBar)),
       div(
         display.flex,
         marginTop("56px"),
