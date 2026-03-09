@@ -2,11 +2,8 @@ package com.example
 
 import com.raquo.laminar.api.L._
 import com.example.headless.{Counter, Sidebar, TopBar}
-import com.example.renderers._
 import org.scalajs.dom
-import com.example.theme.Theme
-import com.example.theme.InlineTheme
-import com.example.theme.CoreUiTheme
+import com.example.theme.{Theme, InlineTheme, CoreUiTheme}
 
 object App {
 
@@ -31,13 +28,6 @@ object App {
 
   private val rendererKeyVar: Var[String] = Var("inline")
 
-  private val rendererVar: Var[SidebarRenderer] = Var(InlineSidebarRenderer)
-  private val counterRendererVar: Var[CounterRenderer] = Var(
-    InlineCounterRenderer
-  )
-  private val topBarRendererVar: Var[TopBarRenderer] = Var(InlineTopBarRenderer)
-
-  // Replace the above 3 renderers, with a theme selection
   private val theme: Var[Theme] = Var(InlineTheme)
 
   def main(args: Array[String]): Unit = {
@@ -59,21 +49,7 @@ object App {
     onRendererChange = { v =>
       rendererKeyVar.set(v)
       setCoreUiStylesheet(v == "coreui")
-      val r: SidebarRenderer = v match {
-        case "coreui" => CoreUiSidebarRenderer
-        case _        => InlineSidebarRenderer
-      }
-      val cr: CounterRenderer = v match {
-        case "coreui" => CoreUiCounterRenderer
-        case _        => InlineCounterRenderer
-      }
-      val tr: TopBarRenderer = v match {
-        case "coreui" => CoreUiTopBarRenderer
-        case _        => InlineTopBarRenderer
-      }
-      rendererVar.set(r)
-      counterRendererVar.set(cr)
-      topBarRendererVar.set(tr)
+      theme.set(if (v == "coreui") CoreUiTheme else InlineTheme)
     }
   )
 
@@ -84,7 +60,7 @@ object App {
         p("Welcome to the dashboard. This is the main overview page."),
         div(
           marginTop("24px"),
-          child <-- counterRendererVar.signal.map(_.render(counter))
+          child <-- theme.signal.map(_.counter(counter))
         )
       )
     case Page.Metrics =>
@@ -109,13 +85,12 @@ object App {
 
   private def appElement(): HtmlElement =
     div(
-      child <-- topBarRendererVar.signal.map(_.render(topBar)),
-      // child <-- theme.signal.map(_.topbar(topBar)),
+      child <-- theme.signal.map(_.topbar(topBar)),
       div(
         display.flex,
         marginTop("56px"),
         height("calc(100vh - 56px)"),
-        child <-- rendererVar.signal.map(_.render(sidebar)),
+        child <-- theme.signal.map(_.sidebar(sidebar)),
         mainContent()
       )
     )
