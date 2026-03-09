@@ -9,6 +9,22 @@ object App {
 
   private val router = AppRouter.router
 
+  private val coreUiStylesheetId = "coreui-stylesheet"
+  private val coreUiStylesheetUrl = "https://unpkg.com/@coreui/coreui@5.3.1/dist/css/coreui.min.css"
+
+  private def setCoreUiStylesheet(enabled: Boolean): Unit = {
+    val existing = dom.document.getElementById(coreUiStylesheetId)
+    if (enabled && existing == null) {
+      val link = dom.document.createElement("link")
+      link.setAttribute("id", coreUiStylesheetId)
+      link.setAttribute("rel", "stylesheet")
+      link.setAttribute("href", coreUiStylesheetUrl)
+      dom.document.head.appendChild(link)
+    } else if (!enabled && existing != null) {
+      existing.parentNode.removeChild(existing)
+    }
+  }
+
   private val rendererKeyVar: Var[String] = Var("inline")
 
   private val rendererVar: Var[SidebarRenderer] = Var(InlineSidebarRenderer)
@@ -33,6 +49,7 @@ object App {
     currentRenderer = rendererKeyVar.signal,
     onRendererChange = { v =>
       rendererKeyVar.set(v)
+      setCoreUiStylesheet(v == "coreui")
       val r: SidebarRenderer = v match {
         case "coreui" => CoreUiSidebarRenderer
         case _        => InlineSidebarRenderer
