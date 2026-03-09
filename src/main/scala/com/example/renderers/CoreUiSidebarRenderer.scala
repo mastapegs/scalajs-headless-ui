@@ -10,6 +10,11 @@ object CoreUiSidebarRenderer extends SidebarRenderer {
     htmlTag("nav")(
       cls("sidebar sidebar-narrow-unfoldable"),
       cls <-- sidebar.isCollapsed.map(if (_) "sidebar-narrow" else ""),
+      // Override CoreUI's fixed positioning so the sidebar participates in
+      // the parent flex layout instead of floating over content.
+      position.relative,
+      height("100%"),
+      flexShrink("0"),
       // CoreUI sidebar structure
       div(
         cls("sidebar-header"),
