@@ -1,0 +1,1 @@
+run using `sbt fastLinkJS` then server `index.html`
