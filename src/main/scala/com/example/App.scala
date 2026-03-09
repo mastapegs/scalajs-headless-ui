@@ -4,13 +4,17 @@ import com.raquo.laminar.api.L._
 import com.example.headless.{Counter, Sidebar, TopBar}
 import com.example.renderers._
 import org.scalajs.dom
+import com.example.theme.Theme
+import com.example.theme.InlineTheme
+import com.example.theme.CoreUiTheme
 
 object App {
 
   private val router = AppRouter.router
 
   private val coreUiStylesheetId = "coreui-stylesheet"
-  private val coreUiStylesheetUrl = "https://unpkg.com/@coreui/coreui@5.3.1/dist/css/coreui.min.css"
+  private val coreUiStylesheetUrl =
+    "https://unpkg.com/@coreui/coreui@5.3.1/dist/css/coreui.min.css"
 
   private def setCoreUiStylesheet(enabled: Boolean): Unit = {
     val existing = dom.document.getElementById(coreUiStylesheetId)
@@ -28,8 +32,13 @@ object App {
   private val rendererKeyVar: Var[String] = Var("inline")
 
   private val rendererVar: Var[SidebarRenderer] = Var(InlineSidebarRenderer)
-  private val counterRendererVar: Var[CounterRenderer] = Var(InlineCounterRenderer)
+  private val counterRendererVar: Var[CounterRenderer] = Var(
+    InlineCounterRenderer
+  )
   private val topBarRendererVar: Var[TopBarRenderer] = Var(InlineTopBarRenderer)
+
+  // Replace the above 3 renderers, with a theme selection
+  private val theme: Var[Theme] = Var(InlineTheme)
 
   def main(args: Array[String]): Unit = {
     val container = dom.document.querySelector("#appContainer")
@@ -101,6 +110,7 @@ object App {
   private def appElement(): HtmlElement =
     div(
       child <-- topBarRendererVar.signal.map(_.render(topBar)),
+      // child <-- theme.signal.map(_.topbar(topBar)),
       div(
         display.flex,
         marginTop("56px"),
