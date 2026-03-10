@@ -1,12 +1,11 @@
 package com.example
 
-import org.scalajs.dom
-import com.raquo.laminar.api.L._
-
 import com.example.headless.{Counter, Sidebar, TopBar}
 import com.example.theme.Theme
 import com.example.theme.coreui.CoreUiTheme
 import com.example.theme.inline.InlineTheme
+import com.raquo.laminar.api.L._
+import org.scalajs.dom
 
 object App {
 

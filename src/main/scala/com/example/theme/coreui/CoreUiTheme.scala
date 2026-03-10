@@ -1,12 +1,9 @@
 package com.example.theme.coreui
 
-import com.raquo.laminar.api.L._
-
-import com.example.headless.Counter
-import com.example.headless.Sidebar
-import com.example.headless.TopBar
 import com.example.Page
+import com.example.headless.{Counter, Sidebar, TopBar}
 import com.example.theme.Theme
+import com.raquo.laminar.api.L._
 
 object CoreUiTheme extends Theme {
   def counter(counter: Counter): HtmlElement = div(

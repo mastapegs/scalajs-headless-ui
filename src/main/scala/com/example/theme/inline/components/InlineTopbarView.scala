@@ -1,7 +1,7 @@
 package com.example.theme.inline.components
 
-import com.raquo.laminar.api.L._
 import com.example.headless.TopBar
+import com.raquo.laminar.api.L._
 
 object InlineTopbarView {
   private def rendererToggle(topBar: TopBar): HtmlElement =

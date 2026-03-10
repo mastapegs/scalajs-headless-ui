@@ -1,10 +1,9 @@
 package com.example.theme.inline.components
 
-import org.scalajs.dom
-import com.raquo.laminar.api.L._
-
-import com.example.headless.Sidebar
 import com.example.Page
+import com.example.headless.Sidebar
+import com.raquo.laminar.api.L._
+import org.scalajs.dom
 
 object InlineSidebarView {
   private def injectHoverStyles(): Unit = {

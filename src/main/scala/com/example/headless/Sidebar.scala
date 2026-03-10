@@ -1,7 +1,7 @@
 package com.example.headless
 
-import com.raquo.laminar.api.L._
 import com.example.Page
+import com.raquo.laminar.api.L._
 
 /** Headless sidebar component: pure state and logic, no rendering. */
 final class Sidebar(

@@ -3,8 +3,8 @@ package com.example
 sealed trait Page
 object Page {
   case object Dashboard extends Page
-  case object Metrics extends Page
-  case object Settings extends Page
+  case object Metrics   extends Page
+  case object Settings  extends Page
 
   val all: List[Page] = List(Dashboard, Metrics, Settings)
 
