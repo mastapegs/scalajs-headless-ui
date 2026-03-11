@@ -30,13 +30,38 @@ sbt fmtall          # runs scalafmtAll + scalafmtSbt
 # Lint and format all code
 sbt fixall           # runs scalafixAll + fmtall
 
+# Run tests
+sbt test
+
+# Check formatting (CI uses this)
+sbt scalafmtCheckAll scalafmtSbtCheck
+
+# Check linting (CI uses this)
+sbt "scalafixAll --check"
+
 # Continuous compilation (watches for changes)
 sbt ~fastLinkJS
 ```
 
 **Build output:** `target/scala-2.13/ui-template-sandbox-fastopt/main.js`
 
-There are **no tests** in this project currently.
+## Testing
+
+- **Framework:** [MUnit](https://scalameta.org/munit/) 1.1.0 (Scala.js compatible)
+- **Run tests:** `sbt test`
+- **Test location:** `src/test/scala/com/example/headless/`
+- **Coverage:** All headless components (`Counter`, `Sidebar`, `TopBar`) and page containers (`DashboardPage`, `MetricsPage`, `SettingsPage`)
+- Tests focus on **state and behavior only** — no DOM or rendering tests
+
+```
+src/test/scala/com/example/headless/
+├── components/
+│   ├── CounterSuite.scala
+│   ├── SidebarSuite.scala
+│   └── TopBarSuite.scala
+└── pages/
+    └── PagesSuite.scala
+```
 
 ## Project Structure
 
@@ -102,10 +127,11 @@ src/main/scala/com/example/
 
 ## CI/CD
 
-Two GitHub Actions workflows in `.github/workflows/`:
-- **deploy-production.yml** — On push to `main`: builds with `sbt fastLinkJS`, deploys to Netlify (production)
-- **deploy-preview.yml** — On PRs: builds and deploys Netlify preview, posts preview URL as PR comment
-- Both use Java 17 (Temurin)
+Three GitHub Actions workflows in `.github/workflows/`:
+- **ci.yml** — On PRs and pushes to `main`: checks formatting (`scalafmtCheckAll`), linting (`scalafixAll --check`), and runs tests (`sbt test`)
+- **deploy-production.yml** — On push to `main`: runs tests, builds with `sbt fastLinkJS`, deploys to Netlify (production)
+- **deploy-preview.yml** — On PRs: runs tests, builds, and deploys Netlify preview, posts preview URL as PR comment
+- All workflows use Java 17 (Temurin)
 
 ## Adding New Components
 

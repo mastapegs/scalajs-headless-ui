@@ -1,9 +1,7 @@
 package com.example.headless.pages
 
-import com.example.headless.components.Counter
-
 /** Headless dashboard page component: holds page-specific state and dependencies. */
-final class DashboardPage(val counter: Counter) {
+final class DashboardPage {
 
   val title: String = "Dashboard"
   val description: String =

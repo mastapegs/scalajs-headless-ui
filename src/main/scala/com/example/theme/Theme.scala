@@ -8,7 +8,7 @@ trait Theme {
   def counter(counter: Counter): HtmlElement
   def topbar(topBar: TopBar): HtmlElement
   def sidebar(sidebar: Sidebar): HtmlElement
-  def dashboardPage(page: DashboardPage): HtmlElement
+  def dashboardPage(page: DashboardPage, counter: Counter): HtmlElement
   def metricsPage(page: MetricsPage): HtmlElement
   def settingsPage(page: SettingsPage): HtmlElement
   def mainContent(content: Signal[HtmlElement]): HtmlElement

@@ -40,9 +40,9 @@ object App {
 
   private val counter = new Counter()
 
-  private val dashboardPage = new DashboardPage(counter)
-  private val metricsPage = new MetricsPage()
-  private val settingsPage = new SettingsPage()
+  private val dashboardPage = new DashboardPage()
+  private val metricsPage   = new MetricsPage()
+  private val settingsPage  = new SettingsPage()
 
   private val sidebar = new Sidebar(
     pages = Page.all,
@@ -62,7 +62,7 @@ object App {
 
   private def pageContent(page: Page, currentTheme: Theme): HtmlElement =
     page match {
-      case Page.Dashboard => currentTheme.dashboardPage(dashboardPage)
+      case Page.Dashboard => currentTheme.dashboardPage(dashboardPage, counter)
       case Page.Metrics   => currentTheme.metricsPage(metricsPage)
       case Page.Settings  => currentTheme.settingsPage(settingsPage)
     }
