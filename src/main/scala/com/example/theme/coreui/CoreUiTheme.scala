@@ -17,10 +17,25 @@ object CoreUiTheme extends Theme {
         """@media (min-width: 769px) {
           |  .coreui-hamburger { display: none !important; }
           |  .coreui-sidebar-backdrop { display: none !important; }
+          |  .coreui-sidebar-mobile {
+          |    position: relative !important;
+          |    height: 100% !important;
+          |    transform: none !important;
+          |    visibility: visible !important;
+          |    top: auto !important;
+          |  }
           |}
           |@media (max-width: 768px) {
-          |  .coreui-sidebar-mobile { display: none !important; }
-          |  .coreui-sidebar-mobile.mobile-open { display: flex !important; position: fixed !important; top: 56px !important; left: 0 !important; bottom: 0 !important; z-index: 99 !important; width: 220px !important; }
+          |  .coreui-sidebar-mobile {
+          |    position: fixed !important;
+          |    top: 56px !important;
+          |    bottom: 0 !important;
+          |    z-index: 99 !important;
+          |  }
+          |  .coreui-sidebar-mobile.mobile-open {
+          |    transform: translateX(0) !important;
+          |    visibility: visible !important;
+          |  }
           |  .coreui-sidebar-backdrop { position: fixed; top: 56px; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.4); z-index: 98; }
           |  .coreui-sidebar-backdrop.hidden { display: none !important; }
           |}
@@ -56,10 +71,6 @@ object CoreUiTheme extends Theme {
         cls("sidebar sidebar-narrow-unfoldable coreui-sidebar-mobile"),
         cls <-- sidebar.isCollapsed.map(if (_) "sidebar-narrow" else ""),
         cls <-- sidebar.isMobileOpen.map(if (_) "mobile-open" else ""),
-        // Override CoreUI's fixed positioning so the sidebar participates in
-        // the parent flex layout instead of floating over content.
-        position.relative,
-        height("100%"),
         flexShrink("0"),
         // CoreUI sidebar structure
         div(
