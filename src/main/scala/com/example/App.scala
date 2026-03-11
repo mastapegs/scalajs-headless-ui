@@ -52,7 +52,8 @@ object App {
       rendererKeyVar.set(v)
       setCoreUiStylesheet(v == "coreui")
       theme.set(if (v == "coreui") CoreUiTheme else InlineTheme)
-    }
+    },
+    onSidebarToggle = () => sidebar.toggleMobile()
   )
 
   private def pageContent(page: Page): HtmlElement = page match {

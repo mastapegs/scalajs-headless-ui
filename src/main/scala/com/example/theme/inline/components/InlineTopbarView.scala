@@ -37,7 +37,23 @@ object InlineTopbarView {
       color("white"),
       padding("0 24px"),
       zIndex(100),
-      span(fontSize("18px"), fontWeight("600"), topBar.brandName),
+      div(
+        display.flex,
+        alignItems.center,
+        gap("12px"),
+        button(
+          cls("inline-hamburger"),
+          background("none"),
+          border("none"),
+          color("white"),
+          fontSize("20px"),
+          cursor.pointer,
+          padding("4px 8px"),
+          "\u2630",
+          onClick --> { _ => topBar.toggleSidebar() }
+        ),
+        span(fontSize("18px"), fontWeight("600"), topBar.brandName)
+      ),
       rendererToggle(topBar)
     )
 }

@@ -11,14 +11,24 @@ final class Sidebar(
 ) {
 
   private val collapsedVar: Var[Boolean] = Var(false)
+  private val mobileOpenVar: Var[Boolean] = Var(false)
 
   val isCollapsed: Signal[Boolean] = collapsedVar.signal
+  val isMobileOpen: Signal[Boolean] = mobileOpenVar.signal
 
   def toggleCollapse(): Unit =
     collapsedVar.update(!_)
 
-  def navigateTo(page: Page): Unit =
+  def toggleMobile(): Unit =
+    mobileOpenVar.update(!_)
+
+  def closeMobile(): Unit =
+    mobileOpenVar.set(false)
+
+  def navigateTo(page: Page): Unit = {
+    mobileOpenVar.set(false)
     onNavigate(page)
+  }
 
   def isActive(page: Page): Signal[Boolean] =
     currentPage.map(_ == page)

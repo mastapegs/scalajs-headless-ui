@@ -6,7 +6,8 @@ import com.raquo.laminar.api.L._
 final class TopBar(
     val brandName: String,
     val currentRenderer: Signal[String],
-    private val onRendererChange: String => Unit
+    private val onRendererChange: String => Unit,
+    private val onSidebarToggle: () => Unit = () => ()
 ) {
   val rendererOptions: List[(String, String)] = List(
     "inline" -> "Inline Styles",
@@ -14,4 +15,6 @@ final class TopBar(
   )
 
   def selectRenderer(value: String): Unit = onRendererChange(value)
+
+  def toggleSidebar(): Unit = onSidebarToggle()
 }
