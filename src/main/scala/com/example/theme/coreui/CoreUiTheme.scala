@@ -8,9 +8,9 @@ import com.example.theme.coreui.pages._
 import com.raquo.laminar.api.L._
 
 object CoreUiTheme extends Theme {
-  def counter(counter: Counter): HtmlElement = CoreUiCounterView.render(counter)
-  def sidebar(sidebar: Sidebar): HtmlElement = CoreUiSidebarView.render(sidebar)
-  def topbar(topBar: TopBar): HtmlElement    = CoreUiTopbarView.render(topBar)
+  def counter(counter: Counter): HtmlElement             = CoreUiCounterView.render(counter)
+  protected def renderSidebar(sidebar: Sidebar): HtmlElement = CoreUiSidebarView.render(sidebar)
+  protected def renderTopbar(topBar: TopBar): HtmlElement    = CoreUiTopbarView.render(topBar)
 
   def dashboardPage(page: DashboardPage, counter: Counter): HtmlElement =
     CoreUiDashboardPageView.render(page, counter, this)
@@ -19,8 +19,8 @@ object CoreUiTheme extends Theme {
   def settingsPage(page: SettingsPage): HtmlElement =
     CoreUiSettingsPageView.render(page)
 
-  def mainContent(content: Signal[HtmlElement]): HtmlElement =
-    div(
+  protected def renderMainContent(content: Signal[HtmlElement]): Mod[HtmlElement] =
+    Seq(
       cls("flex-grow-1 overflow-auto p-4"),
       child <-- content
     )

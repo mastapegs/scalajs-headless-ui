@@ -15,6 +15,8 @@ object InlineCounterView {
     span(
       fontSize("24px"),
       fontWeight("600"),
+      aria.live := "polite",
+      aria.atomic := true,
       child.text <-- counter.count.map(_.toString)
     ),
     button(
@@ -25,6 +27,7 @@ object InlineCounterView {
       color("white"),
       cursor.pointer,
       fontSize("14px"),
+      aria.label := "Increment counter",
       "Increment",
       onClick --> { _ => counter.increment() }
     )

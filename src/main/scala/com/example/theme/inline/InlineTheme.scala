@@ -8,9 +8,9 @@ import com.example.theme.inline.pages._
 import com.raquo.laminar.api.L._
 
 object InlineTheme extends Theme {
-  def counter(counter: Counter): HtmlElement = InlineCounterView.render(counter)
-  def sidebar(sidebar: Sidebar): HtmlElement = InlineSidebarView.render(sidebar)
-  def topbar(topBar: TopBar): HtmlElement    = InlineTopbarView.render(topBar)
+  def counter(counter: Counter): HtmlElement             = InlineCounterView.render(counter)
+  protected def renderSidebar(sidebar: Sidebar): HtmlElement = InlineSidebarView.render(sidebar)
+  protected def renderTopbar(topBar: TopBar): HtmlElement    = InlineTopbarView.render(topBar)
 
   def dashboardPage(page: DashboardPage, counter: Counter): HtmlElement =
     InlineDashboardPageView.render(page, counter, this)
@@ -19,8 +19,8 @@ object InlineTheme extends Theme {
   def settingsPage(page: SettingsPage): HtmlElement =
     InlineSettingsPageView.render(page)
 
-  def mainContent(content: Signal[HtmlElement]): HtmlElement =
-    div(
+  protected def renderMainContent(content: Signal[HtmlElement]): Mod[HtmlElement] =
+    Seq(
       flexGrow(1),
       padding("32px"),
       overflowY.auto,

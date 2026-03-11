@@ -17,6 +17,7 @@ object CoreUiTopbarView {
           select(
             cls("form-select form-select-sm"),
             width("160px"),
+            aria.label := "Select renderer",
             topBar.rendererOptions.map { case (v, lbl) =>
               option(value(v), lbl)
             },
