@@ -17,8 +17,8 @@ class SidebarSuite extends FunSuite {
   }
 
   private def makeSidebar(
-      pages: List[Page]        = Page.all,
-      currentPage: Page        = Page.Dashboard,
+      pages: List[Page] = Page.all,
+      currentPage: Page = Page.Dashboard,
       onNavigate: Page => Unit = _ => ()
   ): Sidebar =
     new Sidebar(pages, Val(currentPage), onNavigate)
@@ -43,7 +43,7 @@ class SidebarSuite extends FunSuite {
 
   test("navigateTo invokes callback with correct page") {
     var navigated: Option[Page] = None
-    val sidebar = makeSidebar(onNavigate = p => navigated = Some(p))
+    val sidebar                 = makeSidebar(onNavigate = p => navigated = Some(p))
     sidebar.navigateTo(Page.Metrics)
     assertEquals(navigated, Some(Page.Metrics))
   }

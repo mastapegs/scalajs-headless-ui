@@ -16,8 +16,8 @@ class TopBarSuite extends FunSuite {
   }
 
   private def makeTopBar(
-      brandName: String                = "TestApp",
-      currentRenderer: String          = "inline",
+      brandName: String = "TestApp",
+      currentRenderer: String = "inline",
       onRendererChange: String => Unit = _ => ()
   ): TopBar =
     new TopBar(brandName, Val(currentRenderer), onRendererChange)
@@ -37,7 +37,7 @@ class TopBarSuite extends FunSuite {
 
   test("selectRenderer invokes callback with correct value") {
     var selected: Option[String] = None
-    val topBar = makeTopBar(onRendererChange = v => selected = Some(v))
+    val topBar                   = makeTopBar(onRendererChange = v => selected = Some(v))
     topBar.selectRenderer("coreui")
     assertEquals(selected, Some("coreui"))
   }
