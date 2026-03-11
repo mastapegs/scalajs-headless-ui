@@ -1,6 +1,6 @@
 package com.example.theme.coreui.components
 
-import com.example.headless.Counter
+import com.example.headless.components.Counter
 import com.raquo.laminar.api.L._
 
 object CoreUiCounterView {

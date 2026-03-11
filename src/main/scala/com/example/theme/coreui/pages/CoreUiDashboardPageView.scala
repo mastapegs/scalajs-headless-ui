@@ -1,6 +1,6 @@
 package com.example.theme.coreui.pages
 
-import com.example.headless.DashboardPage
+import com.example.headless.pages.DashboardPage
 import com.example.theme.Theme
 import com.raquo.laminar.api.L._
 

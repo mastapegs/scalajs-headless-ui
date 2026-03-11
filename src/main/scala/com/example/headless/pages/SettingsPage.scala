@@ -1,4 +1,4 @@
-package com.example.headless
+package com.example.headless.pages
 
 /** Headless settings page component: holds page-specific state and dependencies. */
 final class SettingsPage {

@@ -1,6 +1,7 @@
 package com.example.theme
 
-import com.example.headless.{Counter, DashboardPage, MetricsPage, SettingsPage, Sidebar, TopBar}
+import com.example.headless.components.{Counter, Sidebar, TopBar}
+import com.example.headless.pages.{DashboardPage, MetricsPage, SettingsPage}
 import com.raquo.laminar.api.L._
 
 trait Theme {

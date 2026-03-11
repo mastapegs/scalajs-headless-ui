@@ -1,6 +1,6 @@
 package com.example.theme.coreui.pages
 
-import com.example.headless.MetricsPage
+import com.example.headless.pages.MetricsPage
 import com.raquo.laminar.api.L._
 
 object CoreUiMetricsPageView {

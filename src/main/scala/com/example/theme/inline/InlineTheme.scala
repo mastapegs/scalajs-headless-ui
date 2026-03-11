@@ -1,6 +1,7 @@
 package com.example.theme.inline
 
-import com.example.headless.{Counter, DashboardPage, MetricsPage, SettingsPage, Sidebar, TopBar}
+import com.example.headless.components.{Counter, Sidebar, TopBar}
+import com.example.headless.pages.{DashboardPage, MetricsPage, SettingsPage}
 import com.example.theme.Theme
 import com.example.theme.inline.components._
 import com.example.theme.inline.pages._

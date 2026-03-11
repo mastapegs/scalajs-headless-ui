@@ -1,6 +1,6 @@
 package com.example.theme.coreui.components
 
-import com.example.headless.TopBar
+import com.example.headless.components.TopBar
 import com.raquo.laminar.api.L._
 
 object CoreUiTopbarView {

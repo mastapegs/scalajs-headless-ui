@@ -1,6 +1,6 @@
 package com.example.theme.inline.pages
 
-import com.example.headless.SettingsPage
+import com.example.headless.pages.SettingsPage
 import com.raquo.laminar.api.L._
 
 object InlineSettingsPageView {

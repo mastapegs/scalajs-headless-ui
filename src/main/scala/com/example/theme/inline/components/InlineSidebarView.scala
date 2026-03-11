@@ -1,7 +1,7 @@
 package com.example.theme.inline.components
 
 import com.example.Page
-import com.example.headless.Sidebar
+import com.example.headless.components.Sidebar
 import com.raquo.laminar.api.L._
 import org.scalajs.dom
 
