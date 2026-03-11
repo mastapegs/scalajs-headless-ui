@@ -17,8 +17,8 @@ class SidebarSuite extends FunSuite {
   }
 
   private def makeSidebar(
-      pages: List[Page] = Page.all,
-      currentPage: Page = Page.Dashboard,
+      pages: List[Page]        = Page.all,
+      currentPage: Page        = Page.Dashboard,
       onNavigate: Page => Unit = _ => ()
   ): Sidebar =
     new Sidebar(pages, Val(currentPage), onNavigate)

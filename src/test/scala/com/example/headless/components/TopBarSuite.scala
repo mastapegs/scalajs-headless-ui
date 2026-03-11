@@ -16,8 +16,8 @@ class TopBarSuite extends FunSuite {
   }
 
   private def makeTopBar(
-      brandName: String = "TestApp",
-      currentRenderer: String = "inline",
+      brandName: String                = "TestApp",
+      currentRenderer: String          = "inline",
       onRendererChange: String => Unit = _ => ()
   ): TopBar =
     new TopBar(brandName, Val(currentRenderer), onRendererChange)

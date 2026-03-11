@@ -10,7 +10,7 @@ import com.raquo.laminar.api.L._
 object CoreUiTheme extends Theme {
   def counter(counter: Counter): HtmlElement = CoreUiCounterView.render(counter)
   def sidebar(sidebar: Sidebar): HtmlElement = CoreUiSidebarView.render(sidebar)
-  def topbar(topBar: TopBar): HtmlElement     = CoreUiTopbarView.render(topBar)
+  def topbar(topBar: TopBar): HtmlElement    = CoreUiTopbarView.render(topBar)
 
   def dashboardPage(page: DashboardPage, counter: Counter): HtmlElement =
     CoreUiDashboardPageView.render(page, counter, this)

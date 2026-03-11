@@ -41,8 +41,8 @@ object App {
   private val counter = new Counter()
 
   private val dashboardPage = new DashboardPage()
-  private val metricsPage = new MetricsPage()
-  private val settingsPage = new SettingsPage()
+  private val metricsPage   = new MetricsPage()
+  private val settingsPage  = new SettingsPage()
 
   private val sidebar = new Sidebar(
     pages = Page.all,
