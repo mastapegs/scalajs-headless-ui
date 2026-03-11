@@ -1,0 +1,42 @@
+name: Deploy to Netlify (PR Preview)
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  deploy-preview:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+          cache: sbt
+
+      - name: Build Scala.js
+        run: sbt fastLinkJS
+
+      - name: Assemble site
+        run: |
+          mkdir -p dist/assets
+          cp target/scala-2.13/ui-template-sandbox-fastopt/*.js dist/assets/
+          sed 's|./target/scala-2.13/ui-template-sandbox-fastopt/main.js|./assets/main.js|' index.html > dist/index.html
+
+      - name: Deploy preview to Netlify
+        uses: nwtgck/actions-netlify@v3
+        with:
+          publish-dir: ./dist
+          production-deploy: false
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          deploy-message: "PR #${{ github.event.number }} - ${{ github.event.pull_request.title }}"
+          alias: pr-${{ github.event.number }}
+          enable-pull-request-comment: true
+          enable-commit-comment: false
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
