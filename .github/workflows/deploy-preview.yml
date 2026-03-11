@@ -19,6 +19,16 @@ jobs:
 
       - uses: sbt/setup-sbt@v1
 
+      - name: Cache SBT dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.sbt
+            ~/.cache/coursier
+          key: ${{ runner.os }}-sbt-${{ hashFiles('**/*.sbt', 'project/build.properties', 'project/plugins.sbt') }}
+          restore-keys: |
+            ${{ runner.os }}-sbt-
+
       - name: Run tests
         run: sbt test
 
