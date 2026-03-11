@@ -15,7 +15,7 @@ object InlineCounterView {
     span(
       fontSize("24px"),
       fontWeight("600"),
-      aria.live := "polite",
+      aria.live   := "polite",
       aria.atomic := true,
       child.text <-- counter.count.map(_.toString)
     ),

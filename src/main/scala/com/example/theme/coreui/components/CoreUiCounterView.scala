@@ -10,7 +10,7 @@ object CoreUiCounterView {
       cls("card-body d-flex align-items-center gap-3"),
       span(
         cls("fs-4 fw-semibold"),
-        aria.live := "polite",
+        aria.live   := "polite",
         aria.atomic := true,
         child.text <-- counter.count.map(_.toString)
       ),
