@@ -17,16 +17,26 @@ jobs:
 
       - uses: sbt/setup-sbt@v1
 
+      - name: Cache SBT dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.sbt
+            ~/.cache/coursier
+          key: ${{ runner.os }}-sbt-${{ hashFiles('**/*.sbt', 'project/build.properties', 'project/plugins.sbt') }}
+          restore-keys: |
+            ${{ runner.os }}-sbt-
+
       - name: Run tests
         run: sbt test
 
-      - name: Build Scala.js
-        run: sbt fastLinkJS
+      - name: Build Scala.js (optimized)
+        run: sbt fullLinkJS
 
       - name: Assemble site
         run: |
           mkdir -p dist/assets
-          cp target/scala-2.13/ui-template-sandbox-fastopt/*.js dist/assets/
+          cp target/scala-2.13/ui-template-sandbox-opt/*.js dist/assets/
           sed 's|./target/scala-2.13/ui-template-sandbox-fastopt/main.js|./assets/main.js|' index.html > dist/index.html
 
       - name: Deploy to Netlify
