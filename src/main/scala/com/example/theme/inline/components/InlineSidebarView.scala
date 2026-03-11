@@ -46,7 +46,7 @@ object InlineSidebarView {
         backgroundColor("white"),
         cursor.pointer,
         fontSize("14px"),
-        aria.expanded <-- sidebar.isCollapsed.map(c => (!c).toString),
+        aria.expanded <-- sidebar.isCollapsed.map(c => !c),
         aria.label <-- sidebar.isCollapsed.map(if (_) "Expand sidebar" else "Collapse sidebar"),
         child.text <-- sidebar.isCollapsed.map(if (_) "\u25B6" else "\u25C0"),
         onClick --> { _ => sidebar.toggleCollapse() }
