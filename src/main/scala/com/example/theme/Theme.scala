@@ -41,8 +41,8 @@ trait Theme {
 }
 
 object Theme {
-  val all: List[Theme]   = List(InlineTheme, CoreUiTheme)
-  val default: Theme     = InlineTheme
+  val all: List[Theme] = List(InlineTheme, CoreUiTheme)
+  val default: Theme   = InlineTheme
 
   def forKey(key: String): Theme =
     all.find(_.key == key).getOrElse(default)
