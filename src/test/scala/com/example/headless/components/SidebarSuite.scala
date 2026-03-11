@@ -1,10 +1,20 @@
 package com.example.headless.components
 
 import com.example.Page
+import com.raquo.airstream.core.Signal
+import com.raquo.airstream.ownership.ManualOwner
 import com.raquo.laminar.api.L._
 import munit.FunSuite
 
 class SidebarSuite extends FunSuite {
+
+  private def signalNow[A](signal: Signal[A]): A = {
+    val owner = new ManualOwner
+    var value = Option.empty[A]
+    signal.foreach(v => value = Some(v))(owner)
+    owner.killSubscriptions()
+    value.get
+  }
 
   private def makeSidebar(
       pages: List[Page] = Page.all,
@@ -15,20 +25,20 @@ class SidebarSuite extends FunSuite {
 
   test("initial collapsed state is false") {
     val sidebar = makeSidebar()
-    assertEquals(sidebar.isCollapsed.now(), false)
+    assertEquals(signalNow(sidebar.isCollapsed), false)
   }
 
   test("toggleCollapse flips collapsed state") {
     val sidebar = makeSidebar()
     sidebar.toggleCollapse()
-    assertEquals(sidebar.isCollapsed.now(), true)
+    assertEquals(signalNow(sidebar.isCollapsed), true)
   }
 
   test("double toggle returns to original state") {
     val sidebar = makeSidebar()
     sidebar.toggleCollapse()
     sidebar.toggleCollapse()
-    assertEquals(sidebar.isCollapsed.now(), false)
+    assertEquals(signalNow(sidebar.isCollapsed), false)
   }
 
   test("navigateTo invokes callback with correct page") {
@@ -40,12 +50,12 @@ class SidebarSuite extends FunSuite {
 
   test("isActive returns true for current page") {
     val sidebar = makeSidebar(currentPage = Page.Dashboard)
-    assertEquals(sidebar.isActive(Page.Dashboard).now(), true)
+    assertEquals(signalNow(sidebar.isActive(Page.Dashboard)), true)
   }
 
   test("isActive returns false for non-current page") {
     val sidebar = makeSidebar(currentPage = Page.Dashboard)
-    assertEquals(sidebar.isActive(Page.Metrics).now(), false)
+    assertEquals(signalNow(sidebar.isActive(Page.Metrics)), false)
   }
 
   test("pages returns the injected page list") {

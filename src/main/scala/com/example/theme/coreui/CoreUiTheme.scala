@@ -12,8 +12,8 @@ object CoreUiTheme extends Theme {
   def sidebar(sidebar: Sidebar): HtmlElement = CoreUiSidebarView.render(sidebar)
   def topbar(topBar: TopBar): HtmlElement     = CoreUiTopbarView.render(topBar)
 
-  def dashboardPage(page: DashboardPage): HtmlElement =
-    CoreUiDashboardPageView.render(page, this)
+  def dashboardPage(page: DashboardPage, counter: Counter): HtmlElement =
+    CoreUiDashboardPageView.render(page, counter, this)
   def metricsPage(page: MetricsPage): HtmlElement =
     CoreUiMetricsPageView.render(page)
   def settingsPage(page: SettingsPage): HtmlElement =

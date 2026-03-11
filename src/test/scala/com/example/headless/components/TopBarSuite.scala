@@ -1,9 +1,19 @@
 package com.example.headless.components
 
+import com.raquo.airstream.core.Signal
+import com.raquo.airstream.ownership.ManualOwner
 import com.raquo.laminar.api.L._
 import munit.FunSuite
 
 class TopBarSuite extends FunSuite {
+
+  private def signalNow[A](signal: Signal[A]): A = {
+    val owner = new ManualOwner
+    var value = Option.empty[A]
+    signal.foreach(v => value = Some(v))(owner)
+    owner.killSubscriptions()
+    value.get
+  }
 
   private def makeTopBar(
       brandName: String = "TestApp",
@@ -34,6 +44,6 @@ class TopBarSuite extends FunSuite {
 
   test("currentRenderer reflects injected signal") {
     val topBar = makeTopBar(currentRenderer = "coreui")
-    assertEquals(topBar.currentRenderer.now(), "coreui")
+    assertEquals(signalNow(topBar.currentRenderer), "coreui")
   }
 }
