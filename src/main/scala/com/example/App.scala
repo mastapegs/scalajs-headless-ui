@@ -9,8 +9,6 @@ object App {
 
   private val router = AppRouter.router
 
-  private val rendererKeyVar: Var[String] = Var("inline")
-
   private val theme: Var[Theme] = Var(Theme.default)
 
   def main(args: Array[String]): Unit = {
@@ -26,13 +24,12 @@ object App {
 
   private val topBar = new TopBar(
     brandName = "UI Template",
-    currentRenderer = rendererKeyVar.signal,
+    currentRenderer = theme.signal.map(_.key),
     onRendererChange = { key =>
       val old  = theme.now()
       val next = Theme.forKey(key)
       old.onDeactivate()
       next.onActivate()
-      rendererKeyVar.set(key)
       theme.set(next)
     }
   )
