@@ -6,8 +6,30 @@ import com.example.theme.Theme
 import com.example.theme.coreui.components._
 import com.example.theme.coreui.pages._
 import com.raquo.laminar.api.L._
+import org.scalajs.dom
 
 object CoreUiTheme extends Theme {
+  val key: String = "coreui"
+
+  private val stylesheetId  = "coreui-stylesheet"
+  private val stylesheetUrl = "https://unpkg.com/@coreui/coreui@5.3.1/dist/css/coreui.min.css"
+
+  override def onActivate(): Unit = {
+    val existing = dom.document.getElementById(stylesheetId)
+    if (existing == null) {
+      val link = dom.document.createElement("link")
+      link.setAttribute("id", stylesheetId)
+      link.setAttribute("rel", "stylesheet")
+      link.setAttribute("href", stylesheetUrl)
+      dom.document.head.appendChild(link)
+    }
+  }
+
+  override def onDeactivate(): Unit = {
+    val existing = dom.document.getElementById(stylesheetId)
+    if (existing != null) existing.parentNode.removeChild(existing)
+  }
+
   def counter(counter: Counter): HtmlElement                 = CoreUiCounterView.render(counter)
   protected def renderSidebar(sidebar: Sidebar): HtmlElement = CoreUiSidebarView.render(sidebar)
   protected def renderTopbar(topBar: TopBar): HtmlElement    = CoreUiTopbarView.render(topBar)

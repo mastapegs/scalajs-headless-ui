@@ -2,9 +2,16 @@ package com.example.theme
 
 import com.example.headless.components.{Counter, Sidebar, TopBar}
 import com.example.headless.pages.{DashboardPage, MetricsPage, SettingsPage}
+import com.example.theme.coreui.CoreUiTheme
+import com.example.theme.inline.InlineTheme
 import com.raquo.laminar.api.L._
 
 trait Theme {
+  def key: String
+
+  def onActivate(): Unit   = ()
+  def onDeactivate(): Unit = ()
+
   def counter(counter: Counter): HtmlElement
 
   protected def renderTopbar(topBar: TopBar): HtmlElement
@@ -31,4 +38,12 @@ trait Theme {
       sidebar: HtmlElement,
       mainContent: HtmlElement
   ): HtmlElement
+}
+
+object Theme {
+  val all: List[Theme] = List(InlineTheme, CoreUiTheme)
+  val default: Theme   = InlineTheme
+
+  def forKey(key: String): Theme =
+    all.find(_.key == key).getOrElse(default)
 }
