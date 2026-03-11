@@ -1,6 +1,6 @@
 package com.example.theme.inline.components
 
-import com.example.headless.TopBar
+import com.example.headless.components.TopBar
 import com.raquo.laminar.api.L._
 
 object InlineTopbarView {

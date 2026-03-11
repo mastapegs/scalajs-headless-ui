@@ -1,4 +1,4 @@
-package com.example.headless
+package com.example.headless.components
 
 import com.raquo.laminar.api.L._
 
