@@ -1,7 +1,7 @@
 package com.example.theme.coreui
 
 import com.example.Page
-import com.example.headless.{Counter, Sidebar, TopBar}
+import com.example.headless.{Counter, DashboardPage, MetricsPage, SettingsPage, Sidebar, TopBar}
 import com.example.theme.Theme
 import com.raquo.laminar.api.L._
 
@@ -86,6 +86,50 @@ object CoreUiTheme extends Theme {
       )
     )
   )
+
+  def dashboardPage(page: DashboardPage): HtmlElement = div(
+    cls("container-lg"),
+    h1(cls("mb-3"), page.title),
+    p(page.description),
+    div(
+      cls("mt-4"),
+      counter(page.counter)
+    )
+  )
+
+  def metricsPage(page: MetricsPage): HtmlElement = div(
+    cls("container-lg"),
+    h1(cls("mb-3"), page.title),
+    p(page.description)
+  )
+
+  def settingsPage(page: SettingsPage): HtmlElement = div(
+    cls("container-lg"),
+    h1(cls("mb-3"), page.title),
+    p(page.description)
+  )
+
+  def mainContent(content: Signal[HtmlElement]): HtmlElement =
+    div(
+      cls("flex-grow-1 overflow-auto p-4"),
+      child <-- content
+    )
+
+  def appLayout(
+      topbarEl: HtmlElement,
+      sidebarEl: HtmlElement,
+      mainContentEl: HtmlElement
+  ): HtmlElement =
+    div(
+      topbarEl,
+      div(
+        cls("d-flex"),
+        marginTop("56px"),
+        height("calc(100vh - 56px)"),
+        sidebarEl,
+        mainContentEl
+      )
+    )
 
   private def iconFor(page: Page): String = page match {
     case Page.Dashboard => "\u2302"

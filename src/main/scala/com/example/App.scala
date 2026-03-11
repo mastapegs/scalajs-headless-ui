@@ -1,6 +1,6 @@
 package com.example
 
-import com.example.headless.{Counter, Sidebar, TopBar}
+import com.example.headless.{Counter, DashboardPage, MetricsPage, SettingsPage, Sidebar, TopBar}
 import com.example.theme.Theme
 import com.example.theme.coreui.CoreUiTheme
 import com.example.theme.inline.InlineTheme
@@ -39,6 +39,10 @@ object App {
 
   private val counter = new Counter()
 
+  private val dashboardPage = new DashboardPage(counter)
+  private val metricsPage = new MetricsPage()
+  private val settingsPage = new SettingsPage()
+
   private val sidebar = new Sidebar(
     pages = Page.all,
     currentPage = router.currentPageSignal,
@@ -55,45 +59,23 @@ object App {
     }
   )
 
-  private def pageContent(page: Page): HtmlElement = page match {
-    case Page.Dashboard =>
-      div(
-        h1(marginBottom("16px"), "Dashboard"),
-        p("Welcome to the dashboard. This is the main overview page."),
-        div(
-          marginTop("24px"),
-          child <-- theme.signal.map(_.counter(counter))
-        )
-      )
-    case Page.Metrics =>
-      div(
-        h1(marginBottom("16px"), "Metrics"),
-        p("Charts and metrics would be displayed here.")
-      )
-    case Page.Settings =>
-      div(
-        h1(marginBottom("16px"), "Settings"),
-        p("Application settings and preferences.")
-      )
-  }
-
-  private def mainContent(): HtmlElement =
-    div(
-      flexGrow(1),
-      padding("32px"),
-      overflowY.auto,
-      child <-- router.currentPageSignal.map(pageContent)
-    )
+  private def pageContent(page: Page, currentTheme: Theme): HtmlElement =
+    page match {
+      case Page.Dashboard => currentTheme.dashboardPage(dashboardPage)
+      case Page.Metrics   => currentTheme.metricsPage(metricsPage)
+      case Page.Settings  => currentTheme.settingsPage(settingsPage)
+    }
 
   private def appElement(): HtmlElement =
     div(
-      child <-- theme.signal.map(_.topbar(topBar)),
-      div(
-        display.flex,
-        marginTop("56px"),
-        height("calc(100vh - 56px)"),
-        child <-- theme.signal.map(_.sidebar(sidebar)),
-        mainContent()
-      )
+      child <-- theme.signal.map { currentTheme =>
+        val pageSignal =
+          router.currentPageSignal.map(pageContent(_, currentTheme))
+        currentTheme.appLayout(
+          topbar = currentTheme.topbar(topBar),
+          sidebar = currentTheme.sidebar(sidebar),
+          mainContent = currentTheme.mainContent(pageSignal)
+        )
+      }
     )
 }
