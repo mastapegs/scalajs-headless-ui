@@ -3,6 +3,7 @@ package com.example.theme.inline
 import com.example.headless.{Counter, DashboardPage, MetricsPage, SettingsPage, Sidebar, TopBar}
 import com.example.theme.Theme
 import com.example.theme.inline.components._
+import com.example.theme.inline.pages._
 import com.raquo.laminar.api.L._
 
 object InlineTheme extends Theme {

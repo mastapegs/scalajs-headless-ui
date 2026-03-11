@@ -1,4 +1,4 @@
-package com.example.theme.inline.components
+package com.example.theme.inline.pages
 
 import com.example.headless.DashboardPage
 import com.example.theme.Theme

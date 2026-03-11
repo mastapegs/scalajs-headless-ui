@@ -1,4 +1,4 @@
-package com.example.theme.inline.components
+package com.example.theme.inline.pages
 
 import com.example.headless.SettingsPage
 import com.raquo.laminar.api.L._
