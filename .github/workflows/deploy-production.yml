@@ -17,6 +17,9 @@ jobs:
 
       - uses: sbt/setup-sbt@v1
 
+      - name: Run tests
+        run: sbt test
+
       - name: Build Scala.js
         run: sbt fastLinkJS
 

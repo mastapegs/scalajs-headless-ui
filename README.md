@@ -113,6 +113,19 @@ src/main/scala/com/example/
 
    Then open [http://localhost:8080](http://localhost:8080) in your browser.
 
+## Testing
+
+The project uses [MUnit](https://scalameta.org/munit/) to test all headless
+components and page containers. Tests focus purely on state and behavior — no DOM
+or rendering is involved.
+
+```bash
+sbt test
+```
+
+Tests live in `src/test/scala/com/example/headless/` and cover `Counter`,
+`Sidebar`, `TopBar`, `DashboardPage`, `MetricsPage`, and `SettingsPage`.
+
 ## Tech Stack
 
 | Tool | Role |
@@ -130,6 +143,14 @@ The project deploys to [Netlify](https://www.netlify.com/):
   before merging.
 - **Merges to `main`** trigger a production deploy to
   [scalajs-headless-ui.netlify.app](https://scalajs-headless-ui.netlify.app/).
+
+A **CI workflow** runs on every PR and push to `main`, checking:
+
+1. **Formatting** — `sbt scalafmtCheckAll scalafmtSbtCheck`
+2. **Linting** — `sbt "scalafixAll --check"`
+3. **Tests** — `sbt test`
+
+All checks must pass before deploy workflows proceed.
 
 ## Why This Matters
 
