@@ -10,10 +10,13 @@ object CoreUiCounterView {
       cls("card-body d-flex align-items-center gap-3"),
       span(
         cls("fs-4 fw-semibold"),
+        aria.live   := "polite",
+        aria.atomic := true,
         child.text <-- counter.count.map(_.toString)
       ),
       button(
         cls("btn btn-primary"),
+        aria.label := "Increment counter",
         "Increment",
         onClick --> { _ => counter.increment() }
       )

@@ -46,15 +46,18 @@ object InlineSidebarView {
         backgroundColor("white"),
         cursor.pointer,
         fontSize("14px"),
+        aria.expanded <-- sidebar.isCollapsed.map(c => !c),
+        aria.label <-- sidebar.isCollapsed.map(if (_) "Expand sidebar" else "Collapse sidebar"),
         child.text <-- sidebar.isCollapsed.map(if (_) "\u25B6" else "\u25C0"),
         onClick --> { _ => sidebar.toggleCollapse() }
       ),
 
       // Page items
       sidebar.pages.map { page =>
-        div(
+        a(
           cls("inline-sidebar-item"),
           cls <-- sidebar.isActive(page).map(if (_) "active" else ""),
+          href("#"),
           display.flex,
           alignItems.center,
           padding("10px 12px"),
@@ -62,10 +65,13 @@ object InlineSidebarView {
           borderRadius("4px"),
           cursor.pointer,
           whiteSpace.nowrap,
+          textDecoration.none,
+          color.inherit,
+          aria.current <-- sidebar.isActive(page).map(if (_) "page" else ""),
           child.text <-- sidebar.isCollapsed.map { collapsed =>
             if (collapsed) Page.label(page).take(1) else Page.label(page)
           },
-          onClick --> { _ => sidebar.navigateTo(page) }
+          onClick.preventDefault --> { _ => sidebar.navigateTo(page) }
         )
       }
     )

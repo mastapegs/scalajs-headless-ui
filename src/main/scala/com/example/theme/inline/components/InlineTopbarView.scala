@@ -9,8 +9,9 @@ object InlineTopbarView {
       display.flex,
       alignItems.center,
       gap("8px"),
-      label("Renderer:"),
+      label(forId := "renderer-select", "Renderer:"),
       select(
+        idAttr := "renderer-select",
         topBar.rendererOptions.map { case (v, lbl) =>
           option(value(v), lbl)
         },

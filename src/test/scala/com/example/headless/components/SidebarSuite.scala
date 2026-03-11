@@ -58,6 +58,14 @@ class SidebarSuite extends FunSuite {
     assertEquals(signalNow(sidebar.isActive(Page.Metrics)), false)
   }
 
+  test("isActive is true only for the current page across all pages") {
+    val sidebar = makeSidebar(currentPage = Page.Metrics)
+    Page.all.foreach { page =>
+      val expected = page == Page.Metrics
+      assertEquals(signalNow(sidebar.isActive(page)), expected, s"isActive(${Page.label(page)})")
+    }
+  }
+
   test("pages returns the injected page list") {
     val sidebar = makeSidebar(pages = List(Page.Dashboard, Page.Settings))
     assertEquals(sidebar.pages, List(Page.Dashboard, Page.Settings))

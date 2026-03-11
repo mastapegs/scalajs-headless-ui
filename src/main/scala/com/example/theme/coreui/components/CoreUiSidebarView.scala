@@ -19,6 +19,8 @@ object CoreUiSidebarView {
       // Toggle button
       button(
         cls("btn btn-sm btn-ghost-secondary w-100"),
+        aria.expanded <-- sidebar.isCollapsed.map(c => !c),
+        aria.label <-- sidebar.isCollapsed.map(if (_) "Expand sidebar" else "Collapse sidebar"),
         child.text <-- sidebar.isCollapsed.map(if (_) "\u25B6" else "\u25C0"),
         onClick --> { _ => sidebar.toggleCollapse() }
       )
@@ -32,8 +34,10 @@ object CoreUiSidebarView {
             cls("nav-link"),
             cls <-- sidebar.isActive(page).map(if (_) "active" else ""),
             href("#"),
+            aria.current <-- sidebar.isActive(page).map(if (_) "page" else ""),
             span(
               cls("nav-icon"),
+              aria.hidden := true,
               iconFor(page)
             ),
             span(Page.label(page)),
