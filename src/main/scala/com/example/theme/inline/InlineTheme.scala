@@ -8,6 +8,8 @@ import com.example.theme.inline.pages._
 import com.raquo.laminar.api.L._
 
 object InlineTheme extends Theme {
+  val key: String = "inline"
+
   def counter(counter: Counter): HtmlElement                 = InlineCounterView.render(counter)
   protected def renderSidebar(sidebar: Sidebar): HtmlElement = InlineSidebarView.render(sidebar)
   protected def renderTopbar(topBar: TopBar): HtmlElement    = InlineTopbarView.render(topBar)
