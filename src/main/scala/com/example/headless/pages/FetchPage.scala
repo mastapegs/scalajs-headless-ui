@@ -16,6 +16,9 @@ object FetchState {
   final case class Success(posts: List[Post]) extends FetchState
 }
 
+/** Table-ready representation of post data: column headers and string rows. */
+final case class TableData(headers: List[String], rows: List[List[String]])
+
 /** Headless fetch showcase page: manages async data fetching state and logic, no rendering. */
 final class FetchPage {
 
@@ -26,6 +29,18 @@ final class FetchPage {
   private val stateVar: Var[FetchState] = Var(FetchState.Loading)
 
   val state: Signal[FetchState] = stateVar.signal
+
+  /** Derived table data: transforms successful post list into headers + rows for rendering. */
+  val tableData: Signal[Option[TableData]] = state.map {
+    case FetchState.Success(posts) =>
+      Some(
+        TableData(
+          headers = List("ID", "User ID", "Title", "Body"),
+          rows = posts.map(p => List(p.id.toString, p.userId.toString, p.title, p.body))
+        )
+      )
+    case _ => None
+  }
 
   /** Fetches posts from JSONPlaceholder and updates state.
     * Returns a fire-and-forget EventStream — themes should bind it

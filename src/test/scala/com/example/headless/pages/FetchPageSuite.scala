@@ -66,4 +66,31 @@ class FetchPageSuite extends FunSuite {
     val result = decode[List[Post]](json)
     assertEquals(result, Right(List.empty[Post]))
   }
+
+  // -- tableData signal tests --
+
+  test("tableData is None in initial Loading state") {
+    val page = new FetchPage()
+    assertEquals(signalNow(page.tableData), None)
+  }
+
+  test("tableData contains correct headers and rows after Success") {
+    val page  = new FetchPage()
+    val posts = List(Post(1, 10, "Hello", "World"), Post(2, 20, "Foo", "Bar"))
+    page.setSuccess(posts)
+
+    val result = signalNow(page.tableData)
+    assert(result.isDefined)
+    val td = result.get
+    assertEquals(td.headers, List("ID", "User ID", "Title", "Body"))
+    assertEquals(td.rows.length, 2)
+    assertEquals(td.rows.head, List("10", "1", "Hello", "World"))
+    assertEquals(td.rows(1), List("20", "2", "Foo", "Bar"))
+  }
+
+  test("tableData is None after Error") {
+    val page = new FetchPage()
+    page.setError("something went wrong")
+    assertEquals(signalNow(page.tableData), None)
+  }
 }
