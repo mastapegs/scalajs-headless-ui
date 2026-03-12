@@ -1,6 +1,5 @@
 package com.example
 
-import com.example.headless.components.Counter
 import com.example.headless.pages.{DashboardPage, MetricsPage, SettingsPage}
 import com.example.theme.Theme
 import com.raquo.laminar.api.L._
@@ -33,14 +32,13 @@ object AppRouter {
     getPageTitle = page => s"${Page.label(page)} | UI Template"
   )
 
-  private val counter       = new Counter()
   private val dashboardPage = new DashboardPage()
   private val metricsPage   = new MetricsPage()
   private val settingsPage  = new SettingsPage()
 
   private def pageContent(page: Page, theme: Theme): HtmlElement =
     page match {
-      case Page.Dashboard => theme.dashboardPage(dashboardPage, counter)
+      case Page.Dashboard => theme.dashboardPage(dashboardPage)
       case Page.Metrics   => theme.metricsPage(metricsPage)
       case Page.Settings  => theme.settingsPage(settingsPage)
     }

@@ -25,7 +25,7 @@ trait Theme {
   final def sidebar(sidebar: Sidebar): HtmlElement =
     renderSidebar(sidebar).amend(aria.label := "Main navigation")
 
-  def dashboardPage(page: DashboardPage, counter: Counter): HtmlElement
+  def dashboardPage(page: DashboardPage): HtmlElement
   def metricsPage(page: MetricsPage): HtmlElement
   def settingsPage(page: SettingsPage): HtmlElement
 
