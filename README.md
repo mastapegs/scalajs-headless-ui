@@ -102,7 +102,7 @@ trait level, not left up to individual theme implementations to remember.
 src/main/scala/com/example/
 ├── App.scala                    # Entry point, theme switching, main composition
 ├── AppRouter.scala              # Fragment-based routing (Waypoint)
-├── Page.scala                   # Sealed trait: Dashboard | Metrics | Settings
+├── Page.scala                   # Sealed trait: Dashboard | Metrics | Settings | Fetch
 ├── headless/
 │   ├── components/              # Pure state & logic (no rendering)
 │   │   ├── Counter.scala        # Int state + increment()
@@ -110,6 +110,7 @@ src/main/scala/com/example/
 │   │   └── TopBar.scala         # Brand name, renderer selection
 │   └── pages/                   # Page-level state containers
 │       ├── DashboardPage.scala
+│       ├── FetchPage.scala    # Async data fetching with loading/error/success states
 │       ├── MetricsPage.scala
 │       └── SettingsPage.scala
 └── theme/
@@ -169,7 +170,7 @@ sbt fixall    # Lint + format (Scalafix + Scalafmt)
 ## Testing
 
 The project uses [MUnit](https://scalameta.org/munit/) to test all headless
-components and page containers — 23 tests across 4 suites. Tests focus purely on
+components and page containers — 34 tests across 5 suites. Tests focus purely on
 state and behavior. No DOM, no rendering, no browser required.
 
 ```bash
@@ -183,7 +184,8 @@ src/test/scala/com/example/headless/
 │   ├── SidebarSuite.scala      # 8 tests: collapse toggle, navigation, isActive
 │   └── TopBarSuite.scala       # 4 tests: brand, renderer options, selection
 └── pages/
-    └── PagesSuite.scala        # 6 tests: title/description for all 3 pages
+    ├── FetchPageSuite.scala    # 11 tests: Circe decoding, FetchState, TableData
+    └── PagesSuite.scala        # 6 tests: title/description for all pages
 ```
 
 This is one of the benefits of headless architecture — because state is just data,
@@ -199,6 +201,7 @@ query the DOM. You call a method, read a signal, and assert.
 | [Laminar](https://laminar.dev/) | 17.2.1 | Reactive UI library for Scala.js |
 | [Waypoint](https://github.com/raquo/Waypoint) | 10.0.0-M1 | Fragment-based URL routing |
 | [scalajs-dom](https://github.com/nicklawls/scala-js-dom) | 2.8.1 | Scala.js DOM API bindings |
+| [Circe](https://circe.github.io/circe/) | 0.14.15 | JSON encoding and decoding (used in FetchPage) |
 | [MUnit](https://scalameta.org/munit/) | 1.1.0 | Testing framework |
 | [sbt](https://www.scala-sbt.org/) | 1.12.5 | Build tool |
 
