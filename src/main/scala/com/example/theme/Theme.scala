@@ -4,6 +4,7 @@ import com.example.headless.components.{Counter, Sidebar, TopBar}
 import com.example.headless.pages.{DashboardPage, MetricsPage, SettingsPage}
 import com.example.theme.coreui.CoreUiTheme
 import com.example.theme.inline.InlineTheme
+import com.example.theme.tailwind.TailwindTheme
 import com.raquo.laminar.api.L._
 
 trait Theme {
@@ -41,7 +42,7 @@ trait Theme {
 }
 
 object Theme {
-  val all: List[Theme] = List(InlineTheme, CoreUiTheme)
+  val all: List[Theme] = List(InlineTheme, CoreUiTheme, TailwindTheme)
   val default: Theme   = InlineTheme
 
   def forKey(key: String): Theme =

@@ -9,8 +9,9 @@ final class TopBar(
     private val onRendererChange: String => Unit
 ) {
   val rendererOptions: List[(String, String)] = List(
-    "inline" -> "Inline Styles",
-    "coreui" -> "CoreUI"
+    "inline"   -> "Inline Styles",
+    "coreui"   -> "CoreUI",
+    "tailwind" -> "Tailwind"
   )
 
   def selectRenderer(value: String): Unit = onRendererChange(value)
