@@ -33,8 +33,8 @@ object TailwindTheme extends Theme {
   protected def renderSidebar(sidebar: Sidebar): HtmlElement = TailwindSidebarView.render(sidebar)
   protected def renderTopbar(topBar: TopBar): HtmlElement    = TailwindTopbarView.render(topBar)
 
-  def dashboardPage(page: DashboardPage, counter: Counter): HtmlElement =
-    TailwindDashboardPageView.render(page, counter, this)
+  def dashboardPage(page: DashboardPage): HtmlElement =
+    TailwindDashboardPageView.render(page, this)
   def metricsPage(page: MetricsPage): HtmlElement =
     TailwindMetricsPageView.render(page)
   def settingsPage(page: SettingsPage): HtmlElement =

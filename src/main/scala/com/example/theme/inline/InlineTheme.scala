@@ -14,8 +14,8 @@ object InlineTheme extends Theme {
   protected def renderSidebar(sidebar: Sidebar): HtmlElement = InlineSidebarView.render(sidebar)
   protected def renderTopbar(topBar: TopBar): HtmlElement    = InlineTopbarView.render(topBar)
 
-  def dashboardPage(page: DashboardPage, counter: Counter): HtmlElement =
-    InlineDashboardPageView.render(page, counter, this)
+  def dashboardPage(page: DashboardPage): HtmlElement =
+    InlineDashboardPageView.render(page, this)
   def metricsPage(page: MetricsPage): HtmlElement =
     InlineMetricsPageView.render(page)
   def settingsPage(page: SettingsPage): HtmlElement =
