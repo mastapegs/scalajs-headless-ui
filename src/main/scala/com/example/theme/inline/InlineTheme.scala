@@ -1,7 +1,7 @@
 package com.example.theme.inline
 
 import com.example.headless.components.{Counter, Sidebar, TopBar}
-import com.example.headless.pages.{DashboardPage, MetricsPage, SettingsPage}
+import com.example.headless.pages.{DashboardPage, FetchPage, MetricsPage, SettingsPage}
 import com.example.theme.Theme
 import com.example.theme.inline.components._
 import com.example.theme.inline.pages._
@@ -20,6 +20,8 @@ object InlineTheme extends Theme {
     InlineMetricsPageView.render(page)
   def settingsPage(page: SettingsPage): HtmlElement =
     InlineSettingsPageView.render(page)
+  protected def renderFetchPage(page: FetchPage): HtmlElement =
+    InlineFetchPageView.render(page)
 
   protected def renderMainContent(content: Signal[HtmlElement]): Mod[HtmlElement] =
     Seq(

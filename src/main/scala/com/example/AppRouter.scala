@@ -1,6 +1,6 @@
 package com.example
 
-import com.example.headless.pages.{DashboardPage, MetricsPage, SettingsPage}
+import com.example.headless.pages.{DashboardPage, FetchPage, MetricsPage, SettingsPage}
 import com.example.theme.Theme
 import com.raquo.laminar.api.L._
 import com.raquo.waypoint._
@@ -25,8 +25,14 @@ object AppRouter {
     basePath = Router.localFragmentBasePath
   )
 
+  private val fetchRoute = Route.static(
+    Page.Fetch,
+    root / "fetch" / endOfSegments,
+    basePath = Router.localFragmentBasePath
+  )
+
   val router = new Router[Page](
-    routes = List(dashboardRoute, metricsRoute, settingsRoute),
+    routes = List(dashboardRoute, metricsRoute, settingsRoute, fetchRoute),
     serializePage = Page.serialize _,
     deserializePage = Page.deserialize _,
     getPageTitle = page => s"${Page.label(page)} | UI Template"
@@ -35,12 +41,14 @@ object AppRouter {
   private val dashboardPage = new DashboardPage()
   private val metricsPage   = new MetricsPage()
   private val settingsPage  = new SettingsPage()
+  private val fetchPage     = new FetchPage()
 
   private def pageContent(page: Page, theme: Theme): HtmlElement =
     page match {
       case Page.Dashboard => theme.dashboardPage(dashboardPage)
       case Page.Metrics   => theme.metricsPage(metricsPage)
       case Page.Settings  => theme.settingsPage(settingsPage)
+      case Page.Fetch     => theme.fetchPage(fetchPage)
     }
 
   def pageContentSignal(theme: Theme): Signal[HtmlElement] =

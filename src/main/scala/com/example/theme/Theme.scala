@@ -1,7 +1,7 @@
 package com.example.theme
 
 import com.example.headless.components.{Counter, Sidebar, TopBar}
-import com.example.headless.pages.{DashboardPage, MetricsPage, SettingsPage}
+import com.example.headless.pages.{DashboardPage, FetchPage, MetricsPage, SettingsPage}
 import com.example.theme.coreui.CoreUiTheme
 import com.example.theme.inline.InlineTheme
 import com.example.theme.tailwind.TailwindTheme
@@ -28,6 +28,15 @@ trait Theme {
   def dashboardPage(page: DashboardPage): HtmlElement
   def metricsPage(page: MetricsPage): HtmlElement
   def settingsPage(page: SettingsPage): HtmlElement
+
+  protected def renderFetchPage(page: FetchPage): HtmlElement
+
+  final def fetchPage(page: FetchPage): HtmlElement =
+    renderFetchPage(page).amend(
+      onMountCallback { ctx =>
+        page.fetchPosts().addObserver(Observer.empty)(ctx.owner)
+      }
+    )
 
   protected def renderMainContent(content: Signal[HtmlElement]): Mod[HtmlElement]
 
