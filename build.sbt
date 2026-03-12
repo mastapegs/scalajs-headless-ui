@@ -9,6 +9,8 @@ ThisBuild / organization      := "com.example"
 ThisBuild / semanticdbEnabled := true
 ThisBuild / semanticdbVersion := "4.15.2"
 
+val circeVersion = "0.14.15"
+
 lazy val root = project
   .in(file("."))
   .enablePlugins(ScalaJSPlugin)
@@ -20,10 +22,13 @@ lazy val root = project
     },
     scalaJSUseMainModuleInitializer := true,
     libraryDependencies ++= Seq(
-      "com.raquo"     %%% "laminar"     % "17.2.1",
-      "com.raquo"     %%% "waypoint"    % "10.0.0-M1",
-      "org.scala-js"  %%% "scalajs-dom" % "2.8.1",
-      "org.scalameta" %%% "munit"       % "1.1.0" % Test
+      "com.raquo"     %%% "laminar"       % "17.2.1",
+      "com.raquo"     %%% "waypoint"      % "10.0.0-M1",
+      "org.scala-js"  %%% "scalajs-dom"   % "2.8.1",
+      "io.circe"      %%% "circe-core"    % circeVersion,
+      "io.circe"      %%% "circe-generic" % circeVersion,
+      "io.circe"      %%% "circe-parser"  % circeVersion,
+      "org.scalameta" %%% "munit"         % "1.1.0" % Test
     ),
     testFrameworks += new TestFramework("munit.Framework")
   )

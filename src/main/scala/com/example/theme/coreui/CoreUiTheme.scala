@@ -1,7 +1,7 @@
 package com.example.theme.coreui
 
 import com.example.headless.components.{Counter, Sidebar, TopBar}
-import com.example.headless.pages.{DashboardPage, MetricsPage, SettingsPage}
+import com.example.headless.pages.{DashboardPage, FetchPage, MetricsPage, SettingsPage}
 import com.example.theme.Theme
 import com.example.theme.coreui.components._
 import com.example.theme.coreui.pages._
@@ -40,6 +40,8 @@ object CoreUiTheme extends Theme {
     CoreUiMetricsPageView.render(page)
   def settingsPage(page: SettingsPage): HtmlElement =
     CoreUiSettingsPageView.render(page)
+  protected def renderFetchPage(page: FetchPage): HtmlElement =
+    CoreUiFetchPageView.render(page)
 
   protected def renderMainContent(content: Signal[HtmlElement]): Mod[HtmlElement] =
     Seq(
