@@ -31,39 +31,6 @@ class FetchPageSuite extends FunSuite {
     assertEquals(signalNow(page.state), FetchState.Loading: FetchState)
   }
 
-  test("setError transitions state to Error") {
-    val page = new FetchPage()
-    page.setError("network failure")
-    assertEquals(signalNow(page.state), FetchState.Error("network failure"): FetchState)
-  }
-
-  test("setSuccess transitions state to Success") {
-    val page  = new FetchPage()
-    val posts = List(Post(1, 1, "hello", "world"))
-    page.setSuccess(posts)
-    assertEquals(signalNow(page.state), FetchState.Success(posts): FetchState)
-  }
-
-  test("setLoading resets state back to Loading") {
-    val page = new FetchPage()
-    page.setError("oops")
-    page.setLoading()
-    assertEquals(signalNow(page.state), FetchState.Loading: FetchState)
-  }
-
-  test("state transitions: Loading -> Success -> Error -> Loading") {
-    val page  = new FetchPage()
-    val posts = List(Post(1, 1, "t", "b"))
-
-    assertEquals(signalNow(page.state), FetchState.Loading: FetchState)
-    page.setSuccess(posts)
-    assertEquals(signalNow(page.state), FetchState.Success(posts): FetchState)
-    page.setError("fail")
-    assertEquals(signalNow(page.state), FetchState.Error("fail"): FetchState)
-    page.setLoading()
-    assertEquals(signalNow(page.state), FetchState.Loading: FetchState)
-  }
-
   // -- Circe decoding tests: prove the JSON → Post pipeline works --
 
   test("Circe decodes a single Post from JSON") {

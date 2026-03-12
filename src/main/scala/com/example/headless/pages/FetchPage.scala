@@ -27,33 +27,23 @@ final class FetchPage {
 
   val state: Signal[FetchState] = stateVar.signal
 
-  /** Returns a lazy EventStream that, when started (subscribed to),
-    * fetches posts from JSONPlaceholder and updates state accordingly.
+  /** Fetches posts from JSONPlaceholder and updates state.
+    * Returns a fire-and-forget EventStream — themes should bind it
+    * (e.g. `fetchPosts() --> Observer.empty`) and observe `state` for results.
     */
-  def fetchPosts(): EventStream[FetchState] = {
+  def fetchPosts(): EventStream[Unit] = {
     stateVar.set(FetchState.Loading)
     FetchStream
       .get("https://jsonplaceholder.typicode.com/posts")
       .map { responseText =>
         decode[List[Post]](responseText) match {
-          case Right(posts) =>
-            val st = FetchState.Success(posts)
-            stateVar.set(st)
-            st
-          case Left(err) =>
-            val st = FetchState.Error(err.getMessage)
-            stateVar.set(st)
-            st
+          case Right(posts) => stateVar.set(FetchState.Success(posts))
+          case Left(err)    => stateVar.set(FetchState.Error(err.getMessage))
         }
       }
       .recover { case err: Throwable =>
-        val st = FetchState.Error(err.getMessage)
-        stateVar.set(st)
-        Some(st)
+        stateVar.set(FetchState.Error(err.getMessage))
+        Some(())
       }
   }
-
-  def setLoading(): Unit                   = stateVar.set(FetchState.Loading)
-  def setError(message: String): Unit      = stateVar.set(FetchState.Error(message))
-  def setSuccess(posts: List[Post]): Unit  = stateVar.set(FetchState.Success(posts))
 }
