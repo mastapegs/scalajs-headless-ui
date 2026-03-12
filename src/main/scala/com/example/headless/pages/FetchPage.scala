@@ -13,11 +13,17 @@ sealed trait FetchState
 object FetchState {
   case object Loading                         extends FetchState
   final case class Error(message: String)     extends FetchState
-  final case class Success(posts: List[Post]) extends FetchState
+  final case class Success(posts: List[Post], tableData: TableData) extends FetchState
 }
 
 /** Table-ready representation of post data: column headers and string rows. */
 final case class TableData(headers: List[String], rows: List[List[String]])
+object TableData {
+  def fromPosts(posts: List[Post]): TableData = TableData(
+    headers = List("ID", "User ID", "Title", "Body"),
+    rows = posts.map(p => List(p.id.toString, p.userId.toString, p.title, p.body))
+  )
+}
 
 /** Headless fetch showcase page: manages async data fetching state and logic, no rendering. */
 final class FetchPage {
@@ -30,18 +36,6 @@ final class FetchPage {
 
   val state: Signal[FetchState] = stateVar.signal
 
-  /** Derived table data: transforms successful post list into headers + rows for rendering. */
-  val tableData: Signal[Option[TableData]] = state.map {
-    case FetchState.Success(posts) =>
-      Some(
-        TableData(
-          headers = List("ID", "User ID", "Title", "Body"),
-          rows = posts.map(p => List(p.id.toString, p.userId.toString, p.title, p.body))
-        )
-      )
-    case _ => None
-  }
-
   /** Fetches posts from JSONPlaceholder and updates state.
     * Returns a fire-and-forget EventStream — themes should bind it
     * (e.g. `fetchPosts() --> Observer.empty`) and observe `state` for results.
@@ -52,7 +46,7 @@ final class FetchPage {
       .get("https://jsonplaceholder.typicode.com/posts")
       .map { responseText =>
         decode[List[Post]](responseText) match {
-          case Right(posts) => stateVar.set(FetchState.Success(posts))
+          case Right(posts) => stateVar.set(FetchState.Success(posts, TableData.fromPosts(posts)))
           case Left(err)    => stateVar.set(FetchState.Error(err.getMessage))
         }
       }

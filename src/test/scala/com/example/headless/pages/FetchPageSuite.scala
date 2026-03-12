@@ -67,30 +67,26 @@ class FetchPageSuite extends FunSuite {
     assertEquals(result, Right(List.empty[Post]))
   }
 
-  // -- tableData signal tests --
+  // -- TableData tests --
 
-  test("tableData is None in initial Loading state") {
-    val page = new FetchPage()
-    assertEquals(signalNow(page.tableData), None)
-  }
-
-  test("tableData contains correct headers and rows after Success") {
-    val page  = new FetchPage()
+  test("TableData.fromPosts transforms posts correctly") {
     val posts = List(Post(1, 10, "Hello", "World"), Post(2, 20, "Foo", "Bar"))
-    page.setSuccess(posts)
-
-    val result = signalNow(page.tableData)
-    assert(result.isDefined)
-    val td = result.get
+    val td    = TableData.fromPosts(posts)
     assertEquals(td.headers, List("ID", "User ID", "Title", "Body"))
     assertEquals(td.rows.length, 2)
     assertEquals(td.rows.head, List("10", "1", "Hello", "World"))
     assertEquals(td.rows(1), List("20", "2", "Foo", "Bar"))
   }
 
-  test("tableData is None after Error") {
-    val page = new FetchPage()
-    page.setError("something went wrong")
-    assertEquals(signalNow(page.tableData), None)
+  test("Success state includes tableData with correct headers") {
+    val posts   = List(Post(1, 1, "t", "b"))
+    val success = FetchState.Success(posts, TableData.fromPosts(posts))
+    assertEquals(success.tableData.headers, List("ID", "User ID", "Title", "Body"))
+  }
+
+  test("Success state includes tableData with correct rows") {
+    val posts   = List(Post(3, 42, "title", "body"))
+    val success = FetchState.Success(posts, TableData.fromPosts(posts))
+    assertEquals(success.tableData.rows, List(List("42", "3", "title", "body")))
   }
 }
