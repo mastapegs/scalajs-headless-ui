@@ -11,8 +11,8 @@ final case class Post(userId: Int, id: Int, title: String, body: String)
 /** ADT representing the three states of an async fetch operation. */
 sealed trait FetchState
 object FetchState {
-  case object Loading                         extends FetchState
-  final case class Error(message: String)     extends FetchState
+  case object Loading                                               extends FetchState
+  final case class Error(message: String)                           extends FetchState
   final case class Success(posts: List[Post], tableData: TableData) extends FetchState
 }
 
@@ -36,9 +36,8 @@ final class FetchPage {
 
   val state: Signal[FetchState] = stateVar.signal
 
-  /** Fetches posts from JSONPlaceholder and updates state.
-    * Returns a fire-and-forget EventStream — themes should bind it
-    * (e.g. `fetchPosts() --> Observer.empty`) and observe `state` for results.
+  /** Fetches posts from JSONPlaceholder and updates state. Returns a fire-and-forget EventStream — themes should bind
+    * it (e.g. `fetchPosts() --> Observer.empty`) and observe `state` for results.
     */
   def fetchPosts(): EventStream[Unit] = {
     stateVar.set(FetchState.Loading)
