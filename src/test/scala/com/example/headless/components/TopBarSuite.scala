@@ -27,11 +27,11 @@ class TopBarSuite extends FunSuite {
     assertEquals(topBar.brandName, "MyApp")
   }
 
-  test("rendererOptions contains inline and coreui") {
+  test("rendererOptions contains inline, coreui, and tailwind") {
     val topBar = makeTopBar()
     assertEquals(
       topBar.rendererOptions,
-      List("inline" -> "Inline Styles", "coreui" -> "CoreUI")
+      List("inline" -> "Inline Styles", "coreui" -> "CoreUI", "tailwind" -> "Tailwind")
     )
   }
 
