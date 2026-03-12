@@ -36,12 +36,6 @@ object App {
 
   private def appElement(): HtmlElement =
     div(
-      child <-- theme.signal.map { currentTheme =>
-        currentTheme.appLayout(
-          topbar = currentTheme.topbar(topBar),
-          sidebar = currentTheme.sidebar(sidebar),
-          mainContent = currentTheme.mainContent(AppRouter.pageContentSignal(currentTheme))
-        )
-      }
+      child <-- theme.signal.map(_.appLayout(topBar, sidebar))
     )
 }

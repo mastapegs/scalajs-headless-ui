@@ -1,5 +1,6 @@
 package com.example.theme
 
+import com.example.AppRouter
 import com.example.headless.components.{Counter, Sidebar, TopBar}
 import com.example.headless.pages.{DashboardPage, FetchPage, MetricsPage, SettingsPage}
 import com.example.theme.coreui.CoreUiTheme
@@ -43,11 +44,14 @@ trait Theme {
   final def mainContent(content: Signal[HtmlElement]): HtmlElement =
     mainTag(aria.label := "Page content", renderMainContent(content))
 
-  def appLayout(
+  protected def renderAppLayout(
       topbar: HtmlElement,
       sidebar: HtmlElement,
       mainContent: HtmlElement
   ): HtmlElement
+
+  final def appLayout(topbar: TopBar, sidebar: Sidebar): HtmlElement =
+    renderAppLayout(this.topbar(topbar), this.sidebar(sidebar), this.mainContent(AppRouter.pageContentSignal(this)))
 }
 
 object Theme {

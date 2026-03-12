@@ -48,7 +48,7 @@ object TailwindTheme extends Theme {
       child <-- content
     )
 
-  def appLayout(
+  def renderAppLayout(
       topbarEl: HtmlElement,
       sidebarEl: HtmlElement,
       mainContentEl: HtmlElement

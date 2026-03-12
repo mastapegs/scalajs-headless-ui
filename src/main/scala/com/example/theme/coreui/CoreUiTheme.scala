@@ -49,7 +49,7 @@ object CoreUiTheme extends Theme {
       child <-- content
     )
 
-  def appLayout(
+  def renderAppLayout(
       topbarEl: HtmlElement,
       sidebarEl: HtmlElement,
       mainContentEl: HtmlElement
