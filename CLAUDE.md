@@ -12,7 +12,9 @@ Scala.js proof-of-concept demonstrating the **headless UI pattern** — business
 - **UI Framework:** [Laminar](https://laminar.dev/) 17.2.1 (reactive DOM library)
 - **Routing:** Waypoint 10.0.0-M1 (fragment-based URL routing)
 - **DOM:** scalajs-dom 2.8.1
+- **JSON:** [Circe](https://circe.github.io/circe/) 0.14.15 (circe-core, circe-generic, circe-parser) — used for API response decoding in FetchPage
 - **Build Tool:** SBT 1.12.5
+- **SBT Plugins:** sbt-scalajs 1.20.2, sbt-scalafmt 2.5.4, sbt-scalafix 0.14.2
 - **Module Output:** ESModules with small module splitting
 - **No npm/Node.js dependencies** — pure SBT/Scala.js build
 
@@ -53,7 +55,7 @@ sbt ~fastLinkJS
 - **Framework:** [MUnit](https://scalameta.org/munit/) 1.1.0 (Scala.js compatible)
 - **Run tests:** `sbt test`
 - **Test location:** `src/test/scala/com/example/headless/`
-- **Coverage:** All headless components (`Counter`, `Sidebar`, `TopBar`) and page containers (`DashboardPage`, `MetricsPage`, `SettingsPage`) — 23 tests total
+- **Coverage:** All headless components (`Counter`, `Sidebar`, `TopBar`) and page containers (`DashboardPage`, `MetricsPage`, `SettingsPage`, `FetchPage`) — 34 tests total
 - Tests focus on **state and behavior only** — no DOM or rendering tests
 - Tests use `ManualOwner` from Airstream to synchronously read `Signal` values
 
@@ -64,6 +66,7 @@ src/test/scala/com/example/headless/
 │   ├── SidebarSuite.scala      # 8 tests: collapse toggle, navigation, isActive
 │   └── TopBarSuite.scala       # 4 tests: brand, renderer options, selection
 └── pages/
+    ├── FetchPageSuite.scala    # 11 tests: Circe decoding, FetchState, TableData
     └── PagesSuite.scala        # 6 tests: title/description for all 3 pages
 ```
 
@@ -73,7 +76,7 @@ src/test/scala/com/example/headless/
 src/main/scala/com/example/
 ├── App.scala              # Entry point, theme switching, main composition
 ├── AppRouter.scala        # Fragment-based URL routing (Waypoint), page content signal
-├── Page.scala             # Sealed trait: Dashboard | Metrics | Settings
+├── Page.scala             # Sealed trait: Dashboard | Metrics | Settings | Fetch
 ├── headless/
 │   ├── components/        # Pure state/logic (no rendering)
 │   │   ├── Counter.scala  # Int state + increment()
@@ -81,6 +84,7 @@ src/main/scala/com/example/
 │   │   └── TopBar.scala   # Brand name, renderer selection (inline/coreui/tailwind)
 │   └── pages/             # Page-level state containers
 │       ├── DashboardPage.scala
+│       ├── FetchPage.scala    # Async data fetching with loading/error/success states
 │       ├── MetricsPage.scala
 │       └── SettingsPage.scala
 └── theme/
@@ -88,15 +92,15 @@ src/main/scala/com/example/
     ├── inline/            # CSS-in-Scala theme (no external deps)
     │   ├── InlineTheme.scala
     │   ├── components/    # InlineCounterView, InlineSidebarView, InlineTopbarView
-    │   └── pages/         # InlineDashboardPageView, etc.
+    │   └── pages/         # InlineDashboardPageView, InlineFetchPageView, etc.
     ├── coreui/            # CoreUI CSS framework theme (v5.3.1 via CDN)
     │   ├── CoreUiTheme.scala
     │   ├── components/    # CoreUiCounterView, CoreUiSidebarView, CoreUiTopbarView
-    │   └── pages/         # CoreUiDashboardPageView, etc.
+    │   └── pages/         # CoreUiDashboardPageView, CoreUiFetchPageView, etc.
     └── tailwind/          # Tailwind CSS theme (v4 via CDN)
         ├── TailwindTheme.scala
         ├── components/    # TailwindCounterView, TailwindSidebarView, TailwindTopbarView
-        └── pages/         # TailwindDashboardPageView, etc.
+        └── pages/         # TailwindDashboardPageView, TailwindFetchPageView, etc.
 ```
 
 ## Architecture & Key Patterns
@@ -113,7 +117,7 @@ src/main/scala/com/example/
 - Themes are swappable at runtime without touching business logic
 - `Theme.all` lists all available themes; `Theme.forKey(key)` resolves by string key
 - `onActivate()` / `onDeactivate()` lifecycle hooks for CDN resource injection (CoreUI stylesheet, Tailwind script)
-- ARIA accessibility: `topbar()`, `sidebar()`, and `mainContent()` are final methods that wrap rendered output with `aria.label` attributes
+- ARIA accessibility: `topbar()`, `sidebar()`, `mainContent()`, and `fetchPage()` are final methods that wrap rendered output with `aria.label` attributes or lifecycle hooks
 
 ### Three Theme Implementations
 | Theme | Key | Styling Approach | External Dependencies |
@@ -132,7 +136,7 @@ src/main/scala/com/example/
 ### Naming Conventions
 - Headless components: simple names (`Counter`, `Sidebar`, `TopBar`)
 - Theme views: prefixed by theme name (`InlineSidebarView`, `CoreUiCounterView`, `TailwindTopbarView`)
-- Pages: suffixed with `Page` (`DashboardPage`, `MetricsPage`)
+- Pages: suffixed with `Page` (`DashboardPage`, `MetricsPage`, `FetchPage`)
 - Package structure mirrors the headless/theme separation
 
 ## Code Style
