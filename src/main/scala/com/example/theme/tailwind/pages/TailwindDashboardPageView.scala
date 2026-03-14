@@ -11,7 +11,7 @@ object TailwindDashboardPageView {
     p(page.description),
     div(
       cls("mt-4 flex flex-col gap-4"),
-      page.counters.map(theme.counter): _*
+      page.counters.map(c => theme.counter(c))
     )
   )
 }

@@ -13,7 +13,7 @@ object InlineDashboardPageView {
       display.flex,
       flexDirection.column,
       gap("16px"),
-      page.counters.map(theme.counter): _*
+      page.counters.map(c => theme.counter(c))
     )
   )
 }

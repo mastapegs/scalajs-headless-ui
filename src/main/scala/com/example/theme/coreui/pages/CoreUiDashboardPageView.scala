@@ -11,7 +11,7 @@ object CoreUiDashboardPageView {
     p(page.description),
     div(
       cls("mt-4 d-flex flex-column gap-3"),
-      page.counters.map(theme.counter): _*
+      page.counters.map(c => theme.counter(c))
     )
   )
 }
