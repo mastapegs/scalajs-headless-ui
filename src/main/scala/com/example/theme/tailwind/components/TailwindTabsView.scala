@@ -19,7 +19,7 @@ object TailwindTabsView {
       cls("flex border-b border-gray-200"),
       tabs.tabs.zipWithIndex.map { case (tab, idx) =>
         button(
-          cls("px-5 py-3 text-sm font-medium transition-colors duration-150 -mb-px focus:outline-none"),
+          cls("px-6 py-3.5 text-sm font-medium transition-colors duration-150 -mb-px focus:outline-none"),
           cls <-- tabs
             .isSelected(idx)
             .map(
@@ -33,7 +33,7 @@ object TailwindTabsView {
     ),
     div(
       cls(
-        "p-5 bg-white border border-t-0 border-gray-200 rounded-b-xl text-sm text-gray-700 leading-relaxed"
+        "p-6 bg-white border border-t-0 border-gray-200 rounded-b-xl text-sm text-gray-700 leading-relaxed"
       ),
       child.text <-- tabs.selectedTab.map(_.content)
     )

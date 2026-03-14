@@ -15,10 +15,10 @@ import com.raquo.laminar.api.L._
 object TailwindDashboardPageView {
   def render(page: DashboardPage, theme: Theme): HtmlElement = div(
     cls("max-w-5xl mx-auto"),
-    h1(cls("text-2xl font-bold text-gray-900 mb-1"), page.title),
-    p(cls("text-gray-500 mb-6"), page.description),
+    h1(cls("text-2xl font-bold text-gray-900 mb-2"), page.title),
+    p(cls("text-gray-500 mb-8"), page.description),
     div(
-      cls("mt-2 flex flex-col gap-4"),
+      cls("flex flex-col gap-5"),
       page.counters.map(c => theme.counter(c))
     )
   )

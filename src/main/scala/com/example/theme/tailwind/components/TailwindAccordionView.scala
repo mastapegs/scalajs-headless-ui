@@ -22,7 +22,7 @@ object TailwindAccordionView {
         cls("bg-white"),
         button(
           cls(
-            "flex justify-between items-center w-full px-5 py-4 text-left text-sm font-semibold text-gray-800 hover:bg-gray-50 transition-colors duration-150 focus:outline-none focus:bg-gray-50"
+            "flex justify-between items-center w-full px-6 py-5 text-left text-sm font-semibold text-gray-800 hover:bg-gray-50 transition-colors duration-150 focus:outline-none focus:bg-gray-50"
           ),
           span(item.title),
           span(
@@ -36,7 +36,7 @@ object TailwindAccordionView {
           cls("overflow-hidden transition-all duration-300 ease-in-out"),
           maxHeight <-- accordion.isOpen(item.key).map(if (_) "200px" else "0"),
           div(
-            cls("px-5 py-4 text-sm text-gray-600 leading-relaxed bg-gray-50/50"),
+            cls("px-6 py-5 text-sm text-gray-600 leading-relaxed bg-gray-50/50"),
             item.content
           )
         )

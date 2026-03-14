@@ -15,11 +15,11 @@ import com.raquo.laminar.api.L._
 object TailwindCounterView {
   def render(counter: Counter): HtmlElement = div(
     cls(
-      "bg-white rounded-xl shadow-sm border border-gray-200/60 p-6 flex items-center gap-5 hover:shadow-md transition-shadow duration-200"
+      "bg-white rounded-xl shadow-sm border border-gray-200/60 p-7 flex items-center gap-6 hover:shadow-md transition-shadow duration-200"
     ),
     div(
       cls("flex-1 min-w-0"),
-      div(cls("text-sm font-medium text-gray-500 mb-1"), counter.label),
+      div(cls("text-sm font-medium text-gray-500 mb-2"), counter.label),
       div(
         cls("text-3xl font-bold text-gray-900 tabular-nums"),
         aria.live   := "polite",

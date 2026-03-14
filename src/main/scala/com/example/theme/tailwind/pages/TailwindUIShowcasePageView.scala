@@ -18,16 +18,16 @@ object TailwindUIShowcasePageView {
 
   def render(page: UIShowcasePage, theme: Theme): HtmlElement = div(
     cls("max-w-5xl mx-auto"),
-    h1(cls("text-2xl font-bold text-gray-900 mb-1"), page.title),
-    p(cls("text-gray-500 mb-8"), page.description),
+    h1(cls("text-2xl font-bold text-gray-900 mb-2"), page.title),
+    p(cls("text-gray-500 mb-10"), page.description),
     div(
-      cls("space-y-6"),
+      cls("space-y-8"),
       renderSection("Tabs", theme.tabs(page.tabs)),
       renderSection("Accordion", theme.accordion(page.accordion)),
       renderSection(
         "Toggle / Switch",
         div(
-          cls("flex flex-col gap-4"),
+          cls("flex flex-col gap-6"),
           theme.toggle(page.toggleDarkMode),
           theme.toggle(page.toggleNotifications)
         )
@@ -46,9 +46,9 @@ object TailwindUIShowcasePageView {
     cls("bg-white rounded-xl shadow-sm border border-gray-200/60 overflow-hidden"),
     extraMod,
     div(
-      cls("px-6 py-4 border-b border-gray-100 bg-gray-50/50"),
+      cls("px-7 py-5 border-b border-gray-100 bg-gray-50/50"),
       h3(cls("text-base font-semibold text-gray-800"), title)
     ),
-    div(cls("p-6"), content)
+    div(cls("p-7"), content)
   )
 }

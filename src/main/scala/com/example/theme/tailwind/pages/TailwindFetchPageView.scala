@@ -17,8 +17,8 @@ import com.raquo.laminar.api.L._
 object TailwindFetchPageView {
   def render(page: FetchPage): HtmlElement = div(
     cls("max-w-5xl mx-auto"),
-    h1(cls("text-2xl font-bold text-gray-900 mb-1"), page.title),
-    p(cls("text-gray-500 mb-6"), page.description),
+    h1(cls("text-2xl font-bold text-gray-900 mb-2"), page.title),
+    p(cls("text-gray-500 mb-8"), page.description),
     div(
       child <-- page.state.map {
         case FetchState.Loading =>
@@ -53,7 +53,7 @@ object TailwindFetchPageView {
               td.headers.map(h =>
                 th(
                   cls(
-                    "px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider"
+                    "px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider"
                   ),
                   h
                 )

@@ -12,10 +12,10 @@ import com.raquo.laminar.api.L._
 object TailwindMetricsPageView {
   def render(page: MetricsPage): HtmlElement = div(
     cls("max-w-5xl mx-auto"),
-    h1(cls("text-2xl font-bold text-gray-900 mb-1"), page.title),
-    p(cls("text-gray-500 mb-6"), page.description),
+    h1(cls("text-2xl font-bold text-gray-900 mb-2"), page.title),
+    p(cls("text-gray-500 mb-8"), page.description),
     div(
-      cls("bg-white rounded-xl shadow-sm border border-gray-200/60 p-6"),
+      cls("bg-white rounded-xl shadow-sm border border-gray-200/60 p-7"),
       p(cls("text-gray-600 text-sm leading-relaxed"), "Metrics content will appear here.")
     )
   )

@@ -19,7 +19,7 @@ object TailwindTagsInputView {
   def render(tagsInput: TagsInput): HtmlElement = div(
     div(
       cls(
-        "flex flex-wrap gap-2 items-center p-2.5 border border-gray-300 rounded-xl min-h-[44px] bg-white transition-all duration-200 focus-within:ring-2 focus-within:ring-indigo-500 focus-within:border-indigo-500"
+        "flex flex-wrap gap-2.5 items-center p-3 border border-gray-300 rounded-xl min-h-[48px] bg-white transition-all duration-200 focus-within:ring-2 focus-within:ring-indigo-500 focus-within:border-indigo-500"
       ),
       children <-- tagsInput.tags.map(_.map { tag =>
         span(
@@ -56,7 +56,7 @@ object TailwindTagsInputView {
       )
     ),
     p(
-      cls("text-xs text-gray-400 mt-1.5 ml-1"),
+      cls("text-xs text-gray-400 mt-2 ml-1"),
       child.text <-- tagsInput.tagCount.map(c => s"$c tag(s) added")
     )
   )

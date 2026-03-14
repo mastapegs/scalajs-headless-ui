@@ -15,7 +15,7 @@ import com.raquo.laminar.api.L._
   */
 object TailwindTooltipView {
   def render(tooltip: Tooltip): HtmlElement = div(
-    cls("flex items-center gap-4"),
+    cls("flex items-center gap-5"),
     div(
       cls("relative inline-block"),
       button(

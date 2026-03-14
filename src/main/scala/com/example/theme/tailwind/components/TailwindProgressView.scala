@@ -16,7 +16,7 @@ import com.raquo.laminar.api.L._
   */
 object TailwindProgressView {
   def render(progress: Progress): HtmlElement = div(
-    cls("space-y-3"),
+    cls("space-y-4"),
     div(
       cls("flex justify-between items-center"),
       span(cls("text-sm font-semibold text-gray-700"), progress.label),
@@ -36,7 +36,7 @@ object TailwindProgressView {
       )
     ),
     div(
-      cls("flex gap-2 pt-1"),
+      cls("flex gap-3 pt-1"),
       button(
         cls(
           "inline-flex items-center px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white text-xs font-medium rounded-lg transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
