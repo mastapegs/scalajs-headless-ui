@@ -59,15 +59,15 @@ object TailwindTheme extends Theme {
     if (existing != null) existing.parentNode.removeChild(existing)
   }
 
-  def card(card: Card, content: HtmlElement): HtmlElement    = TailwindCardView.render(card, content)
-  def counter(counter: Counter): HtmlElement                 = TailwindCounterView.render(counter)
-  def tabs(tabs: Tabs): HtmlElement                          = TailwindTabsView.render(tabs)
-  def accordion(accordion: Accordion): HtmlElement           = TailwindAccordionView.render(accordion)
-  def toggle(toggle: Toggle): HtmlElement                    = TailwindToggleView.render(toggle)
-  def progress(progress: Progress): HtmlElement              = TailwindProgressView.render(progress)
-  def tagsInput(tagsInput: TagsInput): HtmlElement           = TailwindTagsInputView.render(tagsInput)
-  def tooltip(tooltip: Tooltip): HtmlElement                 = TailwindTooltipView.render(tooltip)
-  protected def renderSidebar(sidebar: Sidebar): HtmlElement = TailwindSidebarView.render(sidebar)
+  override def card(card: Card, content: HtmlElement): HtmlElement = TailwindCardView.render(card, content)
+  def counter(counter: Counter): HtmlElement                       = TailwindCounterView.render(counter)
+  def tabs(tabs: Tabs): HtmlElement                                = TailwindTabsView.render(tabs)
+  def accordion(accordion: Accordion): HtmlElement                 = TailwindAccordionView.render(accordion)
+  def toggle(toggle: Toggle): HtmlElement                          = TailwindToggleView.render(toggle)
+  def progress(progress: Progress): HtmlElement                    = TailwindProgressView.render(progress)
+  def tagsInput(tagsInput: TagsInput): HtmlElement                 = TailwindTagsInputView.render(tagsInput)
+  def tooltip(tooltip: Tooltip): HtmlElement                       = TailwindTooltipView.render(tooltip)
+  protected def renderSidebar(sidebar: Sidebar): HtmlElement       = TailwindSidebarView.render(sidebar)
   protected def renderTopbar(topBar: TopBar, sidebar: Sidebar): HtmlElement =
     TailwindTopbarView.render(topBar, () => sidebar.toggleCollapse())
 
