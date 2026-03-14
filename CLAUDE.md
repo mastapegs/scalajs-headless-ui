@@ -55,19 +55,26 @@ sbt ~fastLinkJS
 - **Framework:** [MUnit](https://scalameta.org/munit/) 1.1.0 (Scala.js compatible)
 - **Run tests:** `sbt test`
 - **Test location:** `src/test/scala/com/example/headless/`
-- **Coverage:** All headless components (`Counter`, `Sidebar`, `TopBar`) and page containers (`DashboardPage`, `MetricsPage`, `SettingsPage`, `FetchPage`) — 34 tests total
+- **Coverage:** All headless components (`Counter`, `Sidebar`, `TopBar`, `Tabs`, `Accordion`, `Toggle`, `Progress`, `TagsInput`, `Tooltip`) and page containers (`DashboardPage`, `MetricsPage`, `SettingsPage`, `FetchPage`, `UIShowcasePage`) — 90+ tests total
 - Tests focus on **state and behavior only** — no DOM or rendering tests
 - Tests use `ManualOwner` from Airstream to synchronously read `Signal` values
 
 ```
 src/test/scala/com/example/headless/
 ├── components/
+│   ├── AccordionSuite.scala    # 6 tests: open/close, single/multi mode
 │   ├── CounterSuite.scala      # 5 tests: init, custom init, increment, accumulation
+│   ├── ProgressSuite.scala     # 7 tests: value, percentage, bounds, reset
 │   ├── SidebarSuite.scala      # 8 tests: collapse toggle, navigation, isActive
+│   ├── TabsSuite.scala         # 8 tests: selection, navigation, wrapping
+│   ├── TagsInputSuite.scala    # 9 tests: add, remove, duplicates, max tags
+│   ├── ToggleSuite.scala       # 5 tests: toggle, setOn, setOff
+│   ├── TooltipSuite.scala      # 4 tests: show, hide, text, placement
 │   └── TopBarSuite.scala       # 4 tests: brand, renderer options, selection
 └── pages/
     ├── FetchPageSuite.scala    # 11 tests: Circe decoding, FetchState, TableData
-    └── PagesSuite.scala        # 6 tests: title/description for all 3 pages
+    ├── PagesSuite.scala        # 8 tests: title/description for all pages
+    └── UIShowcasePageSuite.scala  # 10 tests: composition, independent state
 ```
 
 ## Project Structure
@@ -76,17 +83,24 @@ src/test/scala/com/example/headless/
 src/main/scala/com/example/
 ├── App.scala              # Entry point, theme switching, main composition
 ├── AppRouter.scala        # Fragment-based URL routing (Waypoint), page content signal
-├── Page.scala             # Sealed trait: Dashboard | Metrics | Settings | Fetch
+├── Page.scala             # Sealed trait: Dashboard | Metrics | Settings | Fetch | UIShowcase
 ├── headless/
 │   ├── components/        # Pure state/logic (no rendering)
+│   │   ├── Accordion.scala  # Expandable sections with single/multi mode
 │   │   ├── Counter.scala  # Int state + increment()
+│   │   ├── Progress.scala # Bounded value with percentage computation
 │   │   ├── Sidebar.scala  # Collapsed state, current page, navigation
+│   │   ├── Tabs.scala     # Tab selection with keyboard navigation
+│   │   ├── TagsInput.scala # Tag list with add/remove/validation
+│   │   ├── Toggle.scala   # Boolean on/off switch
+│   │   ├── Tooltip.scala  # Hover-driven visibility state
 │   │   └── TopBar.scala   # Brand name, renderer selection (inline/coreui/tailwind)
 │   └── pages/             # Page-level state containers
 │       ├── DashboardPage.scala
 │       ├── FetchPage.scala    # Async data fetching with loading/error/success states
 │       ├── MetricsPage.scala
-│       └── SettingsPage.scala
+│       ├── SettingsPage.scala
+│       └── UIShowcasePage.scala # Composes all headless components as a showcase
 └── theme/
     ├── Theme.scala        # Trait defining render contract + ARIA accessibility
     ├── inline/            # CSS-in-Scala theme (no external deps)

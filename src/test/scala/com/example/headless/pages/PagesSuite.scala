@@ -71,4 +71,14 @@ class PagesSuite extends FunSuite {
     val page = new SettingsPage()
     assertEquals(page.description, "Application settings and preferences.")
   }
+
+  test("UIShowcasePage has correct title") {
+    val page = new UIShowcasePage()
+    assertEquals(page.title, "UI Showcase")
+  }
+
+  test("UIShowcasePage has correct description") {
+    val page = new UIShowcasePage()
+    assert(page.description.contains("headless UI components"))
+  }
 }

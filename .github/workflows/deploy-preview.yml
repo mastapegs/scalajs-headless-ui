@@ -33,12 +33,12 @@ jobs:
         run: sbt test
 
       - name: Build Scala.js
-        run: sbt fastLinkJS
+        run: sbt fullLinkJS
 
       - name: Assemble site
         run: |
           mkdir -p dist/assets
-          cp target/scala-2.13/ui-template-sandbox-fastopt/*.js dist/assets/
+          cp target/scala-2.13/ui-template-sandbox-opt/*.js dist/assets/
           sed 's|./target/scala-2.13/ui-template-sandbox-fastopt/main.js|./assets/main.js|' index.html > dist/index.html
 
       - name: Deploy preview to Netlify

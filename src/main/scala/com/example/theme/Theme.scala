@@ -2,7 +2,7 @@ package com.example.theme
 
 import com.example.AppRouter
 import com.example.headless.components.{Counter, Sidebar, TopBar}
-import com.example.headless.pages.{DashboardPage, FetchPage, MetricsPage, SettingsPage}
+import com.example.headless.pages.{DashboardPage, FetchPage, MetricsPage, SettingsPage, UIShowcasePage}
 import com.example.theme.coreui.CoreUiTheme
 import com.example.theme.inline.InlineTheme
 import com.example.theme.tailwind.TailwindTheme
@@ -29,6 +29,9 @@ trait Theme {
   def dashboardPage(page: DashboardPage): HtmlElement
   def metricsPage(page: MetricsPage): HtmlElement
   def settingsPage(page: SettingsPage): HtmlElement
+
+  def uiShowcasePage(page: UIShowcasePage): HtmlElement =
+    div(h1(page.title), p(page.description))
 
   protected def renderFetchPage(page: FetchPage): HtmlElement
 
