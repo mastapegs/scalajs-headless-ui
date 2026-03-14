@@ -18,7 +18,7 @@ object TailwindDashboardPageView {
     h1(cls("text-2xl font-bold text-gray-900 mb-2"), page.title),
     p(cls("text-gray-500 mb-8"), page.description),
     div(
-      cls("flex flex-col gap-5"),
+      cls("flex flex-col gap-6"),
       page.counters.map(c => theme.counter(c))
     )
   )

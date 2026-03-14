@@ -7,9 +7,10 @@ import com.raquo.laminar.api.L._
 /** Tailwind UI showcase page that presents every headless component inside a consistent card layout.
   *
   * '''Design techniques:'''
-  *   - '''Section cards''' — each component demo is wrapped in a `bg-white rounded-xl shadow-sm border` card with a
+  *   - '''Section cards''' — each component demo is wrapped in a `bg-white rounded-xl shadow-md border` card with a
   *     subtle header bar (`border-b bg-gray-50/50`) creating a two-tone card look
-  *   - '''Consistent vertical rhythm''' — `space-y-6` between sections and `p-6` inside each card keeps spacing uniform
+  *   - '''Flex-col gap layout''' — uses `flex flex-col gap-8` instead of `space-y-*` to avoid Tailwind v4 margin
+  *     collapsing issues with the `space-y` utility
   *   - '''Overflow visible''' on the Tooltip section so the tooltip popup can extend above the card boundary
   *   - '''Page header''' uses `text-2xl font-bold text-gray-900` with a muted `text-gray-500` description, matching the
   *     global page-heading convention
@@ -21,7 +22,7 @@ object TailwindUIShowcasePageView {
     h1(cls("text-2xl font-bold text-gray-900 mb-2"), page.title),
     p(cls("text-gray-500 mb-10"), page.description),
     div(
-      cls("space-y-8"),
+      cls("flex flex-col gap-8"),
       renderSection("Tabs", theme.tabs(page.tabs)),
       renderSection("Accordion", theme.accordion(page.accordion)),
       renderSection(
@@ -43,10 +44,10 @@ object TailwindUIShowcasePageView {
       content: HtmlElement,
       extraMod: Mod[HtmlElement] = emptyMod
   ): HtmlElement = div(
-    cls("bg-white rounded-xl shadow-sm border border-gray-200/60 overflow-hidden"),
+    cls("bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden"),
     extraMod,
     div(
-      cls("px-7 py-5 border-b border-gray-100 bg-gray-50/50"),
+      cls("px-7 py-5 border-b border-gray-200 bg-gray-50/80"),
       h3(cls("text-base font-semibold text-gray-800"), title)
     ),
     div(cls("p-7"), content)

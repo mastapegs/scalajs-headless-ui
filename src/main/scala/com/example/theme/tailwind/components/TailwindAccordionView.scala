@@ -16,7 +16,7 @@ import com.raquo.laminar.api.L._
   */
 object TailwindAccordionView {
   def render(accordion: Accordion): HtmlElement = div(
-    cls("border border-gray-200/60 rounded-xl shadow-sm overflow-hidden divide-y divide-gray-100"),
+    cls("border border-gray-200 rounded-xl shadow-md overflow-hidden divide-y divide-gray-200"),
     accordion.items.map { item =>
       div(
         cls("bg-white"),

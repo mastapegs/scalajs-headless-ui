@@ -15,7 +15,7 @@ object TailwindSettingsPageView {
     h1(cls("text-2xl font-bold text-gray-900 mb-2"), page.title),
     p(cls("text-gray-500 mb-8"), page.description),
     div(
-      cls("bg-white rounded-xl shadow-sm border border-gray-200/60 p-7"),
+      cls("bg-white rounded-xl shadow-md border border-gray-200 p-7"),
       p(cls("text-gray-600 text-sm leading-relaxed"), "Settings content will appear here.")
     )
   )

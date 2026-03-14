@@ -42,7 +42,7 @@ object TailwindFetchPageView {
 
   private def renderTable(td: TableData): HtmlElement =
     div(
-      cls("bg-white rounded-xl shadow-sm border border-gray-200/60 overflow-hidden"),
+      cls("bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden"),
       div(
         cls("overflow-x-auto"),
         table(

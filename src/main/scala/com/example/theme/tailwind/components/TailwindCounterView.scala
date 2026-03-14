@@ -15,7 +15,7 @@ import com.raquo.laminar.api.L._
 object TailwindCounterView {
   def render(counter: Counter): HtmlElement = div(
     cls(
-      "bg-white rounded-xl shadow-sm border border-gray-200/60 p-7 flex items-center gap-6 hover:shadow-md transition-shadow duration-200"
+      "bg-white rounded-xl shadow-md border border-gray-200 p-7 flex items-center gap-6 hover:shadow-lg transition-shadow duration-200"
     ),
     div(
       cls("flex-1 min-w-0"),
