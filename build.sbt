@@ -21,6 +21,7 @@ lazy val root = project
         .withModuleSplitStyle(ModuleSplitStyle.SmallModulesFor(List("com.example")))
     },
     scalaJSUseMainModuleInitializer := true,
+    scalacOptions ++= Seq("-Xfatal-warnings"),
     libraryDependencies ++= Seq(
       "com.raquo"     %%% "laminar"       % "17.2.1",
       "com.raquo"     %%% "waypoint"      % "10.0.0-M1",
