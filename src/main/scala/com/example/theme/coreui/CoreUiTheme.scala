@@ -12,7 +12,7 @@ object CoreUiTheme extends Theme {
   val key: String = "coreui"
 
   private val stylesheetId  = "coreui-stylesheet"
-  private val stylesheetUrl = "https://cdn.jsdelivr.net/npm/@coreui/coreui@5.3.1/dist/css/coreui.min.css"
+  private val stylesheetUrl = "https://unpkg.com/@coreui/coreui@5.3.1/dist/css/coreui.min.css"
 
   // NOTE: CoreUI JS bundle is intentionally NOT loaded. Our headless components
   // manage all interactive state — CoreUI is used for CSS layout/styling only.
