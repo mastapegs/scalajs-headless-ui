@@ -87,10 +87,12 @@ object CoreUiTheme extends Theme {
   ): HtmlElement =
     div(
       sidebarEl,
-      // Backdrop overlay shown when sidebar is open on mobile
+      // Backdrop overlay shown when sidebar is open on mobile.
+      // pointer-events:none when hidden so it doesn't block clicks on content.
       div(
         cls("sidebar-backdrop fade"),
         cls <-- sidebarModel.isCollapsed.map(if (_) "show" else ""),
+        pointerEvents <-- sidebarModel.isCollapsed.map(if (_) "auto" else "none"),
         onClick --> { _ => sidebarModel.toggleCollapse() }
       ),
       div(

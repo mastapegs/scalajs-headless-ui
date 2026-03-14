@@ -13,7 +13,7 @@ object CoreUiTopbarView {
         typ        := "button",
         aria.label := "Toggle sidebar",
         onClick --> { _ => onToggleSidebar() },
-        span(cls("header-toggler-icon"))
+        span(fontSize("1.5rem"), "\u2630")
       ),
       a(cls("header-brand"), topBar.brandName),
       ul(
