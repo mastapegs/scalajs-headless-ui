@@ -4,8 +4,8 @@ import com.example.headless.components.Counter
 
 /** Headless dashboard page component: holds page-specific state and dependencies.
   *
-  * Demonstrates headless page composition — the page owns multiple headless components, each with their own
-  * independent state and behavior.
+  * Demonstrates headless page composition — the page owns multiple headless components, each with their own independent
+  * state and behavior.
   */
 final class DashboardPage {
 
