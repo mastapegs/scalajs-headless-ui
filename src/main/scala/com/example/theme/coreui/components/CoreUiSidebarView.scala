@@ -6,32 +6,20 @@ import com.raquo.laminar.api.L._
 
 object CoreUiSidebarView {
   def render(sidebar: Sidebar): HtmlElement = htmlTag("nav")(
-    cls("sidebar sidebar-narrow-unfoldable show"),
-    cls <-- sidebar.isCollapsed.map(if (_) "sidebar-narrow" else ""),
-    // Override CoreUI's fixed positioning and mobile-hiding so the sidebar
-    // participates in the parent flex layout instead of floating over content.
-    // CoreUI hides the sidebar on mobile via negative margin and overrides
-    // sidebar-narrow width; explicit inline width ensures collapse works at
-    // all viewport widths.
-    position.relative,
-    marginLeft("0"),
-    width <-- sidebar.isCollapsed.map(if (_) "4rem" else "16rem"),
-    transition := "width 0.2s ease",
-    height("100%"),
-    flexShrink("0"),
-    overflowX.hidden,
-    // CoreUI sidebar structure
+    cls("sidebar sidebar-dark border-end"),
+    // On desktop (>= lg): sidebar is visible by default; sidebar-narrow
+    // collapses it to icon-only width. On mobile (< lg): sidebar is hidden
+    // by default; the `show` class slides it in as an overlay.
+    // We map the headless collapsed state so that:
+    //   expanded  → show (visible on mobile) without sidebar-narrow
+    //   collapsed → sidebar-narrow (icon-only on desktop), no show (hidden on mobile)
+    cls <-- sidebar.isCollapsed.map(if (_) "sidebar-narrow" else "show"),
+    // sidebar-header
     div(
       cls("sidebar-header"),
-      // Toggle button
-      button(
-        cls("btn btn-sm btn-ghost-secondary w-100"),
-        aria.expanded <-- sidebar.isCollapsed.map(c => !c),
-        aria.label <-- sidebar.isCollapsed.map(if (_) "Expand sidebar" else "Collapse sidebar"),
-        child.text <-- sidebar.isCollapsed.map(if (_) "\u25B6" else "\u25C0"),
-        onClick --> { _ => sidebar.toggleCollapse() }
-      )
+      div(cls("sidebar-brand"), "Menu")
     ),
+    // sidebar-nav
     ul(
       cls("sidebar-nav"),
       sidebar.pages.map { page =>
@@ -52,6 +40,17 @@ object CoreUiSidebarView {
           )
         )
       }
+    ),
+    // sidebar-footer with CoreUI's sidebar-toggler
+    div(
+      cls("sidebar-footer border-top d-flex"),
+      button(
+        cls("sidebar-toggler"),
+        typ := "button",
+        aria.expanded <-- sidebar.isCollapsed.map(c => !c),
+        aria.label <-- sidebar.isCollapsed.map(if (_) "Expand sidebar" else "Collapse sidebar"),
+        onClick --> { _ => sidebar.toggleCollapse() }
+      )
     )
   )
 
