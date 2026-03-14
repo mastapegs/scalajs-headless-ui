@@ -4,10 +4,17 @@ import com.example.headless.components.TopBar
 import com.raquo.laminar.api.L._
 
 object CoreUiTopbarView {
-  def render(topBar: TopBar): HtmlElement = headerTag(
+  def render(topBar: TopBar, onToggleSidebar: () => Unit = () => ()): HtmlElement = headerTag(
     cls("header header-sticky-top"),
     div(
       cls("container-fluid"),
+      button(
+        cls("header-toggler d-lg-none me-2"),
+        typ        := "button",
+        aria.label := "Toggle sidebar",
+        onClick --> { _ => onToggleSidebar() },
+        span(cls("header-toggler-icon"))
+      ),
       a(cls("header-brand"), topBar.brandName),
       ul(
         cls("header-nav ms-auto"),

@@ -6,14 +6,12 @@ import com.raquo.laminar.api.L._
 
 object CoreUiSidebarView {
   def render(sidebar: Sidebar): HtmlElement = htmlTag("nav")(
-    cls("sidebar sidebar-dark border-end"),
-    // On desktop (>= lg): sidebar is visible by default; sidebar-narrow
-    // collapses it to icon-only width. On mobile (< lg): sidebar is hidden
-    // by default; the `show` class slides it in as an overlay.
-    // We map the headless collapsed state so that:
-    //   expanded  → show (visible on mobile) without sidebar-narrow
-    //   collapsed → sidebar-narrow (icon-only on desktop), no show (hidden on mobile)
-    cls <-- sidebar.isCollapsed.map(if (_) "sidebar-narrow" else "show"),
+    cls("sidebar sidebar-dark sidebar-fixed border-end"),
+    // sidebar-fixed: visible on desktop, hidden on mobile by default.
+    // Toggling adds "sidebar-narrow show":
+    //   desktop  → sidebar-narrow collapses to icon-only width
+    //   mobile   → show slides the sidebar in as an overlay
+    cls <-- sidebar.isCollapsed.map(if (_) "sidebar-narrow show" else ""),
     // sidebar-header
     div(
       cls("sidebar-header"),

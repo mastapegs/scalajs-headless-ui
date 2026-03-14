@@ -22,10 +22,10 @@ trait Theme {
   def tagsInput(tagsInput: TagsInput): HtmlElement
   def tooltip(tooltip: Tooltip): HtmlElement
 
-  protected def renderTopbar(topBar: TopBar): HtmlElement
+  protected def renderTopbar(topBar: TopBar, sidebar: Sidebar): HtmlElement
 
-  final def topbar(topBar: TopBar): HtmlElement =
-    renderTopbar(topBar).amend(aria.label := "Top bar")
+  final def topbar(topBar: TopBar, sidebar: Sidebar): HtmlElement =
+    renderTopbar(topBar, sidebar).amend(aria.label := "Top bar")
 
   protected def renderSidebar(sidebar: Sidebar): HtmlElement
 
@@ -56,11 +56,17 @@ trait Theme {
   protected def renderAppLayout(
       topbar: HtmlElement,
       sidebar: HtmlElement,
-      mainContent: HtmlElement
+      mainContent: HtmlElement,
+      sidebarModel: Sidebar
   ): HtmlElement
 
   final def appLayout(topbar: TopBar, sidebar: Sidebar): HtmlElement =
-    renderAppLayout(this.topbar(topbar), this.sidebar(sidebar), this.mainContent(AppRouter.pageContentSignal(this)))
+    renderAppLayout(
+      this.topbar(topbar, sidebar),
+      this.sidebar(sidebar),
+      this.mainContent(AppRouter.pageContentSignal(this)),
+      sidebar
+    )
 }
 
 object Theme {

@@ -10,15 +10,15 @@ import com.raquo.laminar.api.L._
 object InlineTheme extends Theme {
   val key: String = "inline"
 
-  def counter(counter: Counter): HtmlElement                 = InlineCounterView.render(counter)
-  def tabs(tabs: Tabs): HtmlElement                          = InlineTabsView.render(tabs)
-  def accordion(accordion: Accordion): HtmlElement           = InlineAccordionView.render(accordion)
-  def toggle(toggle: Toggle): HtmlElement                    = InlineToggleView.render(toggle)
-  def progress(progress: Progress): HtmlElement              = InlineProgressView.render(progress)
-  def tagsInput(tagsInput: TagsInput): HtmlElement           = InlineTagsInputView.render(tagsInput)
-  def tooltip(tooltip: Tooltip): HtmlElement                 = InlineTooltipView.render(tooltip)
-  protected def renderSidebar(sidebar: Sidebar): HtmlElement = InlineSidebarView.render(sidebar)
-  protected def renderTopbar(topBar: TopBar): HtmlElement    = InlineTopbarView.render(topBar)
+  def counter(counter: Counter): HtmlElement                                = InlineCounterView.render(counter)
+  def tabs(tabs: Tabs): HtmlElement                                         = InlineTabsView.render(tabs)
+  def accordion(accordion: Accordion): HtmlElement                          = InlineAccordionView.render(accordion)
+  def toggle(toggle: Toggle): HtmlElement                                   = InlineToggleView.render(toggle)
+  def progress(progress: Progress): HtmlElement                             = InlineProgressView.render(progress)
+  def tagsInput(tagsInput: TagsInput): HtmlElement                          = InlineTagsInputView.render(tagsInput)
+  def tooltip(tooltip: Tooltip): HtmlElement                                = InlineTooltipView.render(tooltip)
+  protected def renderSidebar(sidebar: Sidebar): HtmlElement                = InlineSidebarView.render(sidebar)
+  protected def renderTopbar(topBar: TopBar, sidebar: Sidebar): HtmlElement = InlineTopbarView.render(topBar)
 
   def dashboardPage(page: DashboardPage): HtmlElement =
     InlineDashboardPageView.render(page, this)
@@ -42,7 +42,8 @@ object InlineTheme extends Theme {
   def renderAppLayout(
       topbarEl: HtmlElement,
       sidebarEl: HtmlElement,
-      mainContentEl: HtmlElement
+      mainContentEl: HtmlElement,
+      sidebarModel: Sidebar
   ): HtmlElement =
     div(
       topbarEl,

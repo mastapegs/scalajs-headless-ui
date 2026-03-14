@@ -56,7 +56,8 @@ object CoreUiTheme extends Theme {
   def tagsInput(tagsInput: TagsInput): HtmlElement           = CoreUiTagsInputView.render(tagsInput)
   def tooltip(tooltip: Tooltip): HtmlElement                 = CoreUiTooltipView.render(tooltip)
   protected def renderSidebar(sidebar: Sidebar): HtmlElement = CoreUiSidebarView.render(sidebar)
-  protected def renderTopbar(topBar: TopBar): HtmlElement    = CoreUiTopbarView.render(topBar)
+  protected def renderTopbar(topBar: TopBar, sidebar: Sidebar): HtmlElement =
+    CoreUiTopbarView.render(topBar, () => sidebar.toggleCollapse())
 
   def dashboardPage(page: DashboardPage): HtmlElement =
     CoreUiDashboardPageView.render(page, this)
@@ -81,10 +82,17 @@ object CoreUiTheme extends Theme {
   def renderAppLayout(
       topbarEl: HtmlElement,
       sidebarEl: HtmlElement,
-      mainContentEl: HtmlElement
+      mainContentEl: HtmlElement,
+      sidebarModel: Sidebar
   ): HtmlElement =
     div(
       sidebarEl,
+      // Backdrop overlay shown when sidebar is open on mobile
+      div(
+        cls("sidebar-backdrop fade"),
+        cls <-- sidebarModel.isCollapsed.map(if (_) "show" else ""),
+        onClick --> { _ => sidebarModel.toggleCollapse() }
+      ),
       div(
         cls("wrapper d-flex flex-column min-vh-100"),
         topbarEl,
