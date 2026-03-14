@@ -55,7 +55,7 @@ sbt ~fastLinkJS
 - **Framework:** [MUnit](https://scalameta.org/munit/) 1.1.0 (Scala.js compatible)
 - **Run tests:** `sbt test`
 - **Test location:** `src/test/scala/com/example/headless/`
-- **Coverage:** All headless components (`Counter`, `Sidebar`, `TopBar`, `Tabs`, `Accordion`, `Toggle`, `Progress`, `TagsInput`, `Tooltip`) and page containers (`DashboardPage`, `MetricsPage`, `SettingsPage`, `FetchPage`, `UIShowcasePage`) — 90+ tests total
+- **Coverage:** All headless components (`Counter`, `Sidebar`, `TopBar`, `Tabs`, `Accordion`, `Toggle`, `Progress`, `TagsInput`, `Tooltip`) and page containers (`DashboardPage`, `MetricsPage`, `SettingsPage`, `FetchPage`, `UIShowcasePage`) — 91 tests total
 - Tests focus on **state and behavior only** — no DOM or rendering tests
 - Tests use `ManualOwner` from Airstream to synchronously read `Signal` values
 
@@ -63,7 +63,7 @@ sbt ~fastLinkJS
 src/test/scala/com/example/headless/
 ├── components/
 │   ├── AccordionSuite.scala    # 6 tests: open/close, single/multi mode
-│   ├── CounterSuite.scala      # 5 tests: init, custom init, increment, accumulation
+│   ├── CounterSuite.scala      # 7 tests: init, custom init, increment, decrement, reset, accumulation
 │   ├── ProgressSuite.scala     # 7 tests: value, percentage, bounds, reset
 │   ├── SidebarSuite.scala      # 8 tests: collapse toggle, navigation, isActive
 │   ├── TabsSuite.scala         # 8 tests: selection, navigation, wrapping
@@ -73,7 +73,7 @@ src/test/scala/com/example/headless/
 │   └── TopBarSuite.scala       # 4 tests: brand, renderer options, selection
 └── pages/
     ├── FetchPageSuite.scala    # 11 tests: Circe decoding, FetchState, TableData
-    ├── PagesSuite.scala        # 8 tests: title/description for all pages
+    ├── PagesSuite.scala        # 12 tests: title/description for all pages
     └── UIShowcasePageSuite.scala  # 10 tests: composition, independent state
 ```
 

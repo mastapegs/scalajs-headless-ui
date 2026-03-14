@@ -53,7 +53,7 @@ state lives in a private `Var`, the outside world reads it through a `Signal`, a
 mutations happen through explicit methods. This is a small but meaningful
 discipline — it means you can *always* reason about where state changes come from.
 
-### 2. Theme Layer — Presentation
+### 2. Theme Layer — Presentation & the `Theme` Trait Contract
 
 A `Theme` trait defines how every headless component gets rendered. Each theme
 implementation receives headless components and returns `HtmlElement` trees:
@@ -61,11 +61,26 @@ implementation receives headless components and returns `HtmlElement` trees:
 ```scala
 trait Theme {
   def counter(counter: Counter): HtmlElement
-  def sidebar(sidebar: Sidebar): HtmlElement
-  def topbar(topBar: TopBar): HtmlElement
-  // ...page methods too
+  def tabs(tabs: Tabs): HtmlElement
+  def accordion(accordion: Accordion): HtmlElement
+  def toggle(toggle: Toggle): HtmlElement
+  def progress(progress: Progress): HtmlElement
+  def tagsInput(tagsInput: TagsInput): HtmlElement
+  def tooltip(tooltip: Tooltip): HtmlElement
+
+  def dashboardPage(page: DashboardPage): HtmlElement
+  def metricsPage(page: MetricsPage): HtmlElement
+  def settingsPage(page: SettingsPage): HtmlElement
+  // ...and so on for every page
 }
 ```
+
+This trait is the **contract** between logic and presentation. It's also the thing
+you need to update whenever you introduce something new. Adding a headless
+component without declaring it in `Theme` means no theme can render it. Adding a
+page without a corresponding `Theme` method means the router has nothing to
+display. The compiler will remind you — `Theme` is the single source of truth for
+what the presentation layer is expected to render.
 
 The project ships with **three themes** to prove the point:
 
@@ -95,6 +110,67 @@ The `Theme` trait includes `final` methods — `topbar()`, `sidebar()`, and
 `mainContent()` — that wrap each theme's rendered output with ARIA `role` and
 `aria-label` attributes. This means accessibility semantics are enforced at the
 trait level, not left up to individual theme implementations to remember.
+
+## Extending the Project
+
+The headless architecture makes it straightforward to add new pieces — but every
+addition touches multiple layers. The `Theme` trait is the glue that holds it all
+together, and keeping it in sync is the one thing you genuinely can't skip.
+
+### Adding a New Component
+
+1. **Create the headless component** in `headless/components/`. Define state with
+   `Var`, expose it through `Signal`, and provide methods for mutations.
+2. **Add a render method to the `Theme` trait** in `theme/Theme.scala`. This is
+   what makes every theme aware that the component exists. Without this step, the
+   component is invisible to the presentation layer.
+3. **Implement the view in all three themes** — `theme/inline/components/`,
+   `theme/coreui/components/`, and `theme/tailwind/components/`. Each theme object
+   (`InlineTheme`, `CoreUiTheme`, `TailwindTheme`) must override the new method.
+4. **Wire it in.** Compose the component into the appropriate page or layout in
+   `App.scala`.
+5. **Write tests** in `src/test/scala/com/example/headless/components/`. Test the
+   state and behavior — the headless part — not the rendering.
+
+### Adding a New Page
+
+Pages require a few more touch points because they interact with routing,
+navigation, and the sealed `Page` trait:
+
+1. **Add a case** to the `Page` sealed trait in `Page.scala` — update `all`,
+   `label`, `serialize`, and `deserialize`. Since `Page` is sealed and the
+   compiler runs with `-Xfatal-warnings`, a missing case will fail the build.
+2. **Create the page state class** in `headless/pages/`.
+3. **Add a route** in `AppRouter.scala` — define a route val, add it to the
+   router's route list, instantiate the page, and add a match case in
+   `pageContent`.
+4. **Add a render method to the `Theme` trait.** Use a concrete method with a
+   default implementation (e.g., `def myPage(page: MyPage): HtmlElement = div(...)`)
+   rather than an abstract one — this avoids issues with Scala.js `fastLinkJS`
+   ESModule splitting.
+5. **Implement the page view in all three themes** — `theme/inline/pages/`,
+   `theme/coreui/pages/`, and `theme/tailwind/pages/`. Override the method in each
+   theme object.
+6. **Add sidebar icons** in `CoreUiSidebarView.iconFor` and
+   `TailwindSidebarView.iconFor`. (The Inline theme doesn't use icons.)
+7. **Write tests** in `src/test/scala/com/example/headless/pages/`.
+
+The common thread: **every new component or page must update the `Theme` trait**.
+This is by design — the trait is the render contract, and the compiler enforces
+it. If you add a headless piece but forget to declare it in `Theme`, none of the
+themes can render it. If you add it to `Theme` but forget a theme implementation,
+the build fails. The system keeps itself honest.
+
+### Adding a New Theme
+
+1. Create a new package under `theme/` (e.g., `theme/mytheme/`).
+2. Implement the `Theme` trait with a unique `key` string.
+3. Add `onActivate()` / `onDeactivate()` hooks if external CSS/JS resources are
+   needed.
+4. Implement views for every component and page — the `Theme` trait will tell you
+   exactly what's required.
+5. Register the theme in `Theme.all` (in `Theme.scala`) and add it to
+   `TopBar.rendererOptions` so it appears in the theme selector.
 
 ## Project Structure
 
@@ -177,7 +253,7 @@ sbt fixall    # Lint + format (Scalafix + Scalafmt)
 ## Testing
 
 The project uses [MUnit](https://scalameta.org/munit/) to test all headless
-components and page containers — 90+ tests across 12 suites. Tests focus purely on
+components and page containers — 91 tests across 12 suites. Tests focus purely on
 state and behavior. No DOM, no rendering, no browser required.
 
 ```bash
@@ -188,7 +264,7 @@ sbt test
 src/test/scala/com/example/headless/
 ├── components/
 │   ├── AccordionSuite.scala    # 6 tests: open/close, single/multi mode
-│   ├── CounterSuite.scala      # 5 tests: init, custom init, increment, accumulation
+│   ├── CounterSuite.scala      # 7 tests: init, custom init, increment, decrement, reset, accumulation
 │   ├── ProgressSuite.scala     # 7 tests: value, percentage, bounds, reset
 │   ├── SidebarSuite.scala      # 8 tests: collapse toggle, navigation, isActive
 │   ├── TabsSuite.scala         # 8 tests: selection, navigation, wrapping
@@ -198,7 +274,7 @@ src/test/scala/com/example/headless/
 │   └── TopBarSuite.scala       # 4 tests: brand, renderer options, selection
 └── pages/
     ├── FetchPageSuite.scala    # 11 tests: Circe decoding, FetchState, TableData
-    ├── PagesSuite.scala        # 8 tests: title/description for all pages
+    ├── PagesSuite.scala        # 12 tests: title/description for all pages
     └── UIShowcasePageSuite.scala  # 10 tests: composition, independent state
 ```
 
