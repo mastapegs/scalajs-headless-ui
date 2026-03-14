@@ -6,25 +6,18 @@ import com.raquo.laminar.api.L._
 
 object CoreUiSidebarView {
   def render(sidebar: Sidebar): HtmlElement = htmlTag("nav")(
-    cls("sidebar sidebar-narrow-unfoldable"),
-    cls <-- sidebar.isCollapsed.map(if (_) "sidebar-narrow" else ""),
-    // Override CoreUI's fixed positioning so the sidebar participates in
-    // the parent flex layout instead of floating over content.
-    position.relative,
-    height("100%"),
-    flexShrink("0"),
-    // CoreUI sidebar structure
+    cls("sidebar sidebar-dark sidebar-fixed border-end"),
+    // sidebar-fixed: visible on desktop, hidden on mobile by default.
+    // Toggling adds "sidebar-narrow show":
+    //   desktop  → sidebar-narrow collapses to icon-only width
+    //   mobile   → show slides the sidebar in as an overlay
+    cls <-- sidebar.isCollapsed.map(if (_) "sidebar-narrow show" else ""),
+    // sidebar-header
     div(
       cls("sidebar-header"),
-      // Toggle button
-      button(
-        cls("btn btn-sm btn-ghost-secondary w-100"),
-        aria.expanded <-- sidebar.isCollapsed.map(c => !c),
-        aria.label <-- sidebar.isCollapsed.map(if (_) "Expand sidebar" else "Collapse sidebar"),
-        child.text <-- sidebar.isCollapsed.map(if (_) "\u25B6" else "\u25C0"),
-        onClick --> { _ => sidebar.toggleCollapse() }
-      )
+      div(cls("sidebar-brand"), "Menu")
     ),
+    // sidebar-nav
     ul(
       cls("sidebar-nav"),
       sidebar.pages.map { page =>
@@ -45,6 +38,17 @@ object CoreUiSidebarView {
           )
         )
       }
+    ),
+    // sidebar-footer with CoreUI's sidebar-toggler
+    div(
+      cls("sidebar-footer border-top d-flex"),
+      button(
+        cls("sidebar-toggler"),
+        typ := "button",
+        aria.expanded <-- sidebar.isCollapsed.map(c => !c),
+        aria.label <-- sidebar.isCollapsed.map(if (_) "Expand sidebar" else "Collapse sidebar"),
+        onClick --> { _ => sidebar.toggleCollapse() }
+      )
     )
   )
 
