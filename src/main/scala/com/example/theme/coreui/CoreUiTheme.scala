@@ -13,8 +13,10 @@ object CoreUiTheme extends Theme {
 
   private val stylesheetId  = "coreui-stylesheet"
   private val stylesheetUrl = "https://cdn.jsdelivr.net/npm/@coreui/coreui@5.3.1/dist/css/coreui.min.css"
-  private val scriptId      = "coreui-script"
-  private val scriptUrl     = "https://cdn.jsdelivr.net/npm/@coreui/coreui@5.3.1/dist/js/coreui.bundle.min.js"
+
+  // NOTE: CoreUI JS bundle is intentionally NOT loaded. Our headless components
+  // manage all interactive state — CoreUI is used for CSS layout/styling only.
+  // Loading CoreUI's JS would conflict with Laminar's reactive DOM management.
 
   override def onActivate(): Unit = {
     if (dom.document.getElementById(stylesheetId) == null) {
@@ -24,19 +26,11 @@ object CoreUiTheme extends Theme {
       link.setAttribute("href", stylesheetUrl)
       dom.document.head.appendChild(link)
     }
-    if (dom.document.getElementById(scriptId) == null) {
-      val script = dom.document.createElement("script")
-      script.setAttribute("id", scriptId)
-      script.setAttribute("src", scriptUrl)
-      dom.document.body.appendChild(script)
-    }
   }
 
   override def onDeactivate(): Unit = {
-    val css = dom.document.getElementById(stylesheetId)
-    if (css != null) css.parentNode.removeChild(css)
-    val js = dom.document.getElementById(scriptId)
-    if (js != null) js.parentNode.removeChild(js)
+    val existing = dom.document.getElementById(stylesheetId)
+    if (existing != null) existing.parentNode.removeChild(existing)
   }
 
   def counter(counter: Counter): HtmlElement                 = CoreUiCounterView.render(counter)
