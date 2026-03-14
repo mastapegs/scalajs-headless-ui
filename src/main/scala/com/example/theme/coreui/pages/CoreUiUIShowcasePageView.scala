@@ -64,9 +64,12 @@ object CoreUiUIShowcasePageView {
             onClick --> { _ => accordion.toggle(item.key) }
           )
         ),
+        // CoreUI's .collapse requires JS to animate, but we manage state ourselves.
+        // Use inline overflow/maxHeight for reliable show/hide without depending on
+        // CoreUI's JS collapse plugin conflicting with our headless state.
         div(
           overflow.hidden,
-          maxHeight <-- accordion.isOpen(item.key).map(if (_) "200px" else "0"),
+          maxHeight <-- accordion.isOpen(item.key).map(if (_) "500px" else "0"),
           transition := "max-height 0.3s ease",
           div(cls("accordion-body"), item.content)
         )
@@ -114,19 +117,14 @@ object CoreUiUIShowcasePageView {
       )
     ),
     div(
-      cls("mb-3"),
-      height("1rem"),
-      backgroundColor("var(--cui-secondary-bg, #e9ecef)"),
-      borderRadius("var(--cui-border-radius, 0.375rem)"),
-      overflow.hidden,
+      cls("progress mb-3"),
+      role := "progressbar",
+      aria.valueNow <-- progress.value.map(_.toDouble),
+      aria.label := progress.label,
       div(
-        height("100%"),
-        backgroundColor("var(--cui-primary, #5856d6)"),
-        transition := "width 0.3s ease",
+        cls("progress-bar"),
         width <-- progress.percentage.map(p => s"$p%"),
-        role := "progressbar",
-        aria.valueNow <-- progress.value.map(_.toDouble),
-        aria.label := progress.label
+        child.text <-- progress.percentage.map(p => s"$p%")
       )
     ),
     div(
@@ -138,32 +136,17 @@ object CoreUiUIShowcasePageView {
 
   private def renderTagsInput(tagsInput: TagsInput): HtmlElement = div(
     div(
-      display.flex,
-      flexWrap.wrap,
-      gap("8px"),
-      alignItems.center,
-      padding("8px"),
-      cls("border rounded"),
+      cls("d-flex flex-wrap gap-2 align-items-center p-2 border rounded"),
       minHeight("44px"),
       children <-- tagsInput.tags.map(_.map { tag =>
         span(
-          display.inlineFlex,
-          alignItems.center,
-          gap("4px"),
-          padding("4px 10px"),
-          backgroundColor("var(--cui-primary, #5856d6)"),
-          color("white"),
-          borderRadius("16px"),
-          fontSize("13px"),
+          cls("badge text-bg-primary d-inline-flex align-items-center gap-1 fs-6"),
           tag,
           button(
-            border("none"),
-            backgroundColor("transparent"),
-            color("white"),
-            cursor.pointer,
-            fontSize("14px"),
-            padding("0 2px"),
-            "\u00D7",
+            tpe := "button",
+            cls("btn-close btn-close-white ms-1"),
+            fontSize("0.6em"),
+            aria.label := "Remove",
             onClick --> { _ => tagsInput.removeTag(tag) }
           )
         )
@@ -210,16 +193,16 @@ object CoreUiUIShowcasePageView {
         bottom("calc(100% + 8px)"),
         left("50%"),
         transform := "translateX(-50%)",
-        padding("6px 12px"),
-        backgroundColor("#333"),
-        color("white"),
-        borderRadius("4px"),
-        fontSize("12px"),
         whiteSpace.nowrap,
         pointerEvents := "none",
         transition    := "opacity 0.2s",
         opacity <-- tooltip.isVisible.map(if (_) "1" else "0"),
-        tooltip.text
+        // Use CoreUI's tooltip-inner styling without the .tooltip wrapper class
+        // which sets opacity:0 and expects JS to add .show
+        div(
+          cls("tooltip-inner"),
+          tooltip.text
+        )
       )
     ),
     span(

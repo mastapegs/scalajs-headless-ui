@@ -12,22 +12,31 @@ object CoreUiTheme extends Theme {
   val key: String = "coreui"
 
   private val stylesheetId  = "coreui-stylesheet"
-  private val stylesheetUrl = "https://unpkg.com/@coreui/coreui@5.3.1/dist/css/coreui.min.css"
+  private val stylesheetUrl = "https://cdn.jsdelivr.net/npm/@coreui/coreui@5.3.1/dist/css/coreui.min.css"
+  private val scriptId      = "coreui-script"
+  private val scriptUrl     = "https://cdn.jsdelivr.net/npm/@coreui/coreui@5.3.1/dist/js/coreui.bundle.min.js"
 
   override def onActivate(): Unit = {
-    val existing = dom.document.getElementById(stylesheetId)
-    if (existing == null) {
+    if (dom.document.getElementById(stylesheetId) == null) {
       val link = dom.document.createElement("link")
       link.setAttribute("id", stylesheetId)
       link.setAttribute("rel", "stylesheet")
       link.setAttribute("href", stylesheetUrl)
       dom.document.head.appendChild(link)
     }
+    if (dom.document.getElementById(scriptId) == null) {
+      val script = dom.document.createElement("script")
+      script.setAttribute("id", scriptId)
+      script.setAttribute("src", scriptUrl)
+      dom.document.body.appendChild(script)
+    }
   }
 
   override def onDeactivate(): Unit = {
-    val existing = dom.document.getElementById(stylesheetId)
-    if (existing != null) existing.parentNode.removeChild(existing)
+    val css = dom.document.getElementById(stylesheetId)
+    if (css != null) css.parentNode.removeChild(css)
+    val js = dom.document.getElementById(scriptId)
+    if (js != null) js.parentNode.removeChild(js)
   }
 
   def counter(counter: Counter): HtmlElement                 = CoreUiCounterView.render(counter)
