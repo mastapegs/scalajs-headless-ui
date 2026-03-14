@@ -6,11 +6,14 @@ import com.raquo.laminar.api.L._
 
 object CoreUiSidebarView {
   def render(sidebar: Sidebar): HtmlElement = htmlTag("nav")(
-    cls("sidebar sidebar-narrow-unfoldable"),
+    cls("sidebar sidebar-narrow-unfoldable show"),
     cls <-- sidebar.isCollapsed.map(if (_) "sidebar-narrow" else ""),
-    // Override CoreUI's fixed positioning so the sidebar participates in
-    // the parent flex layout instead of floating over content.
+    // Override CoreUI's fixed positioning and mobile-hiding so the sidebar
+    // participates in the parent flex layout instead of floating over content.
+    // CoreUI hides the sidebar on mobile via negative margin; `show` + margin
+    // override ensures it stays visible at all viewport widths.
     position.relative,
+    marginLeft("0"),
     height("100%"),
     flexShrink("0"),
     // CoreUI sidebar structure
