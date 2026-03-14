@@ -1,6 +1,6 @@
 package com.example.theme.inline
 
-import com.example.headless.components.{Counter, Sidebar, TopBar}
+import com.example.headless.components._
 import com.example.headless.pages.{DashboardPage, FetchPage, MetricsPage, SettingsPage, UIShowcasePage}
 import com.example.theme.Theme
 import com.example.theme.inline.components._
@@ -11,6 +11,12 @@ object InlineTheme extends Theme {
   val key: String = "inline"
 
   def counter(counter: Counter): HtmlElement                 = InlineCounterView.render(counter)
+  def tabs(tabs: Tabs): HtmlElement                          = InlineTabsView.render(tabs)
+  def accordion(accordion: Accordion): HtmlElement           = InlineAccordionView.render(accordion)
+  def toggle(toggle: Toggle): HtmlElement                    = InlineToggleView.render(toggle)
+  def progress(progress: Progress): HtmlElement              = InlineProgressView.render(progress)
+  def tagsInput(tagsInput: TagsInput): HtmlElement           = InlineTagsInputView.render(tagsInput)
+  def tooltip(tooltip: Tooltip): HtmlElement                 = InlineTooltipView.render(tooltip)
   protected def renderSidebar(sidebar: Sidebar): HtmlElement = InlineSidebarView.render(sidebar)
   protected def renderTopbar(topBar: TopBar): HtmlElement    = InlineTopbarView.render(topBar)
 
@@ -21,7 +27,7 @@ object InlineTheme extends Theme {
   def settingsPage(page: SettingsPage): HtmlElement =
     InlineSettingsPageView.render(page)
   override def uiShowcasePage(page: UIShowcasePage): HtmlElement =
-    InlineUIShowcasePageView.render(page)
+    InlineUIShowcasePageView.render(page, this)
   protected def renderFetchPage(page: FetchPage): HtmlElement =
     InlineFetchPageView.render(page)
 

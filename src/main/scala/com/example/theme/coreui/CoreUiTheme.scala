@@ -1,6 +1,6 @@
 package com.example.theme.coreui
 
-import com.example.headless.components.{Counter, Sidebar, TopBar}
+import com.example.headless.components._
 import com.example.headless.pages.{DashboardPage, FetchPage, MetricsPage, SettingsPage, UIShowcasePage}
 import com.example.theme.Theme
 import com.example.theme.coreui.components._
@@ -33,6 +33,12 @@ object CoreUiTheme extends Theme {
   }
 
   def counter(counter: Counter): HtmlElement                 = CoreUiCounterView.render(counter)
+  def tabs(tabs: Tabs): HtmlElement                          = CoreUiTabsView.render(tabs)
+  def accordion(accordion: Accordion): HtmlElement           = CoreUiAccordionView.render(accordion)
+  def toggle(toggle: Toggle): HtmlElement                    = CoreUiToggleView.render(toggle)
+  def progress(progress: Progress): HtmlElement              = CoreUiProgressView.render(progress)
+  def tagsInput(tagsInput: TagsInput): HtmlElement           = CoreUiTagsInputView.render(tagsInput)
+  def tooltip(tooltip: Tooltip): HtmlElement                 = CoreUiTooltipView.render(tooltip)
   protected def renderSidebar(sidebar: Sidebar): HtmlElement = CoreUiSidebarView.render(sidebar)
   protected def renderTopbar(topBar: TopBar): HtmlElement    = CoreUiTopbarView.render(topBar)
 
@@ -43,7 +49,7 @@ object CoreUiTheme extends Theme {
   def settingsPage(page: SettingsPage): HtmlElement =
     CoreUiSettingsPageView.render(page)
   override def uiShowcasePage(page: UIShowcasePage): HtmlElement =
-    CoreUiUIShowcasePageView.render(page)
+    CoreUiUIShowcasePageView.render(page, this)
   protected def renderFetchPage(page: FetchPage): HtmlElement =
     CoreUiFetchPageView.render(page)
 
