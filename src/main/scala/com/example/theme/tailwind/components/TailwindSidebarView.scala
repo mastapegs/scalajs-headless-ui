@@ -9,17 +9,15 @@ import com.raquo.laminar.api.L._
   * '''Design techniques:'''
   *   - '''Smooth width transition''' (`transition-all duration-300 ease-in-out`) for collapse/expand
   *   - '''Gradient background''' (`bg-gradient-to-b from-slate-800 to-slate-900`) adds subtle depth
-  *   - '''Active indicator''' uses a left-border accent (`border-l-2 border-indigo-400`) and highlighted background to
-  *     clearly signal the current page
+  *   - '''Active indicator''' uses a left-border accent (`border-l-2 border-indigo-400`) and highlighted
+  *     background to clearly signal the current page
   *   - '''Hover states''' with `hover:bg-white/10` use semi-transparent white for consistent dark-mode hovers
   *   - '''Icon sizing''' with `text-lg w-6 text-center` ensures uniform icon alignment when collapsed
   *   - '''Overflow hidden''' prevents text wrapping artifacts during the collapse transition
   */
 object TailwindSidebarView {
   def render(sidebar: Sidebar): HtmlElement = htmlTag("nav")(
-    cls(
-      "bg-gradient-to-b from-slate-800 to-slate-900 text-white transition-all duration-300 ease-in-out flex-shrink-0"
-    ),
+    cls("bg-gradient-to-b from-slate-800 to-slate-900 text-white transition-all duration-300 ease-in-out flex-shrink-0"),
     cls("overflow-hidden border-r border-slate-700/50"),
     width <-- sidebar.isCollapsed.map(if (_) "64px" else "240px"),
     height("100%"),
