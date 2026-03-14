@@ -10,12 +10,16 @@ object CoreUiSidebarView {
     cls <-- sidebar.isCollapsed.map(if (_) "sidebar-narrow" else ""),
     // Override CoreUI's fixed positioning and mobile-hiding so the sidebar
     // participates in the parent flex layout instead of floating over content.
-    // CoreUI hides the sidebar on mobile via negative margin; `show` + margin
-    // override ensures it stays visible at all viewport widths.
+    // CoreUI hides the sidebar on mobile via negative margin and overrides
+    // sidebar-narrow width; explicit inline width ensures collapse works at
+    // all viewport widths.
     position.relative,
     marginLeft("0"),
+    width <-- sidebar.isCollapsed.map(if (_) "4rem" else "16rem"),
+    transition := "width 0.2s ease",
     height("100%"),
     flexShrink("0"),
+    overflowX.hidden,
     // CoreUI sidebar structure
     div(
       cls("sidebar-header"),
