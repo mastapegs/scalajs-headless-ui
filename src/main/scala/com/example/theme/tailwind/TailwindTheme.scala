@@ -8,6 +8,36 @@ import com.example.theme.tailwind.pages._
 import com.raquo.laminar.api.L._
 import org.scalajs.dom
 
+/** Tailwind CSS v4 theme implementation.
+  *
+  * Loads the Tailwind CSS browser script from the jsDelivr CDN at activation time and removes it on deactivation. All
+  * styling is expressed through Tailwind utility classes applied via Laminar's `cls(...)` modifier.
+  *
+  * ==Design System==
+  *
+  * The theme follows a consistent design language across every component and page:
+  *
+  *   - '''Color palette''' — Indigo (`indigo-500`/`indigo-600`) as the primary accent, Slate (`slate-800`/`slate-900`)
+  *     for dark surfaces (top bar, sidebar), and neutral Grays for text and borders.
+  *   - '''Card surfaces''' — `bg-white rounded-xl shadow-sm border border-gray-200/60` with `hover:shadow-md
+  *     transition-shadow` for interactive lift.
+  *   - '''Typography hierarchy''' — `text-3xl font-bold text-gray-900` for hero values, `text-sm font-medium
+  *     text-gray-500` for labels, `leading-relaxed` for body text.
+  *   - '''Button system''' — Primary buttons use `bg-indigo-600 hover:bg-indigo-700` with `focus:ring-2
+  *     focus:ring-indigo-500 focus:ring-offset-2` for accessible focus indication. Secondary buttons use
+  *     `bg-white border border-gray-300`.
+  *   - '''Transitions''' — `transition-colors duration-150` on buttons and links, `transition-all duration-200` on
+  *     layout changes, `transition-shadow` on cards for a polished, responsive feel.
+  *   - '''Spacing''' — Consistent use of Tailwind's spacing scale (`p-5`, `p-6`, `gap-3`, `gap-5`, `space-y-3`) to
+  *     maintain visual rhythm throughout the interface.
+  *   - '''Layout''' — `bg-gray-50` main content background creates contrast against white cards, a classic dashboard
+  *     pattern.
+  *
+  * ==Accessibility==
+  *
+  * Focus rings (`focus:ring-2 focus:ring-offset-2`), ARIA attributes (`aria-label`, `aria-live`, `role="switch"`), and
+  * keyboard-navigable controls are applied consistently across all components.
+  */
 object TailwindTheme extends Theme {
   val key: String = "tailwind"
 
@@ -52,7 +82,7 @@ object TailwindTheme extends Theme {
 
   protected def renderMainContent(content: Signal[HtmlElement]): Mod[HtmlElement] =
     Seq(
-      cls("flex-grow overflow-y-auto p-8"),
+      cls("flex-grow overflow-y-auto p-8 bg-gray-50"),
       child <-- content
     )
 
@@ -63,6 +93,7 @@ object TailwindTheme extends Theme {
       sidebarModel: Sidebar
   ): HtmlElement =
     div(
+      cls("min-h-screen bg-gray-50"),
       topbarEl,
       div(
         cls("flex"),

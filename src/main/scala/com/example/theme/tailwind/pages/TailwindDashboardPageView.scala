@@ -4,13 +4,21 @@ import com.example.headless.pages.DashboardPage
 import com.example.theme.Theme
 import com.raquo.laminar.api.L._
 
+/** Tailwind dashboard page with a clear heading hierarchy and a vertical stack of counter cards.
+  *
+  * '''Design techniques:'''
+  *   - '''Max-width container''' (`max-w-5xl mx-auto`) keeps content readable on wide screens
+  *   - '''Page heading''' uses `text-2xl font-bold text-gray-900` for clear visual hierarchy
+  *   - '''Muted description''' (`text-gray-500`) distinguishes helper text from the title
+  *   - '''Vertical card stack''' (`flex flex-col gap-4`) provides consistent spacing between counters
+  */
 object TailwindDashboardPageView {
   def render(page: DashboardPage, theme: Theme): HtmlElement = div(
     cls("max-w-5xl mx-auto"),
-    h1(cls("text-2xl font-bold mb-3"), page.title),
-    p(page.description),
+    h1(cls("text-2xl font-bold text-gray-900 mb-1"), page.title),
+    p(cls("text-gray-500 mb-6"), page.description),
     div(
-      cls("mt-4 flex flex-col gap-4"),
+      cls("mt-2 flex flex-col gap-4"),
       page.counters.map(c => theme.counter(c))
     )
   )
