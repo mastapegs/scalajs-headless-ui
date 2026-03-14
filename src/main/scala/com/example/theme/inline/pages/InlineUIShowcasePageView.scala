@@ -10,20 +10,22 @@ object InlineUIShowcasePageView {
   def render(page: UIShowcasePage, theme: Theme): HtmlElement = div(
     h1(marginBottom("8px"), page.title),
     p(marginBottom("32px"), color("#6c757d"), page.description),
-    theme.card(Card("Tabs"), theme.tabs(page.tabs)),
-    theme.card(Card("Accordion"), theme.accordion(page.accordion)),
+    theme.card(Card(span("Tabs"), theme.tabs(page.tabs))),
+    theme.card(Card(span("Accordion"), theme.accordion(page.accordion))),
     theme.card(
-      Card("Toggle / Switch"),
-      div(
-        display.flex,
-        flexDirection.column,
-        gap("16px"),
-        theme.toggle(page.toggleDarkMode),
-        theme.toggle(page.toggleNotifications)
+      Card(
+        span("Toggle / Switch"),
+        div(
+          display.flex,
+          flexDirection.column,
+          gap("16px"),
+          theme.toggle(page.toggleDarkMode),
+          theme.toggle(page.toggleNotifications)
+        )
       )
     ),
-    theme.card(Card("Progress"), theme.progress(page.progress)),
-    theme.card(Card("Tags Input"), theme.tagsInput(page.tagsInput)),
-    theme.card(Card("Tooltip"), theme.tooltip(page.tooltip))
+    theme.card(Card(span("Progress"), theme.progress(page.progress))),
+    theme.card(Card(span("Tags Input"), theme.tagsInput(page.tagsInput))),
+    theme.card(Card(span("Tooltip"), theme.tooltip(page.tooltip)))
   )
 }

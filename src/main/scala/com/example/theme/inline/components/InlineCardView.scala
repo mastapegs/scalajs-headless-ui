@@ -5,7 +5,7 @@ import com.raquo.laminar.api.L._
 
 object InlineCardView {
 
-  def render(card: Card, content: HtmlElement): HtmlElement = div(
+  def render(card: Card): HtmlElement = div(
     marginBottom("32px"),
     h2(
       fontSize("18px"),
@@ -15,6 +15,6 @@ object InlineCardView {
       paddingBottom("8px"),
       card.title
     ),
-    content
+    card.content
   )
 }
