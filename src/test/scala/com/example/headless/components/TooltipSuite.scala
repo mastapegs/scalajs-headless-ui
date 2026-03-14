@@ -1,18 +1,9 @@
 package com.example.headless.components
 
-import com.raquo.airstream.core.Signal
-import com.raquo.airstream.ownership.ManualOwner
+import com.example.headless.SignalHelpers
 import munit.FunSuite
 
-class TooltipSuite extends FunSuite {
-
-  private def signalNow[A](signal: Signal[A]): A = {
-    val owner = new ManualOwner
-    var value = Option.empty[A]
-    signal.foreach(v => value = Some(v))(owner)
-    owner.killSubscriptions()
-    value.get
-  }
+class TooltipSuite extends FunSuite with SignalHelpers {
 
   test("initially hidden") {
     val tooltip = new Tooltip("Hello")
