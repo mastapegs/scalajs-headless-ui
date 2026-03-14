@@ -147,6 +147,33 @@ src/main/scala/com/example/
 - **Dialect:** scala213
 - Always run `sbt fmtall` before committing
 
+### Running Lint/Format without SBT (Claude Code on the Web)
+
+When running in an environment without SBT (e.g., Claude Code on the Web), use Coursier to install the standalone CLIs. The **JVM-based `coursier.jar`** must be used instead of the native `cs` binary, because the native binary cannot route through the container's HTTP proxy — the JVM jar picks up proxy settings from `JAVA_TOOL_OPTIONS` automatically.
+
+```bash
+# 1. Download the Coursier JVM launcher (one-time setup)
+curl -fLo ~/coursier.jar "https://github.com/coursier/coursier/releases/latest/download/coursier.jar"
+
+# 2. Download the scalafmt native binary (one-time setup)
+curl -fLo ~/scalafmt "https://github.com/scalameta/scalafmt/releases/download/v3.8.6/scalafmt-linux-musl"
+chmod +x ~/scalafmt
+
+# 3. Run scalafmt (replaces `sbt fmtall`)
+~/scalafmt --config .scalafmt.conf --non-interactive src/main/scala src/test/scala
+
+# 4. Check scalafmt (replaces `sbt scalafmtCheckAll`)
+~/scalafmt --config .scalafmt.conf --non-interactive --check src/main/scala src/test/scala
+
+# 5. Run scalafix OrganizeImports (replaces `sbt scalafixAll`)
+java -jar ~/coursier.jar launch ch.epfl.scala:scalafix-cli_2.13.18:0.14.6 \
+  -M scalafix.cli.Cli -- \
+  --rules OrganizeImports --config .scalafix.conf \
+  -f src/main/scala -f src/test/scala
+```
+
+**Note on scalafix:** The `OrganizeImports` rule is semantic and requires SemanticDB output from a prior compilation. Without SBT to compile first, scalafix will report "SemanticDB not found" errors. However, since the project config sets `removeUnused = false`, OrganizeImports only merges and sorts imports — and scalafmt's `SortImports` rewrite already handles import sorting. In practice, **running scalafmt alone is sufficient to pass CI lint checks** as long as imports are written correctly (one import per package, alphabetically ordered).
+
 ## CI/CD
 
 Three GitHub Actions workflows in `.github/workflows/`:

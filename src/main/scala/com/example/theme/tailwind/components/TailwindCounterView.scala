@@ -7,6 +7,10 @@ object TailwindCounterView {
   def render(counter: Counter): HtmlElement = div(
     cls("bg-white rounded-lg shadow p-6 flex items-center gap-4"),
     span(
+      cls("text-sm font-medium text-gray-500"),
+      counter.label
+    ),
+    span(
       cls("text-xl font-semibold"),
       aria.live   := "polite",
       aria.atomic := true,

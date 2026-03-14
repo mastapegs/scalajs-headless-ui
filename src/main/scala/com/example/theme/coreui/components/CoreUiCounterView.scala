@@ -9,6 +9,10 @@ object CoreUiCounterView {
     div(
       cls("card-body d-flex align-items-center gap-3"),
       span(
+        cls("text-body-secondary fw-medium"),
+        counter.label
+      ),
+      span(
         cls("fs-4 fw-semibold"),
         aria.live   := "polite",
         aria.atomic := true,

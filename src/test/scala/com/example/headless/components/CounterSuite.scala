@@ -14,13 +14,23 @@ class CounterSuite extends FunSuite {
     value.get
   }
 
+  test("default label is Counter") {
+    val counter = new Counter()
+    assertEquals(counter.label, "Counter")
+  }
+
+  test("custom label is respected") {
+    val counter = new Counter(label = "Custom")
+    assertEquals(counter.label, "Custom")
+  }
+
   test("default initial value is 0") {
     val counter = new Counter()
     assertEquals(signalNow(counter.count), 0)
   }
 
   test("custom initial value is respected") {
-    val counter = new Counter(42)
+    val counter = new Counter(initialValue = 42)
     assertEquals(signalNow(counter.count), 42)
   }
 
@@ -39,7 +49,7 @@ class CounterSuite extends FunSuite {
   }
 
   test("increment from custom initial value") {
-    val counter = new Counter(10)
+    val counter = new Counter(initialValue = 10)
     counter.increment()
     assertEquals(signalNow(counter.count), 11)
   }
