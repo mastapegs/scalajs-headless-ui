@@ -18,7 +18,7 @@ object CoreUiTheme extends Theme {
   // manage all interactive state — CoreUI is used for CSS layout/styling only.
   // Loading CoreUI's JS would conflict with Laminar's reactive DOM management.
 
-  override def onActivate(): Unit = {
+  override def onActivate(): Unit =
     if (dom.document.getElementById(stylesheetId) == null) {
       val link = dom.document.createElement("link")
       link.setAttribute("id", stylesheetId)
@@ -26,7 +26,6 @@ object CoreUiTheme extends Theme {
       link.setAttribute("href", stylesheetUrl)
       dom.document.head.appendChild(link)
     }
-  }
 
   override def onDeactivate(): Unit = {
     val existing = dom.document.getElementById(stylesheetId)
