@@ -208,11 +208,11 @@ java -jar ~/coursier.jar launch org.scala-lang:scala-compiler:2.13.18 \
 
 ## CI/CD
 
-Three GitHub Actions workflows in `.github/workflows/`:
-- **ci.yml** — Reusable workflow (`workflow_call` + `workflow_dispatch`): lint job checks formatting (`scalafmtCheckAll scalafmtSbtCheck`) and linting (`scalafixAll --check`); test job runs `sbt test`
-- **deploy.yml** — On push to `main`: calls ci.yml, then builds with `sbt fullLinkJS` (optimized), deploys to Netlify production
-- **pull-request.yml** — On PRs (opened, synchronize, reopened): calls ci.yml, then builds with `sbt fastLinkJS`, deploys Netlify preview, posts preview URL as PR comment
-- All workflows use Java 17 (Temurin) with SBT dependency caching
+Three GitHub Actions workflows in `.github/workflows/`, organized as a reusable workflow pattern:
+- **ci.yml** — Reusable workflow (`workflow_call` + `workflow_dispatch`): two independent jobs — `lint` (checks formatting with `scalafmtCheckAll scalafmtSbtCheck` and linting with `scalafixAll --check`) and `test` (runs `sbt test`)
+- **deploy.yml** — On push to `main`: calls ci.yml, then builds with `sbt fullLinkJS` (optimized), assembles site into `dist/`, deploys to Netlify production. Uses `concurrency: deploy-production` with `cancel-in-progress: false` to prevent overlapping deploys
+- **pull-request.yml** — On PRs (opened, synchronize, reopened): calls ci.yml, then builds with `sbt fastLinkJS`, deploys Netlify preview with alias `pr-<number>`, posts preview URL as PR comment. Uses concurrency per PR branch with `cancel-in-progress: true` to cancel stale builds
+- All workflows use Java 17 (Temurin), `sbt/setup-sbt`, and SBT dependency caching
 
 ## Adding New Components
 
