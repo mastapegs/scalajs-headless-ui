@@ -116,15 +116,23 @@ object CoreUiUIShowcasePageView {
         child.text <-- progress.percentage.map(p => s"$p%")
       )
     ),
+    // Avoid CoreUI's .progress/.progress-bar classes which require JS to animate.
+    // Use inline styles for the reactive width binding instead.
     div(
-      cls("progress mb-3"),
-      role := "progressbar",
-      aria.valueNow <-- progress.value.map(_.toDouble),
-      aria.label := progress.label,
+      height("12px"),
+      backgroundColor("#ebedef"),
+      borderRadius("6px"),
+      overflow.hidden,
+      cls("mb-3"),
       div(
-        cls("progress-bar"),
+        height("100%"),
+        backgroundColor("var(--cui-primary, #321fdb)"),
+        borderRadius("6px"),
+        transition := "width 0.3s ease",
         width <-- progress.percentage.map(p => s"$p%"),
-        child.text <-- progress.percentage.map(p => s"$p%")
+        role := "progressbar",
+        aria.valueNow <-- progress.value.map(_.toDouble),
+        aria.label := progress.label
       )
     ),
     div(
@@ -138,15 +146,29 @@ object CoreUiUIShowcasePageView {
     div(
       cls("d-flex flex-wrap gap-2 align-items-center p-2 border rounded"),
       minHeight("44px"),
+      // Avoid CoreUI's .badge/.btn-close classes which have CSS that can interfere
+      // with Laminar's reactive children rendering. Use inline styles instead.
       children <-- tagsInput.tags.map(_.map { tag =>
         span(
-          cls("badge text-bg-primary d-inline-flex align-items-center gap-1 fs-6"),
+          display.inlineFlex,
+          alignItems.center,
+          gap("4px"),
+          padding("4px 10px"),
+          backgroundColor("var(--cui-primary, #321fdb)"),
+          color("white"),
+          borderRadius("16px"),
+          fontSize("13px"),
           tag,
           button(
-            tpe := "button",
-            cls("btn-close btn-close-white ms-1"),
-            fontSize("0.6em"),
+            tpe    := "button",
+            border := "none",
+            backgroundColor("transparent"),
+            color("white"),
+            cursor.pointer,
+            fontSize("14px"),
+            padding("0 2px"),
             aria.label := "Remove",
+            "\u00D7",
             onClick --> { _ => tagsInput.removeTag(tag) }
           )
         )
@@ -188,21 +210,23 @@ object CoreUiUIShowcasePageView {
         onMouseEnter --> { _ => tooltip.show() },
         onMouseLeave --> { _ => tooltip.hide() }
       ),
+      // Avoid CoreUI's .tooltip/.tooltip-inner classes which set opacity:0 and
+      // expect JS to add .show. Use inline styles for full Laminar control.
       div(
         position.absolute,
         bottom("calc(100% + 8px)"),
         left("50%"),
         transform := "translateX(-50%)",
+        padding   := "6px 12px",
+        backgroundColor("var(--cui-dark, #212631)"),
+        color("white"),
+        borderRadius("4px"),
+        fontSize("12px"),
         whiteSpace.nowrap,
         pointerEvents := "none",
         transition    := "opacity 0.2s",
         opacity <-- tooltip.isVisible.map(if (_) "1" else "0"),
-        // Use CoreUI's tooltip-inner styling without the .tooltip wrapper class
-        // which sets opacity:0 and expects JS to add .show
-        div(
-          cls("tooltip-inner"),
-          tooltip.text
-        )
+        tooltip.text
       )
     ),
     span(
