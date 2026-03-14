@@ -10,6 +10,7 @@ concurrency:
 
 permissions:
   contents: read
+  pull-requests: write
 
 jobs:
   ci:
@@ -17,3 +18,53 @@ jobs:
     uses: ./.github/workflows/ci.yml
     permissions:
       contents: read
+
+  deploy-preview:
+    name: Deploy Preview
+    needs: ci
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - uses: actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00 # v4.7.1
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - uses: sbt/setup-sbt@6bec67c98f542b9e17369bfca0ec822ac1363194 # v1.1.19
+
+      - name: Cache SBT dependencies
+        uses: actions/cache@d4323d4df104b026a6aa633fdb11d772146be0bf # v4.2.2
+        with:
+          path: |
+            ~/.sbt
+            ~/.cache/coursier
+          key: ${{ runner.os }}-sbt-${{ hashFiles('**/*.sbt', 'project/build.properties', 'project/plugins.sbt') }}
+          restore-keys: |
+            ${{ runner.os }}-sbt-
+
+      - name: Build Scala.js
+        run: sbt fastLinkJS
+
+      - name: Assemble site
+        run: |
+          mkdir -p dist/assets
+          cp target/scala-2.13/ui-template-sandbox-fastopt/*.js dist/assets/
+          sed 's|./target/scala-2.13/ui-template-sandbox-fastopt/main.js|./assets/main.js|' index.html > dist/index.html
+
+      - name: Deploy preview to Netlify
+        uses: nwtgck/actions-netlify@4cbaf4c08f1a7bfa537d6113472ef4424e4eb654 # v3.0.0
+        with:
+          publish-dir: ./dist
+          production-deploy: false
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          deploy-message: "PR #${{ github.event.number }} - ${{ github.event.pull_request.title }}"
+          alias: pr-${{ github.event.number }}
+          enable-pull-request-comment: true
+          enable-commit-comment: false
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
