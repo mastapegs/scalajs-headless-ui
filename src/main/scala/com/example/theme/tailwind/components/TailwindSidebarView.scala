@@ -38,7 +38,8 @@ object TailwindSidebarView {
           span(
             cls("text-lg"),
             child.text <-- sidebar.isCollapsed.map(if (_) "\u25B6" else "\u25C0")
-          )
+          ),
+          onClick --> { _ => sidebar.toggleCollapse() }
         )
       ),
       // Navigation items
