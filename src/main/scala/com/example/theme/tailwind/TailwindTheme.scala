@@ -1,7 +1,7 @@
 package com.example.theme.tailwind
 
 import com.example.headless.components.{Counter, Sidebar, TopBar}
-import com.example.headless.pages.{DashboardPage, FetchPage, MetricsPage, SettingsPage}
+import com.example.headless.pages.{DashboardPage, FetchPage, MetricsPage, SettingsPage, UIShowcasePage}
 import com.example.theme.Theme
 import com.example.theme.tailwind.components._
 import com.example.theme.tailwind.pages._
@@ -39,6 +39,8 @@ object TailwindTheme extends Theme {
     TailwindMetricsPageView.render(page)
   def settingsPage(page: SettingsPage): HtmlElement =
     TailwindSettingsPageView.render(page)
+  override def uiShowcasePage(page: UIShowcasePage): HtmlElement =
+    TailwindUIShowcasePageView.render(page)
   protected def renderFetchPage(page: FetchPage): HtmlElement =
     TailwindFetchPageView.render(page)
 

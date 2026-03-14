@@ -55,19 +55,26 @@ sbt ~fastLinkJS
 - **Framework:** [MUnit](https://scalameta.org/munit/) 1.1.0 (Scala.js compatible)
 - **Run tests:** `sbt test`
 - **Test location:** `src/test/scala/com/example/headless/`
-- **Coverage:** All headless components (`Counter`, `Sidebar`, `TopBar`) and page containers (`DashboardPage`, `MetricsPage`, `SettingsPage`, `FetchPage`) — 34 tests total
+- **Coverage:** All headless components (`Counter`, `Sidebar`, `TopBar`, `Tabs`, `Accordion`, `Toggle`, `Progress`, `TagsInput`, `Tooltip`) and page containers (`DashboardPage`, `MetricsPage`, `SettingsPage`, `FetchPage`, `UIShowcasePage`) — 90+ tests total
 - Tests focus on **state and behavior only** — no DOM or rendering tests
 - Tests use `ManualOwner` from Airstream to synchronously read `Signal` values
 
 ```
 src/test/scala/com/example/headless/
 ├── components/
+│   ├── AccordionSuite.scala    # 6 tests: open/close, single/multi mode
 │   ├── CounterSuite.scala      # 5 tests: init, custom init, increment, accumulation
+│   ├── ProgressSuite.scala     # 7 tests: value, percentage, bounds, reset
 │   ├── SidebarSuite.scala      # 8 tests: collapse toggle, navigation, isActive
+│   ├── TabsSuite.scala         # 8 tests: selection, navigation, wrapping
+│   ├── TagsInputSuite.scala    # 9 tests: add, remove, duplicates, max tags
+│   ├── ToggleSuite.scala       # 5 tests: toggle, setOn, setOff
+│   ├── TooltipSuite.scala      # 4 tests: show, hide, text, placement
 │   └── TopBarSuite.scala       # 4 tests: brand, renderer options, selection
 └── pages/
     ├── FetchPageSuite.scala    # 11 tests: Circe decoding, FetchState, TableData
-    └── PagesSuite.scala        # 6 tests: title/description for all 3 pages
+    ├── PagesSuite.scala        # 8 tests: title/description for all pages
+    └── UIShowcasePageSuite.scala  # 10 tests: composition, independent state
 ```
 
 ## Project Structure
@@ -76,17 +83,24 @@ src/test/scala/com/example/headless/
 src/main/scala/com/example/
 ├── App.scala              # Entry point, theme switching, main composition
 ├── AppRouter.scala        # Fragment-based URL routing (Waypoint), page content signal
-├── Page.scala             # Sealed trait: Dashboard | Metrics | Settings | Fetch
+├── Page.scala             # Sealed trait: Dashboard | Metrics | Settings | Fetch | UIShowcase
 ├── headless/
 │   ├── components/        # Pure state/logic (no rendering)
+│   │   ├── Accordion.scala  # Expandable sections with single/multi mode
 │   │   ├── Counter.scala  # Int state + increment()
+│   │   ├── Progress.scala # Bounded value with percentage computation
 │   │   ├── Sidebar.scala  # Collapsed state, current page, navigation
+│   │   ├── Tabs.scala     # Tab selection with keyboard navigation
+│   │   ├── TagsInput.scala # Tag list with add/remove/validation
+│   │   ├── Toggle.scala   # Boolean on/off switch
+│   │   ├── Tooltip.scala  # Hover-driven visibility state
 │   │   └── TopBar.scala   # Brand name, renderer selection (inline/coreui/tailwind)
 │   └── pages/             # Page-level state containers
 │       ├── DashboardPage.scala
 │       ├── FetchPage.scala    # Async data fetching with loading/error/success states
 │       ├── MetricsPage.scala
-│       └── SettingsPage.scala
+│       ├── SettingsPage.scala
+│       └── UIShowcasePage.scala # Composes all headless components as a showcase
 └── theme/
     ├── Theme.scala        # Trait defining render contract + ARIA accessibility
     ├── inline/            # CSS-in-Scala theme (no external deps)
@@ -145,11 +159,14 @@ src/main/scala/com/example/
 - **Scalafix** rules: `OrganizeImports` (grouped, merged)
 - **Scalafmt rewrites:** `SortImports`, `RedundantBraces`, `RedundantParens`, `SortModifiers`
 - **Dialect:** scala213
+- **Compiler flags:** `-Xfatal-warnings` — all warnings are errors (including non-exhaustive match on sealed traits)
 - Always run `sbt fmtall` before committing
 
 ### Running Lint/Format without SBT (Claude Code on the Web)
 
-When running in an environment without SBT (e.g., Claude Code on the Web), use Coursier to install the standalone CLIs. The **JVM-based `coursier.jar`** must be used instead of the native `cs` binary, because the native binary cannot route through the container's HTTP proxy — the JVM jar picks up proxy settings from `JAVA_TOOL_OPTIONS` automatically.
+**SBT cannot run in Claude Code on the Web.** The SBT launcher bootstraps by fetching artifacts from `repo.scala-sbt.org` and `repo.typesafe.com`, which are blocked by the container's HTTP proxy. Only Maven Central (`repo1.maven.org`) is accessible. This means `sbt compile`, `sbt test`, `sbt fastLinkJS`, etc. are all unavailable — compilation and tests must be validated by CI.
+
+For formatting and linting, use Coursier to install standalone CLIs. The **JVM-based `coursier.jar`** must be used instead of the native `cs` binary, because the native binary cannot route through the container's HTTP proxy — the JVM jar picks up proxy settings from `JAVA_TOOL_OPTIONS` automatically.
 
 ```bash
 # 1. Download the Coursier JVM launcher (one-time setup)
@@ -170,9 +187,24 @@ java -jar ~/coursier.jar launch ch.epfl.scala:scalafix-cli_2.13.18:0.14.6 \
   -M scalafix.cli.Cli -- \
   --rules OrganizeImports --config .scalafix.conf \
   -f src/main/scala -f src/test/scala
+
+# 6. Run scalac standalone for type-checking (limited — no Laminar/Scala.js on classpath)
+#    Useful for checking sealed trait exhaustiveness on pure-Scala files:
+java -jar ~/coursier.jar launch org.scala-lang:scala-compiler:2.13.18 \
+  -M scala.tools.nsc.Main -- -d /tmp/out <files...>
 ```
 
 **Note on scalafix:** The `OrganizeImports` rule is semantic and requires SemanticDB output from a prior compilation. Without SBT to compile first, scalafix will report "SemanticDB not found" errors. However, since the project config sets `removeUnused = false`, OrganizeImports only merges and sorts imports — and scalafmt's `SortImports` rewrite already handles import sorting. In practice, **running scalafmt alone is sufficient to pass CI lint checks** as long as imports are written correctly (one import per package, alphabetically ordered).
+
+### Sealed Trait Exhaustiveness
+
+`Page` is a **sealed trait** — the compiler warns on non-exhaustive pattern matches. With `-Xfatal-warnings` enabled in `build.sbt`, these warnings become compile errors in CI. However, since SBT cannot run in Claude Code on the Web, **you must manually ensure all pattern matches on `Page` are updated when adding new cases.** Key locations to check:
+
+- `Page.scala` — `label`, `serialize`, `deserialize`
+- `AppRouter.scala` — `pageContent` match
+- `CoreUiSidebarView.scala` — `iconFor` match
+- `TailwindSidebarView.scala` — `iconFor` match
+- (`InlineSidebarView.scala` does not use icons, so no match to update)
 
 ## CI/CD
 
@@ -192,13 +224,16 @@ Three GitHub Actions workflows in `.github/workflows/`:
 
 ## Adding New Pages
 
-1. Add case to `Page` sealed trait in `Page.scala`
+1. Add case to `Page` sealed trait in `Page.scala` — update `all`, `label`, `serialize`, `deserialize`
 2. Create page state class in `headless/pages/`
-3. Add route in `AppRouter.scala`
-4. Add render methods to `Theme` trait
+3. Add route in `AppRouter.scala` — add route val, add to router routes list, instantiate page, add match case in `pageContent`
+4. Add render method to `Theme` trait (use concrete method with default impl, not abstract — see note below)
 5. Implement page views in all three theme directories: `theme/inline/pages/`, `theme/coreui/pages/`, and `theme/tailwind/pages/`
-6. Add navigation entry in `Sidebar` component
-7. Add tests in `src/test/scala/com/example/headless/pages/`
+6. Override the render method in all three theme objects (`InlineTheme`, `CoreUiTheme`, `TailwindTheme`)
+7. Add icon case in `CoreUiSidebarView.iconFor` and `TailwindSidebarView.iconFor`
+8. Add tests in `src/test/scala/com/example/headless/pages/`
+
+**Note:** When adding page render methods to `Theme`, prefer `def myPage(page: MyPage): HtmlElement = div(...)` (concrete with default) over abstract. This avoids issues with Scala.js `fastLinkJS` ESModule splitting.
 
 ## Adding New Themes
 

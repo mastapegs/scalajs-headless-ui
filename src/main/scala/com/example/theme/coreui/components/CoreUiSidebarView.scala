@@ -49,9 +49,10 @@ object CoreUiSidebarView {
   )
 
   private def iconFor(page: Page): String = page match {
-    case Page.Dashboard => "\u2302"
-    case Page.Metrics   => "\u2261"
-    case Page.Settings  => "\u2699"
-    case Page.Fetch     => "\u21e9"
+    case Page.Dashboard  => "\u2302"
+    case Page.Metrics    => "\u2261"
+    case Page.Settings   => "\u2699"
+    case Page.Fetch      => "\u21e9"
+    case Page.UIShowcase => "\u2726"
   }
 }
