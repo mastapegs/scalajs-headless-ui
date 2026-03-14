@@ -59,15 +59,16 @@ object TailwindTheme extends Theme {
     if (existing != null) existing.parentNode.removeChild(existing)
   }
 
-  def counter(counter: Counter): HtmlElement                                = TailwindCounterView.render(counter)
-  def tabs(tabs: Tabs): HtmlElement                                         = TailwindTabsView.render(tabs)
-  def accordion(accordion: Accordion): HtmlElement                          = TailwindAccordionView.render(accordion)
-  def toggle(toggle: Toggle): HtmlElement                                   = TailwindToggleView.render(toggle)
-  def progress(progress: Progress): HtmlElement                             = TailwindProgressView.render(progress)
-  def tagsInput(tagsInput: TagsInput): HtmlElement                          = TailwindTagsInputView.render(tagsInput)
-  def tooltip(tooltip: Tooltip): HtmlElement                                = TailwindTooltipView.render(tooltip)
-  protected def renderSidebar(sidebar: Sidebar): HtmlElement                = TailwindSidebarView.render(sidebar)
-  protected def renderTopbar(topBar: TopBar, sidebar: Sidebar): HtmlElement = TailwindTopbarView.render(topBar)
+  def counter(counter: Counter): HtmlElement                 = TailwindCounterView.render(counter)
+  def tabs(tabs: Tabs): HtmlElement                          = TailwindTabsView.render(tabs)
+  def accordion(accordion: Accordion): HtmlElement           = TailwindAccordionView.render(accordion)
+  def toggle(toggle: Toggle): HtmlElement                    = TailwindToggleView.render(toggle)
+  def progress(progress: Progress): HtmlElement              = TailwindProgressView.render(progress)
+  def tagsInput(tagsInput: TagsInput): HtmlElement           = TailwindTagsInputView.render(tagsInput)
+  def tooltip(tooltip: Tooltip): HtmlElement                 = TailwindTooltipView.render(tooltip)
+  protected def renderSidebar(sidebar: Sidebar): HtmlElement = TailwindSidebarView.render(sidebar)
+  protected def renderTopbar(topBar: TopBar, sidebar: Sidebar): HtmlElement =
+    TailwindTopbarView.render(topBar, () => sidebar.toggleCollapse())
 
   def dashboardPage(page: DashboardPage): HtmlElement =
     TailwindDashboardPageView.render(page, this)
@@ -82,7 +83,7 @@ object TailwindTheme extends Theme {
 
   protected def renderMainContent(content: Signal[HtmlElement]): Mod[HtmlElement] =
     Seq(
-      cls("flex-grow overflow-y-auto p-8 bg-gray-50"),
+      cls("flex-grow overflow-y-auto p-4 sm:p-6 lg:p-8 bg-gray-50"),
       child <-- content
     )
 
@@ -100,6 +101,12 @@ object TailwindTheme extends Theme {
         marginTop("56px"),
         height("calc(100vh - 56px)"),
         sidebarEl,
+        // Backdrop overlay: visible on mobile when sidebar is expanded, hidden on lg+
+        div(
+          cls("fixed inset-0 bg-black/40 z-30 transition-opacity duration-300 lg:hidden"),
+          cls <-- sidebarModel.isCollapsed.map(if (_) "opacity-0 pointer-events-none" else "opacity-100"),
+          onClick --> { _ => sidebarModel.toggleCollapse() }
+        ),
         mainContentEl
       )
     )
