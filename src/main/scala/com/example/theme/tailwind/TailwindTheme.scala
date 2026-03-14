@@ -1,6 +1,6 @@
 package com.example.theme.tailwind
 
-import com.example.headless.components.{Counter, Sidebar, TopBar}
+import com.example.headless.components._
 import com.example.headless.pages.{DashboardPage, FetchPage, MetricsPage, SettingsPage, UIShowcasePage}
 import com.example.theme.Theme
 import com.example.theme.tailwind.components._
@@ -30,6 +30,12 @@ object TailwindTheme extends Theme {
   }
 
   def counter(counter: Counter): HtmlElement                 = TailwindCounterView.render(counter)
+  def tabs(tabs: Tabs): HtmlElement                          = TailwindTabsView.render(tabs)
+  def accordion(accordion: Accordion): HtmlElement           = TailwindAccordionView.render(accordion)
+  def toggle(toggle: Toggle): HtmlElement                    = TailwindToggleView.render(toggle)
+  def progress(progress: Progress): HtmlElement              = TailwindProgressView.render(progress)
+  def tagsInput(tagsInput: TagsInput): HtmlElement           = TailwindTagsInputView.render(tagsInput)
+  def tooltip(tooltip: Tooltip): HtmlElement                 = TailwindTooltipView.render(tooltip)
   protected def renderSidebar(sidebar: Sidebar): HtmlElement = TailwindSidebarView.render(sidebar)
   protected def renderTopbar(topBar: TopBar): HtmlElement    = TailwindTopbarView.render(topBar)
 
@@ -40,7 +46,7 @@ object TailwindTheme extends Theme {
   def settingsPage(page: SettingsPage): HtmlElement =
     TailwindSettingsPageView.render(page)
   override def uiShowcasePage(page: UIShowcasePage): HtmlElement =
-    TailwindUIShowcasePageView.render(page)
+    TailwindUIShowcasePageView.render(page, this)
   protected def renderFetchPage(page: FetchPage): HtmlElement =
     TailwindFetchPageView.render(page)
 

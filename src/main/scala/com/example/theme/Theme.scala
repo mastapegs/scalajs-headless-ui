@@ -1,7 +1,7 @@
 package com.example.theme
 
 import com.example.AppRouter
-import com.example.headless.components.{Counter, Sidebar, TopBar}
+import com.example.headless.components._
 import com.example.headless.pages.{DashboardPage, FetchPage, MetricsPage, SettingsPage, UIShowcasePage}
 import com.example.theme.coreui.CoreUiTheme
 import com.example.theme.inline.InlineTheme
@@ -15,6 +15,12 @@ trait Theme {
   def onDeactivate(): Unit = ()
 
   def counter(counter: Counter): HtmlElement
+  def tabs(tabs: Tabs): HtmlElement
+  def accordion(accordion: Accordion): HtmlElement
+  def toggle(toggle: Toggle): HtmlElement
+  def progress(progress: Progress): HtmlElement
+  def tagsInput(tagsInput: TagsInput): HtmlElement
+  def tooltip(tooltip: Tooltip): HtmlElement
 
   protected def renderTopbar(topBar: TopBar): HtmlElement
 
