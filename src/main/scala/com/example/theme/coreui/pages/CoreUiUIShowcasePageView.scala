@@ -15,11 +15,16 @@ object CoreUiUIShowcasePageView {
     renderSection("Toggle / Switch", renderToggles(page.toggleDarkMode, page.toggleNotifications)),
     renderSection("Progress", renderProgress(page.progress)),
     renderSection("Tags Input", renderTagsInput(page.tagsInput)),
-    renderSection("Tooltip", renderTooltip(page.tooltip))
+    renderSection("Tooltip", renderTooltip(page.tooltip), overflow.visible)
   )
 
-  private def renderSection(title: String, content: HtmlElement): HtmlElement = div(
+  private def renderSection(
+      title: String,
+      content: HtmlElement,
+      extraMod: Mod[HtmlElement] = emptyMod
+  ): HtmlElement = div(
     cls("card mb-4"),
+    extraMod,
     div(
       cls("card-header"),
       h5(cls("card-title mb-0"), title)
@@ -78,52 +83,72 @@ object CoreUiUIShowcasePageView {
   )
 
   private def renderToggles(darkMode: Toggle, notifications: Toggle): HtmlElement = div(
-    cls("d-flex flex-column gap-3"),
+    display.flex,
+    flexDirection.column,
+    gap("16px"),
     renderSingleToggle(darkMode),
     renderSingleToggle(notifications)
   )
 
   private def renderSingleToggle(toggle: Toggle): HtmlElement = div(
-    cls("form-check form-switch"),
-    input(
-      cls("form-check-input"),
-      tpe    := "checkbox",
-      role   := "switch",
-      idAttr := s"toggle-${toggle.label.toLowerCase.replace(" ", "-")}",
-      controlled(
-        checked <-- toggle.isOn,
-        onChange.mapToChecked --> { _ => toggle.toggle() }
-      )
-    ),
-    label(
-      cls("form-check-label"),
-      forId := s"toggle-${toggle.label.toLowerCase.replace(" ", "-")}",
-      toggle.label,
+    display.flex,
+    alignItems.center,
+    gap("12px"),
+    button(
+      width("48px"),
+      height("26px"),
+      borderRadius("13px"),
+      border("none"),
+      cursor.pointer,
+      position.relative,
+      transition := "background-color 0.2s",
+      backgroundColor <-- toggle.isOn.map(if (_) "var(--cui-primary, #321fdb)" else "#ccc"),
+      role := "switch",
+      aria.checked <-- toggle.isOn.map(_.toString),
+      aria.label := toggle.label,
       span(
-        cls("badge ms-2"),
-        cls <-- toggle.isOn.map(if (_) "text-bg-success" else "text-bg-secondary"),
-        child.text <-- toggle.isOn.map(if (_) "ON" else "OFF")
-      )
+        position.absolute,
+        top("3px"),
+        width("20px"),
+        height("20px"),
+        borderRadius("50%"),
+        backgroundColor("white"),
+        transition := "left 0.2s",
+        left <-- toggle.isOn.map(if (_) "25px" else "3px")
+      ),
+      onClick --> { _ => toggle.toggle() }
+    ),
+    span(fontSize("14px"), fontWeight("500"), toggle.label),
+    span(
+      display.inlineFlex,
+      padding("2px 8px"),
+      borderRadius("12px"),
+      fontSize("12px"),
+      backgroundColor <-- toggle.isOn.map(if (_) "#d4edda" else "#e9ecef"),
+      color <-- toggle.isOn.map(if (_) "#155724" else "#6c757d"),
+      child.text <-- toggle.isOn.map(if (_) "ON" else "OFF")
     )
   )
 
   private def renderProgress(progress: Progress): HtmlElement = div(
+    display.flex,
+    flexDirection.column,
+    gap("12px"),
     div(
-      cls("d-flex justify-content-between mb-2"),
-      span(progress.label),
+      display.flex,
+      justifyContent.spaceBetween,
+      span(fontSize("14px"), fontWeight("500"), progress.label),
       span(
-        cls("text-body-secondary"),
+        fontSize("14px"),
+        color("#6c757d"),
         child.text <-- progress.percentage.map(p => s"$p%")
       )
     ),
-    // Avoid CoreUI's .progress/.progress-bar classes which require JS to animate.
-    // Use inline styles for the reactive width binding instead.
     div(
       height("12px"),
       backgroundColor("#ebedef"),
       borderRadius("6px"),
       overflow.hidden,
-      cls("mb-3"),
       div(
         height("100%"),
         backgroundColor("var(--cui-primary, #321fdb)"),
@@ -136,18 +161,23 @@ object CoreUiUIShowcasePageView {
       )
     ),
     div(
-      cls("btn-group btn-group-sm"),
-      button(cls("btn btn-primary"), "+10%", onClick --> { _ => progress.increment(10) }),
-      button(cls("btn btn-outline-secondary"), "Reset", onClick --> { _ => progress.reset() })
+      display.flex,
+      gap("8px"),
+      button(cls("btn btn-sm btn-primary"), "+10%", onClick --> { _ => progress.increment(10) }),
+      button(cls("btn btn-sm btn-outline-secondary"), "Reset", onClick --> { _ => progress.reset() })
     )
   )
 
   private def renderTagsInput(tagsInput: TagsInput): HtmlElement = div(
     div(
-      cls("d-flex flex-wrap gap-2 align-items-center p-2 border rounded"),
+      display.flex,
+      flexWrap.wrap,
+      gap("8px"),
+      alignItems.center,
+      padding("8px"),
+      border("1px solid #dee2e6"),
+      borderRadius("8px"),
       minHeight("44px"),
-      // Avoid CoreUI's .badge/.btn-close classes which have CSS that can interfere
-      // with Laminar's reactive children rendering. Use inline styles instead.
       children <-- tagsInput.tags.map(_.map { tag =>
         span(
           display.inlineFlex,
@@ -160,8 +190,8 @@ object CoreUiUIShowcasePageView {
           fontSize("13px"),
           tag,
           button(
-            tpe    := "button",
-            border := "none",
+            tpe := "button",
+            border("none"),
             backgroundColor("transparent"),
             color("white"),
             cursor.pointer,
@@ -174,7 +204,9 @@ object CoreUiUIShowcasePageView {
         )
       }),
       input(
-        cls("form-control border-0 shadow-none"),
+        border("none"),
+        outline("none"),
+        fontSize("14px"),
         flexGrow(1),
         minWidth("120px"),
         placeholder := "Type and press Enter...",
@@ -193,14 +225,18 @@ object CoreUiUIShowcasePageView {
         }
       )
     ),
-    small(
-      cls("text-body-secondary mt-1 d-block"),
+    div(
+      marginTop("8px"),
+      fontSize("12px"),
+      color("#6c757d"),
       child.text <-- tagsInput.tagCount.map(c => s"$c tag(s) added")
     )
   )
 
   private def renderTooltip(tooltip: Tooltip): HtmlElement = div(
-    cls("d-flex align-items-center gap-3"),
+    display.flex,
+    alignItems.center,
+    gap("16px"),
     div(
       position.relative,
       display.inlineBlock,
@@ -210,14 +246,12 @@ object CoreUiUIShowcasePageView {
         onMouseEnter --> { _ => tooltip.show() },
         onMouseLeave --> { _ => tooltip.hide() }
       ),
-      // Avoid CoreUI's .tooltip/.tooltip-inner classes which set opacity:0 and
-      // expect JS to add .show. Use inline styles for full Laminar control.
       div(
         position.absolute,
         bottom("calc(100% + 8px)"),
         left("50%"),
         transform := "translateX(-50%)",
-        padding   := "6px 12px",
+        padding("6px 12px"),
         backgroundColor("var(--cui-dark, #212631)"),
         color("white"),
         borderRadius("4px"),
@@ -225,12 +259,14 @@ object CoreUiUIShowcasePageView {
         whiteSpace.nowrap,
         pointerEvents := "none",
         transition    := "opacity 0.2s",
+        zIndex(10),
         opacity <-- tooltip.isVisible.map(if (_) "1" else "0"),
         tooltip.text
       )
     ),
     span(
-      cls("text-body-secondary"),
+      fontSize("14px"),
+      color("#6c757d"),
       child.text <-- tooltip.isVisible.map(if (_) "Tooltip visible" else "Hover the button to see the tooltip")
     )
   )
