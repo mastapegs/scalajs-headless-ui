@@ -49,7 +49,7 @@ class CounterSuite extends FunSuite {
   }
 
   test("increment from custom initial value") {
-    val counter = new Counter(10)
+    val counter = new Counter(initialValue = 10)
     counter.increment()
     assertEquals(signalNow(counter.count), 11)
   }
