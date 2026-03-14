@@ -55,13 +55,14 @@ sbt ~fastLinkJS
 - **Framework:** [MUnit](https://scalameta.org/munit/) 1.1.0 (Scala.js compatible)
 - **Run tests:** `sbt test`
 - **Test location:** `src/test/scala/com/example/headless/`
-- **Coverage:** All headless components (`Counter`, `Sidebar`, `TopBar`, `Tabs`, `Accordion`, `Toggle`, `Progress`, `TagsInput`, `Tooltip`) and page containers (`DashboardPage`, `MetricsPage`, `SettingsPage`, `FetchPage`, `UIShowcasePage`) — 91 tests total
+- **Coverage:** All headless components (`Card`, `Counter`, `Sidebar`, `TopBar`, `Tabs`, `Accordion`, `Toggle`, `Progress`, `TagsInput`, `Tooltip`) and page containers (`DashboardPage`, `MetricsPage`, `SettingsPage`, `FetchPage`, `UIShowcasePage`) — 95 tests total
 - Tests focus on **state and behavior only** — no DOM or rendering tests
 - Tests use `ManualOwner` from Airstream to synchronously read `Signal` values
 
 ```
 src/test/scala/com/example/headless/
 ├── components/
+│   ├── CardSuite.scala         # 4 tests: title, content, independence, type parameters
 │   ├── AccordionSuite.scala    # 6 tests: open/close, single/multi mode
 │   ├── CounterSuite.scala      # 7 tests: init, custom init, increment, decrement, reset, accumulation
 │   ├── ProgressSuite.scala     # 7 tests: value, percentage, bounds, reset
@@ -87,6 +88,7 @@ src/main/scala/com/example/
 ├── headless/
 │   ├── components/        # Pure state/logic (no rendering)
 │   │   ├── Accordion.scala  # Expandable sections with single/multi mode
+│   │   ├── Card.scala     # Generic titled container Card[T, C] (no Laminar dependency)
 │   │   ├── Counter.scala  # Int state + increment()
 │   │   ├── Progress.scala # Bounded value with percentage computation
 │   │   ├── Sidebar.scala  # Collapsed state, current page, navigation
@@ -124,6 +126,7 @@ src/main/scala/com/example/
 - State held in `Var[T]` (mutable reactive cell), exposed as read-only `Signal[T]`
 - No DOM or rendering logic — purely state and behavior
 - Example: `Counter` owns `Var[Int]`, exposes `count: Signal[Int]` and `increment()` method
+- `Card[T, C]` is a generic case class with no Laminar dependency — themes concretize it as `Card[HtmlElement, HtmlElement]`
 
 ### Theme Layer
 - `Theme` trait defines a method per component/page returning `HtmlElement`

@@ -60,6 +60,7 @@ implementation receives headless components and returns `HtmlElement` trees:
 
 ```scala
 trait Theme {
+  def card(card: Card[HtmlElement, HtmlElement]): HtmlElement
   def counter(counter: Counter): HtmlElement
   def tabs(tabs: Tabs): HtmlElement
   def accordion(accordion: Accordion): HtmlElement
@@ -203,6 +204,7 @@ src/main/scala/com/example/
 ├── headless/
 │   ├── components/              # Pure state & logic (no rendering)
 │   │   ├── Accordion.scala      # Expandable sections with single/multi mode
+│   │   ├── Card.scala           # Generic titled container Card[T, C]
 │   │   ├── Counter.scala        # Int state + increment()
 │   │   ├── Progress.scala       # Bounded value with percentage computation
 │   │   ├── Sidebar.scala        # Collapsed state, current page, navigation
@@ -274,7 +276,7 @@ sbt fixall    # Lint + format (Scalafix + Scalafmt)
 ## Testing
 
 The project uses [MUnit](https://scalameta.org/munit/) to test all headless
-components and page containers — 91 tests across 12 suites. Tests focus purely on
+components and page containers — 95 tests across 13 suites. Tests focus purely on
 state and behavior. No DOM, no rendering, no browser required.
 
 ```bash
@@ -284,6 +286,7 @@ sbt test
 ```
 src/test/scala/com/example/headless/
 ├── components/
+│   ├── CardSuite.scala         # 4 tests: title, content, independence, type parameters
 │   ├── AccordionSuite.scala    # 6 tests: open/close, single/multi mode
 │   ├── CounterSuite.scala      # 7 tests: init, custom init, increment, decrement, reset, accumulation
 │   ├── ProgressSuite.scala     # 7 tests: value, percentage, bounds, reset
