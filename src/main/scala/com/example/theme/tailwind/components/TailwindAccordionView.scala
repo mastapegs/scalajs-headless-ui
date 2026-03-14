@@ -10,8 +10,8 @@ import com.raquo.laminar.api.L._
   *   - '''Divide utility''' (`divide-y divide-gray-100`) provides subtle separators between items
   *   - '''Chevron rotation''' via `rotate-180` with `transition-transform duration-200` for a smooth open/close
   *     indicator
-  *   - '''Max-height animation''' (`transition-all duration-300`) reveals content with a sliding motion rather than
-  *     an abrupt show/hide
+  *   - '''Max-height animation''' (`transition-all duration-300`) reveals content with a sliding motion rather than an
+  *     abrupt show/hide
   *   - '''Hover highlight''' (`hover:bg-gray-50`) gives tactile feedback on the clickable header row
   */
 object TailwindAccordionView {
