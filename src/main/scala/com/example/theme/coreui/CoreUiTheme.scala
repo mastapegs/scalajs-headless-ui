@@ -48,6 +48,7 @@ object CoreUiTheme extends Theme {
     if (helper != null) helper.parentNode.removeChild(helper)
   }
 
+  def card(card: Card, content: HtmlElement): HtmlElement    = CoreUiCardView.render(card, content)
   def counter(counter: Counter): HtmlElement                 = CoreUiCounterView.render(counter)
   def tabs(tabs: Tabs): HtmlElement                          = CoreUiTabsView.render(tabs)
   def accordion(accordion: Accordion): HtmlElement           = CoreUiAccordionView.render(accordion)

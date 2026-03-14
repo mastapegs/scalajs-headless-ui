@@ -1,5 +1,6 @@
 package com.example.theme.tailwind.pages
 
+import com.example.headless.components.Card
 import com.example.headless.pages.UIShowcasePage
 import com.example.theme.Theme
 import com.raquo.laminar.api.L._
@@ -7,8 +8,8 @@ import com.raquo.laminar.api.L._
 /** Tailwind UI showcase page that presents every headless component inside a consistent card layout.
   *
   * '''Design techniques:'''
-  *   - '''Section cards''' — each component demo is wrapped in a `bg-white rounded-xl shadow-md border` card with a
-  *     subtle header bar (`border-b bg-gray-50/50`) creating a two-tone card look
+  *   - '''Section cards''' — each component demo is wrapped via `theme.card()` which renders a `bg-white rounded-xl
+  *     shadow-md border` card with a subtle header bar (`border-b bg-gray-50/50`) creating a two-tone card look
   *   - '''Flex-col gap layout''' — uses `flex flex-col gap-8` instead of `space-y-*` to avoid Tailwind v4 margin
   *     collapsing issues with the `space-y` utility
   *   - '''Overflow visible''' on the Tooltip section so the tooltip popup can extend above the card boundary
@@ -23,33 +24,19 @@ object TailwindUIShowcasePageView {
     p(cls("text-gray-500 mb-10"), page.description),
     div(
       cls("flex flex-col gap-8"),
-      renderSection("Tabs", theme.tabs(page.tabs)),
-      renderSection("Accordion", theme.accordion(page.accordion)),
-      renderSection(
-        "Toggle / Switch",
+      theme.card(new Card("Tabs"), theme.tabs(page.tabs)),
+      theme.card(new Card("Accordion"), theme.accordion(page.accordion)),
+      theme.card(
+        new Card("Toggle / Switch"),
         div(
           cls("flex flex-col gap-6"),
           theme.toggle(page.toggleDarkMode),
           theme.toggle(page.toggleNotifications)
         )
       ),
-      renderSection("Progress", theme.progress(page.progress)),
-      renderSection("Tags Input", theme.tagsInput(page.tagsInput)),
-      renderSection("Tooltip", theme.tooltip(page.tooltip), overflow.visible)
+      theme.card(new Card("Progress"), theme.progress(page.progress)),
+      theme.card(new Card("Tags Input"), theme.tagsInput(page.tagsInput)),
+      theme.card(new Card("Tooltip"), theme.tooltip(page.tooltip)).amend(overflow.visible)
     )
-  )
-
-  private def renderSection(
-      title: String,
-      content: HtmlElement,
-      extraMod: Mod[HtmlElement] = emptyMod
-  ): HtmlElement = div(
-    cls("bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden"),
-    extraMod,
-    div(
-      cls("px-7 py-5 border-b border-gray-200 bg-gray-50/80"),
-      h3(cls("text-base font-semibold text-gray-800"), title)
-    ),
-    div(cls("p-7"), content)
   )
 }

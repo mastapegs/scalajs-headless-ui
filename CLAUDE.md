@@ -55,13 +55,14 @@ sbt ~fastLinkJS
 - **Framework:** [MUnit](https://scalameta.org/munit/) 1.1.0 (Scala.js compatible)
 - **Run tests:** `sbt test`
 - **Test location:** `src/test/scala/com/example/headless/`
-- **Coverage:** All headless components (`Counter`, `Sidebar`, `TopBar`, `Tabs`, `Accordion`, `Toggle`, `Progress`, `TagsInput`, `Tooltip`) and page containers (`DashboardPage`, `MetricsPage`, `SettingsPage`, `FetchPage`, `UIShowcasePage`) — 91 tests total
+- **Coverage:** All headless components (`Card`, `Counter`, `Sidebar`, `TopBar`, `Tabs`, `Accordion`, `Toggle`, `Progress`, `TagsInput`, `Tooltip`) and page containers (`DashboardPage`, `MetricsPage`, `SettingsPage`, `FetchPage`, `UIShowcasePage`) — 94 tests total
 - Tests focus on **state and behavior only** — no DOM or rendering tests
 - Tests use `ManualOwner` from Airstream to synchronously read `Signal` values
 
 ```
 src/test/scala/com/example/headless/
 ├── components/
+│   ├── CardSuite.scala         # 3 tests: title, independent titles, empty title
 │   ├── AccordionSuite.scala    # 6 tests: open/close, single/multi mode
 │   ├── CounterSuite.scala      # 7 tests: init, custom init, increment, decrement, reset, accumulation
 │   ├── ProgressSuite.scala     # 7 tests: value, percentage, bounds, reset
@@ -87,6 +88,7 @@ src/main/scala/com/example/
 ├── headless/
 │   ├── components/        # Pure state/logic (no rendering)
 │   │   ├── Accordion.scala  # Expandable sections with single/multi mode
+│   │   ├── Card.scala     # Titled container for grouping content
 │   │   ├── Counter.scala  # Int state + increment()
 │   │   ├── Progress.scala # Bounded value with percentage computation
 │   │   ├── Sidebar.scala  # Collapsed state, current page, navigation
