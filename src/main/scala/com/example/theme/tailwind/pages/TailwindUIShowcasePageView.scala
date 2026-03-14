@@ -24,19 +24,19 @@ object TailwindUIShowcasePageView {
     p(cls("text-gray-500 mb-10"), page.description),
     div(
       cls("flex flex-col gap-8"),
-      theme.card(new Card("Tabs"), theme.tabs(page.tabs)),
-      theme.card(new Card("Accordion"), theme.accordion(page.accordion)),
+      theme.card(Card("Tabs"), theme.tabs(page.tabs)),
+      theme.card(Card("Accordion"), theme.accordion(page.accordion)),
       theme.card(
-        new Card("Toggle / Switch"),
+        Card("Toggle / Switch"),
         div(
           cls("flex flex-col gap-6"),
           theme.toggle(page.toggleDarkMode),
           theme.toggle(page.toggleNotifications)
         )
       ),
-      theme.card(new Card("Progress"), theme.progress(page.progress)),
-      theme.card(new Card("Tags Input"), theme.tagsInput(page.tagsInput)),
-      theme.card(new Card("Tooltip"), theme.tooltip(page.tooltip)).amend(overflow.visible)
+      theme.card(Card("Progress"), theme.progress(page.progress)),
+      theme.card(Card("Tags Input"), theme.tagsInput(page.tagsInput)),
+      theme.card(Card("Tooltip"), theme.tooltip(page.tooltip)).amend(overflow.visible)
     )
   )
 }

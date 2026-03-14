@@ -11,10 +11,10 @@ object CoreUiUIShowcasePageView {
     cls("container-lg"),
     h1(cls("mb-2"), page.title),
     p(cls("text-body-secondary mb-4"), page.description),
-    theme.card(new Card("Tabs"), theme.tabs(page.tabs)),
-    theme.card(new Card("Accordion"), theme.accordion(page.accordion)),
+    theme.card(Card("Tabs"), theme.tabs(page.tabs)),
+    theme.card(Card("Accordion"), theme.accordion(page.accordion)),
     theme.card(
-      new Card("Toggle / Switch"),
+      Card("Toggle / Switch"),
       div(
         display.flex,
         flexDirection.column,
@@ -23,8 +23,8 @@ object CoreUiUIShowcasePageView {
         theme.toggle(page.toggleNotifications)
       )
     ),
-    theme.card(new Card("Progress"), theme.progress(page.progress)),
-    theme.card(new Card("Tags Input"), theme.tagsInput(page.tagsInput)),
-    theme.card(new Card("Tooltip"), theme.tooltip(page.tooltip)).amend(overflow.visible)
+    theme.card(Card("Progress"), theme.progress(page.progress)),
+    theme.card(Card("Tags Input"), theme.tagsInput(page.tagsInput)),
+    theme.card(Card("Tooltip"), theme.tooltip(page.tooltip)).amend(overflow.visible)
   )
 }
