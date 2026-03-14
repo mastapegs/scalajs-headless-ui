@@ -209,9 +209,9 @@ java -jar ~/coursier.jar launch org.scala-lang:scala-compiler:2.13.18 \
 ## CI/CD
 
 Three GitHub Actions workflows in `.github/workflows/`:
-- **ci.yml** — On PRs and pushes to `main` (+ manual dispatch): checks formatting (`scalafmtCheckAll`), linting (`scalafixAll --check`), and runs tests (`sbt test`)
-- **deploy-production.yml** — On push to `main`: runs tests, builds with `sbt fullLinkJS` (optimized), deploys to Netlify production
-- **deploy-preview.yml** — On PRs: runs tests, builds with `sbt fastLinkJS`, deploys Netlify preview, posts preview URL as PR comment
+- **ci.yml** — Reusable workflow (`workflow_call` + `workflow_dispatch`): lint job checks formatting (`scalafmtCheckAll scalafmtSbtCheck`) and linting (`scalafixAll --check`); test job runs `sbt test`
+- **deploy.yml** — On push to `main`: calls ci.yml, then builds with `sbt fullLinkJS` (optimized), deploys to Netlify production
+- **pull-request.yml** — On PRs (opened, synchronize, reopened): calls ci.yml, then builds with `sbt fastLinkJS`, deploys Netlify preview, posts preview URL as PR comment
 - All workflows use Java 17 (Temurin) with SBT dependency caching
 
 ## Adding New Components
