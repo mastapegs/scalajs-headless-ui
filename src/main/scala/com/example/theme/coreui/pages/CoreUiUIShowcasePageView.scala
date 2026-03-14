@@ -65,8 +65,9 @@ object CoreUiUIShowcasePageView {
           )
         ),
         div(
-          cls("accordion-collapse collapse"),
-          cls <-- accordion.isOpen(item.key).map(if (_) "show" else ""),
+          overflow.hidden,
+          maxHeight <-- accordion.isOpen(item.key).map(if (_) "200px" else "0"),
+          transition := "max-height 0.3s ease",
           div(cls("accordion-body"), item.content)
         )
       )
@@ -113,14 +114,19 @@ object CoreUiUIShowcasePageView {
       )
     ),
     div(
-      cls("progress mb-3"),
+      cls("mb-3"),
+      height("1rem"),
+      backgroundColor("var(--cui-secondary-bg, #e9ecef)"),
+      borderRadius("var(--cui-border-radius, 0.375rem)"),
+      overflow.hidden,
       div(
-        cls("progress-bar"),
+        height("100%"),
+        backgroundColor("var(--cui-primary, #5856d6)"),
+        transition := "width 0.3s ease",
+        width <-- progress.percentage.map(p => s"$p%"),
         role := "progressbar",
         aria.valueNow <-- progress.value.map(_.toDouble),
-        aria.label := progress.label,
-        width <-- progress.percentage.map(p => s"$p%"),
-        child.text <-- progress.percentage.map(p => s"$p%")
+        aria.label := progress.label
       )
     ),
     div(
@@ -132,17 +138,32 @@ object CoreUiUIShowcasePageView {
 
   private def renderTagsInput(tagsInput: TagsInput): HtmlElement = div(
     div(
-      cls("d-flex flex-wrap gap-2 align-items-center p-2 border rounded"),
+      display.flex,
+      flexWrap.wrap,
+      gap("8px"),
+      alignItems.center,
+      padding("8px"),
+      cls("border rounded"),
       minHeight("44px"),
       children <-- tagsInput.tags.map(_.map { tag =>
         span(
-          cls("badge text-bg-primary d-inline-flex align-items-center gap-1"),
+          display.inlineFlex,
+          alignItems.center,
+          gap("4px"),
+          padding("4px 10px"),
+          backgroundColor("var(--cui-primary, #5856d6)"),
+          color("white"),
+          borderRadius("16px"),
           fontSize("13px"),
-          padding("6px 10px"),
           tag,
           button(
-            cls("btn-close btn-close-white"),
-            fontSize("10px"),
+            border("none"),
+            backgroundColor("transparent"),
+            color("white"),
+            cursor.pointer,
+            fontSize("14px"),
+            padding("0 2px"),
+            "\u00D7",
             onClick --> { _ => tagsInput.removeTag(tag) }
           )
         )
@@ -185,15 +206,20 @@ object CoreUiUIShowcasePageView {
         onMouseLeave --> { _ => tooltip.hide() }
       ),
       div(
-        cls("tooltip bs-tooltip-top"),
         position.absolute,
-        bottom("calc(100% + 4px)"),
+        bottom("calc(100% + 8px)"),
         left("50%"),
-        transform  := "translateX(-50%)",
-        transition := "opacity 0.2s",
+        transform := "translateX(-50%)",
+        padding("6px 12px"),
+        backgroundColor("#333"),
+        color("white"),
+        borderRadius("4px"),
+        fontSize("12px"),
+        whiteSpace.nowrap,
+        pointerEvents := "none",
+        transition    := "opacity 0.2s",
         opacity <-- tooltip.isVisible.map(if (_) "1" else "0"),
-        display.block,
-        div(cls("tooltip-inner"), tooltip.text)
+        tooltip.text
       )
     ),
     span(
