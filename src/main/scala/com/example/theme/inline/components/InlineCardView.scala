@@ -5,7 +5,7 @@ import com.raquo.laminar.api.L._
 
 object InlineCardView {
 
-  def render(card: Card): HtmlElement = div(
+  def render(card: Card[HtmlElement, HtmlElement]): HtmlElement = div(
     marginBottom("32px"),
     h2(
       fontSize("18px"),

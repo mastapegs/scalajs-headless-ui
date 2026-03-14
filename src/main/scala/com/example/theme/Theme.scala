@@ -21,7 +21,7 @@ trait Theme {
   def progress(progress: Progress): HtmlElement
   def tagsInput(tagsInput: TagsInput): HtmlElement
   def tooltip(tooltip: Tooltip): HtmlElement
-  def card(card: Card): HtmlElement = div(card.title, card.content)
+  def card(card: Card[HtmlElement, HtmlElement]): HtmlElement = div(card.title, card.content)
 
   protected def renderTopbar(topBar: TopBar, sidebar: Sidebar): HtmlElement
 

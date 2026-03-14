@@ -5,7 +5,7 @@ import com.raquo.laminar.api.L._
 
 object CoreUiCardView {
 
-  def render(card: Card): HtmlElement = div(
+  def render(card: Card[HtmlElement, HtmlElement]): HtmlElement = div(
     cls("card mb-4"),
     div(
       cls("card-header"),

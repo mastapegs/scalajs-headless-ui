@@ -1,26 +1,31 @@
 package com.example.headless.components
 
-import com.raquo.laminar.api.L._
 import munit.FunSuite
 
 class CardSuite extends FunSuite {
 
-  test("stores title element") {
-    val title = span("My Card")
-    val card  = Card(title, div())
-    assert(card.title eq title)
+  test("stores title") {
+    val card = Card("My Card", "content")
+    assertEquals(card.title, "My Card")
   }
 
-  test("stores content element") {
-    val content = div("body")
-    val card    = Card(span("Title"), content)
-    assert(card.content eq content)
+  test("stores content") {
+    val card = Card("Title", "body")
+    assertEquals(card.content, "body")
   }
 
-  test("different cards have independent elements") {
-    val card1 = Card(span("First"), div("a"))
-    val card2 = Card(span("Second"), div("b"))
-    assert(!(card1.title eq card2.title))
-    assert(!(card1.content eq card2.content))
+  test("different cards have independent values") {
+    val card1 = Card("First", "a")
+    val card2 = Card("Second", "b")
+    assertEquals(card1.title, "First")
+    assertEquals(card2.title, "Second")
+    assertNotEquals(card1, card2)
+  }
+
+  test("supports different type parameters") {
+    val strCard = Card("title", "content")
+    val intCard = Card(1, 2)
+    assertEquals(strCard.title, "title")
+    assertEquals(intCard.title, 1)
   }
 }

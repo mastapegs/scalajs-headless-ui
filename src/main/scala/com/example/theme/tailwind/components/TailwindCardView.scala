@@ -5,7 +5,7 @@ import com.raquo.laminar.api.L._
 
 object TailwindCardView {
 
-  def render(card: Card): HtmlElement = div(
+  def render(card: Card[HtmlElement, HtmlElement]): HtmlElement = div(
     cls("bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden"),
     div(
       cls("px-7 py-5 border-b border-gray-200 bg-gray-50/80"),
