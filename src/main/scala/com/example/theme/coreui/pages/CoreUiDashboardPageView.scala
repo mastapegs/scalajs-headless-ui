@@ -10,8 +10,8 @@ object CoreUiDashboardPageView {
     h1(cls("mb-3"), page.title),
     p(page.description),
     div(
-      cls("mt-4"),
-      theme.counter(page.counter)
+      cls("mt-4 d-flex flex-column gap-3"),
+      page.counters.map(theme.counter): _*
     )
   )
 }

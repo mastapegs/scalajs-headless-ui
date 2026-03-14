@@ -13,6 +13,12 @@ object InlineCounterView {
     borderRadius("8px"),
     backgroundColor("#f8f9fa"),
     span(
+      fontSize("14px"),
+      fontWeight("500"),
+      color("#6c757d"),
+      counter.label
+    ),
+    span(
       fontSize("24px"),
       fontWeight("600"),
       aria.live   := "polite",

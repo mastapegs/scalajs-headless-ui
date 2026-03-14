@@ -1,8 +1,18 @@
 package com.example.headless.pages
 
+import com.raquo.airstream.core.Signal
+import com.raquo.airstream.ownership.ManualOwner
 import munit.FunSuite
 
 class PagesSuite extends FunSuite {
+
+  private def signalNow[A](signal: Signal[A]): A = {
+    val owner = new ManualOwner
+    var value = Option.empty[A]
+    signal.foreach(v => value = Some(v))(owner)
+    owner.killSubscriptions()
+    value.get
+  }
 
   test("DashboardPage has correct title") {
     val page = new DashboardPage()
@@ -12,6 +22,34 @@ class PagesSuite extends FunSuite {
   test("DashboardPage has correct description") {
     val page = new DashboardPage()
     assertEquals(page.description, "Welcome to the dashboard. This is the main overview page.")
+  }
+
+  test("DashboardPage composes two counters") {
+    val page = new DashboardPage()
+    assertEquals(page.counters.length, 2)
+  }
+
+  test("DashboardPage primary counter starts at 0 with label") {
+    val page    = new DashboardPage()
+    val primary = page.counters.head
+    assertEquals(primary.label, "Primary")
+    assertEquals(signalNow(primary.count), 0)
+  }
+
+  test("DashboardPage secondary counter starts at 100 with label") {
+    val page      = new DashboardPage()
+    val secondary = page.counters(1)
+    assertEquals(secondary.label, "Secondary")
+    assertEquals(signalNow(secondary.count), 100)
+  }
+
+  test("DashboardPage counters have independent state") {
+    val page = new DashboardPage()
+    page.counters.head.increment()
+    page.counters.head.increment()
+    page.counters(1).increment()
+    assertEquals(signalNow(page.counters.head.count), 2)
+    assertEquals(signalNow(page.counters(1).count), 101)
   }
 
   test("MetricsPage has correct title") {

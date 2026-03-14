@@ -10,7 +10,10 @@ object InlineDashboardPageView {
     p(page.description),
     div(
       marginTop("24px"),
-      theme.counter(page.counter)
+      display.flex,
+      flexDirection.column,
+      gap("16px"),
+      page.counters.map(theme.counter): _*
     )
   )
 }
