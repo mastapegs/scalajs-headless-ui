@@ -1,20 +1,11 @@
 package com.example.headless.pages
 
-import com.raquo.airstream.core.Signal
-import com.raquo.airstream.ownership.ManualOwner
+import com.example.headless.SignalHelpers
 import io.circe.generic.auto._
 import io.circe.parser.decode
 import munit.FunSuite
 
-class FetchPageSuite extends FunSuite {
-
-  private def signalNow[A](signal: Signal[A]): A = {
-    val owner = new ManualOwner
-    var value = Option.empty[A]
-    signal.foreach(v => value = Some(v))(owner)
-    owner.killSubscriptions()
-    value.get
-  }
+class FetchPageSuite extends FunSuite with SignalHelpers {
 
   test("FetchPage has correct title") {
     val page = new FetchPage()
