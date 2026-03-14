@@ -138,7 +138,18 @@ src/main/scala/com/example/
 |-------|-----|------------------|-----------------------|
 | **InlineTheme** | `"inline"` | CSS-in-Scala via Laminar DSL (`backgroundColor(...)`, `display.flex`) | None |
 | **CoreUiTheme** | `"coreui"` | CoreUI CSS classes (`cls("card d-flex")`) | CoreUI v5.3.1 CSS (CDN, injected at runtime) |
-| **TailwindTheme** | `"tailwind"` | Tailwind utility classes (`cls("bg-white rounded-lg shadow p-6")`) | Tailwind CSS v4 browser script (CDN, injected at runtime) |
+| **TailwindTheme** | `"tailwind"` | Tailwind utility classes (`cls("bg-white rounded-xl shadow-sm p-6")`) | Tailwind CSS v4 browser script (CDN, injected at runtime) |
+
+### Tailwind Theme Design System
+The Tailwind theme follows a cohesive design language documented via Scaladoc on each view object:
+
+- **Color palette:** Indigo (`indigo-500`/`indigo-600`) primary accent, Slate (`slate-800`/`slate-900`) for dark surfaces (top bar, sidebar), neutral Grays for text and borders
+- **Card surfaces:** `bg-white rounded-xl shadow-sm border border-gray-200/60` with `hover:shadow-md transition-shadow` for interactive lift
+- **Typography:** `text-3xl font-bold text-gray-900` for hero values, `text-sm font-medium text-gray-500` for labels, `leading-relaxed` for body text
+- **Button system:** Primary `bg-indigo-600 hover:bg-indigo-700` with `focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2`; secondary `bg-white border border-gray-300`
+- **Transitions:** `transition-colors duration-150` on buttons, `transition-all duration-200` on layout changes, `transition-shadow` on cards
+- **Layout:** `bg-gray-50` main content background creates contrast against white cards (classic dashboard pattern)
+- **Accessibility:** Focus rings, ARIA attributes, and keyboard navigation across all components
 
 ### Reactive Patterns (Laminar)
 - `Var[T]` — mutable observable state

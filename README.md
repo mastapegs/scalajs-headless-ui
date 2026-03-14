@@ -88,12 +88,33 @@ The project ships with **three themes** to prove the point:
 |-------|------------------|-----------------------|
 | **Inline** | CSS-in-Scala via Laminar's DSL (`backgroundColor(...)`, `display.flex`) | None |
 | **CoreUI** | [CoreUI](https://coreui.io/) v5.3.1 CSS classes (`cls("card d-flex")`) | CoreUI stylesheet (CDN) |
-| **Tailwind** | [Tailwind CSS](https://tailwindcss.com/) v4 utility classes (`cls("bg-white rounded-lg shadow p-6")`) | Tailwind browser script (CDN) |
+| **Tailwind** | [Tailwind CSS](https://tailwindcss.com/) v4 utility classes (`cls("bg-white rounded-xl shadow-sm p-6")`) | Tailwind browser script (CDN) |
 
 All three themes read from the exact same headless components. You can switch
 between them at runtime using the selector in the top bar and watch the UI
 completely transform while the underlying state stays intact. That's the whole
 point.
+
+#### Tailwind Theme Design System
+
+The Tailwind theme uses a cohesive design system built from utility-first
+principles. Each view object documents its specific techniques via Scaladoc.
+Here are the overarching conventions:
+
+- **Color palette** — Indigo as the primary accent (`indigo-500`/`indigo-600`),
+  Slate for dark surfaces (top bar, sidebar), and neutral Grays for text and
+  borders.
+- **Card surfaces** — `bg-white rounded-xl shadow-sm border border-gray-200/60`
+  with `hover:shadow-md transition-shadow` for interactive lift on hover.
+- **Typography** — Bold headings (`text-2xl font-bold text-gray-900`), muted
+  labels (`text-sm font-medium text-gray-500`), and relaxed body text.
+- **Button system** — Primary buttons in indigo with hover/active/focus states
+  and `focus:ring-2 focus:ring-offset-2` for accessible focus indication.
+  Secondary buttons use a white background with a gray border.
+- **Transitions** — Smooth `transition-colors`, `transition-shadow`, and
+  `transition-all` on interactive elements for a polished, responsive feel.
+- **Layout** — Gray-50 main content background creates contrast against white
+  cards, a classic dashboard pattern. Gradient sidebar and top bar add depth.
 
 ### How Themes Load External Resources
 
