@@ -1,7 +1,7 @@
 package com.example.theme.coreui.pages
 
-import com.example.headless.components.PageContainer
-import com.example.headless.pages.{FetchPage, FetchState}
+import com.example.headless.components.{FetchState, PageContainer}
+import com.example.headless.pages.FetchPage
 import com.example.theme.Theme
 import com.raquo.laminar.api.L._
 
@@ -17,8 +17,8 @@ object CoreUiFetchPageView {
             div(cls("text-center"), div(cls("spinner-border"), role("status")))
           case FetchState.Error(msg) =>
             div(cls("alert alert-danger"), s"Error: $msg")
-          case FetchState.Success(_, table) =>
-            theme.table(table)
+          case FetchState.Success(tables) =>
+            div(tables.map(t => div(cls("mb-4"), theme.table(t))))
         }
       )
     )

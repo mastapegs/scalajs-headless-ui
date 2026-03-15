@@ -1,7 +1,7 @@
 package com.example.theme.inline.pages
 
-import com.example.headless.components.PageContainer
-import com.example.headless.pages.{FetchPage, FetchState}
+import com.example.headless.components.{FetchState, PageContainer}
+import com.example.headless.pages.FetchPage
 import com.example.theme.Theme
 import com.raquo.laminar.api.L._
 
@@ -16,8 +16,8 @@ object InlineFetchPageView {
           case FetchState.Loading => p("Loading...")
           case FetchState.Error(msg) =>
             p(color("red"), s"Error: $msg")
-          case FetchState.Success(_, table) =>
-            theme.table(table)
+          case FetchState.Success(tables) =>
+            div(tables.map(t => div(marginBottom("24px"), theme.table(t))))
         }
       )
     )

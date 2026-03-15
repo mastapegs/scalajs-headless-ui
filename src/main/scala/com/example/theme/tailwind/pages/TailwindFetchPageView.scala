@@ -1,7 +1,7 @@
 package com.example.theme.tailwind.pages
 
-import com.example.headless.components.PageContainer
-import com.example.headless.pages.{FetchPage, FetchState}
+import com.example.headless.components.{FetchState, PageContainer}
+import com.example.headless.pages.FetchPage
 import com.example.theme.Theme
 import com.raquo.laminar.api.L._
 
@@ -36,8 +36,8 @@ object TailwindFetchPageView {
               div(cls("font-semibold text-sm"), "Error"),
               div(cls("text-sm mt-1"), msg)
             )
-          case FetchState.Success(_, table) =>
-            theme.table(table)
+          case FetchState.Success(tables) =>
+            div(cls("space-y-6"), tables.map(t => theme.table(t)))
         }
       )
     )
