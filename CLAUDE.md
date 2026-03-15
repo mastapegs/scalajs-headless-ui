@@ -55,7 +55,7 @@ sbt ~fastLinkJS
 - **Framework:** [MUnit](https://scalameta.org/munit/) 1.1.0 (Scala.js compatible)
 - **Run tests:** `sbt test`
 - **Test location:** `src/test/scala/com/example/headless/`
-- **Coverage:** All headless components (`Card`, `Counter`, `Sidebar`, `TopBar`, `Tabs`, `Accordion`, `Toggle`, `Progress`, `TagsInput`, `Tooltip`, `Table`, `PageContainer`) and page containers (`DashboardPage`, `MetricsPage`, `SettingsPage`, `FetchPage`, `UIShowcasePage`) — 111 tests total
+- **Coverage:** All headless components (`Card`, `Counter`, `Modal`, `Sidebar`, `TopBar`, `Tabs`, `Accordion`, `Toggle`, `Progress`, `TagsInput`, `Tooltip`, `Table`, `PageContainer`) and page containers (`DashboardPage`, `MetricsPage`, `SettingsPage`, `FetchPage`, `UIShowcasePage`) — 128 tests total
 - Tests focus on **state and behavior only** — no DOM or rendering tests
 - Tests use `ManualOwner` from Airstream to synchronously read `Signal` values
 
@@ -66,6 +66,7 @@ src/test/scala/com/example/headless/
 │   ├── AccordionSuite.scala       # 6 tests: open/close, single/multi mode
 │   ├── CardSuite.scala            # 4 tests: title, content, independence, type parameters
 │   ├── CounterSuite.scala         # 7 tests: init, custom init, increment, decrement, reset, accumulation
+│   ├── ModalSuite.scala           # 16 tests: open/close, escape/outside policies, mapContent, shared state
 │   ├── PageContainerSuite.scala   # 5 tests: title, description, content, independence, type parameters
 │   ├── ProgressSuite.scala        # 7 tests: value, percentage, bounds, reset
 │   ├── SidebarSuite.scala         # 8 tests: collapse toggle, navigation, isActive
@@ -78,7 +79,7 @@ src/test/scala/com/example/headless/
 └── pages/
     ├── FetchPageSuite.scala       # 16 tests: Circe decoding, FetchState, Table transformation
     ├── PagesSuite.scala           # 12 tests: title/description for all pages
-    └── UIShowcasePageSuite.scala  # 10 tests: composition, independent state
+    └── UIShowcasePageSuite.scala  # 11 tests: composition, independent state
 ```
 
 ## Project Structure
@@ -95,6 +96,7 @@ src/main/scala/com/example/
 │   │   ├── Counter.scala       # Int state + increment()
 │   │   ├── FetchEndpoint.scala # Reusable JSON endpoint fetcher — decodes JSON arrays into Table
 │   │   ├── FetchState.scala    # ADT: Loading | Error(msg) | Success(data) for async operations
+│   │   ├── Modal.scala         # Generic dialog with open/close state and close-policy flags
 │   │   ├── PageContainer.scala # Generic page wrapper PageContainer[C] (title + description + content)
 │   │   ├── Progress.scala      # Bounded value with percentage computation
 │   │   ├── Sidebar.scala       # Collapsed state, current page, navigation
@@ -114,15 +116,15 @@ src/main/scala/com/example/
     ├── Theme.scala        # Trait defining render contract + ARIA accessibility + app layout
     ├── inline/            # CSS-in-Scala theme (no external deps)
     │   ├── InlineTheme.scala
-    │   ├── components/    # 12 views: Accordion, Card, Counter, PageContainer, Progress, Sidebar, Table, Tabs, TagsInput, Toggle, Tooltip, Topbar
+    │   ├── components/    # 13 views: Accordion, Card, Counter, Modal, PageContainer, Progress, Sidebar, Table, Tabs, TagsInput, Toggle, Tooltip, Topbar
     │   └── pages/         # InlineDashboardPageView, InlineFetchPageView, InlineMetricsPageView, InlineSettingsPageView, InlineUIShowcasePageView
     ├── coreui/            # CoreUI CSS framework theme (v5.3.1 via CDN)
     │   ├── CoreUiTheme.scala
-    │   ├── components/    # 12 views: same set as inline, prefixed with CoreUi
+    │   ├── components/    # 13 views: same set as inline, prefixed with CoreUi
     │   └── pages/         # CoreUiDashboardPageView, CoreUiFetchPageView, CoreUiMetricsPageView, CoreUiSettingsPageView, CoreUiUIShowcasePageView
     └── tailwind/          # Tailwind CSS theme (v4 via CDN)
         ├── TailwindTheme.scala
-        ├── components/    # 12 views: same set as inline, prefixed with Tailwind
+        ├── components/    # 13 views: same set as inline, prefixed with Tailwind
         └── pages/         # TailwindDashboardPageView, TailwindFetchPageView, TailwindMetricsPageView, TailwindSettingsPageView, TailwindUIShowcasePageView
 ```
 
@@ -138,6 +140,7 @@ src/main/scala/com/example/
 - `Table` is a case class holding optional caption, headers, and string rows
 - `FetchState[+T]` is a sealed ADT (`Loading | Error | Success`) for async operation states
 - `FetchEndpoint` is a utility object that fetches a JSON array endpoint, decodes it via Circe, and produces a `Table`
+- `Modal[C]` is a generic class combining open/close state (like `Toggle`) with a titled content container; supports `closeOnEscape` and `closeOnOutsideClick` policy flags; `mapContent` creates a view sharing the same state with transformed content type
 
 ### Theme Layer
 - `Theme` trait defines a method per component/page returning `HtmlElement`
