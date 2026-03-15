@@ -16,8 +16,8 @@ object InlineFetchPageView {
           case FetchState.Loading => p("Loading...")
           case FetchState.Error(msg) =>
             p(color("red"), s"Error: $msg")
-          case FetchState.Success(_, table) =>
-            theme.table(table)
+          case FetchState.Success(tables) =>
+            div(tables.map(t => div(marginBottom("24px"), theme.table(t))): _*)
         }
       )
     )
