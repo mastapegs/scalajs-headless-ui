@@ -9,8 +9,9 @@ import munit.FunSuite
 class FetchPageSuite extends FunSuite with SignalHelpers {
 
   private def tableFromPosts(posts: List[Post]): Table = Table(
+    caption = Some("JSONPlaceholder Posts"),
     headers = List("ID", "User ID", "Title", "Body"),
-    rows = posts.map(p => List(p.id.toString, p.userId.toString, p.title, p.body))
+    rows = posts.take(10).map(p => List(p.id.toString, p.userId.toString, p.title, p.body))
   )
 
   test("FetchPage has correct title") {

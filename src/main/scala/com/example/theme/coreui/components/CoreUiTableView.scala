@@ -9,6 +9,7 @@ object CoreUiTableView {
       cls("table-responsive"),
       table(
         cls("table table-striped table-hover"),
+        t.caption.map(c => htmlTag("caption")(c)),
         thead(
           tr(t.headers.map(h => th(cls("text-nowrap"), h)))
         ),

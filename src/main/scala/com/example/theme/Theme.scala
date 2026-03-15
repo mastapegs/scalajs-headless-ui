@@ -22,6 +22,7 @@ trait Theme {
   def tagsInput(tagsInput: TagsInput): HtmlElement
   def tooltip(tooltip: Tooltip): HtmlElement
   def table(table: Table): HtmlElement = htmlTag("table")(
+    table.caption.map(c => htmlTag("caption")(c)),
     thead(tr(table.headers.map(h => th(h)))),
     tbody(table.rows.map(row => tr(row.map(cell => htmlTag("td")(cell)))))
   )

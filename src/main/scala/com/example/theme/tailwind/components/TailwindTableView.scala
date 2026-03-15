@@ -19,6 +19,7 @@ object TailwindTableView {
         cls("overflow-x-auto"),
         table(
           cls("min-w-full divide-y divide-gray-200"),
+          t.caption.map(c => htmlTag("caption")(cls("px-6 py-3 text-left text-sm font-semibold text-gray-700"), c)),
           thead(
             cls("bg-gray-50"),
             tr(

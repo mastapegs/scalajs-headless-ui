@@ -8,6 +8,7 @@ object InlineTableView {
     table(
       width("100%"),
       borderCollapse("collapse"),
+      t.caption.map(c => htmlTag("caption")(textAlign.left, fontWeight.bold, padding("8px 12px"), c)),
       thead(
         tr(
           t.headers.map(h =>
