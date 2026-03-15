@@ -55,26 +55,29 @@ sbt ~fastLinkJS
 - **Framework:** [MUnit](https://scalameta.org/munit/) 1.1.0 (Scala.js compatible)
 - **Run tests:** `sbt test`
 - **Test location:** `src/test/scala/com/example/headless/`
-- **Coverage:** All headless components (`Card`, `Counter`, `Sidebar`, `TopBar`, `Tabs`, `Accordion`, `Toggle`, `Progress`, `TagsInput`, `Tooltip`) and page containers (`DashboardPage`, `MetricsPage`, `SettingsPage`, `FetchPage`, `UIShowcasePage`) — 95 tests total
+- **Coverage:** All headless components (`Card`, `Counter`, `Sidebar`, `TopBar`, `Tabs`, `Accordion`, `Toggle`, `Progress`, `TagsInput`, `Tooltip`, `Table`, `PageContainer`) and page containers (`DashboardPage`, `MetricsPage`, `SettingsPage`, `FetchPage`, `UIShowcasePage`) — 111 tests total
 - Tests focus on **state and behavior only** — no DOM or rendering tests
 - Tests use `ManualOwner` from Airstream to synchronously read `Signal` values
 
 ```
 src/test/scala/com/example/headless/
+├── TestHelpers.scala          # SignalHelpers trait: synchronously reads Signal values via ManualOwner
 ├── components/
-│   ├── CardSuite.scala         # 4 tests: title, content, independence, type parameters
-│   ├── AccordionSuite.scala    # 6 tests: open/close, single/multi mode
-│   ├── CounterSuite.scala      # 7 tests: init, custom init, increment, decrement, reset, accumulation
-│   ├── ProgressSuite.scala     # 7 tests: value, percentage, bounds, reset
-│   ├── SidebarSuite.scala      # 8 tests: collapse toggle, navigation, isActive
-│   ├── TabsSuite.scala         # 8 tests: selection, navigation, wrapping
-│   ├── TagsInputSuite.scala    # 9 tests: add, remove, duplicates, max tags
-│   ├── ToggleSuite.scala       # 5 tests: toggle, setOn, setOff
-│   ├── TooltipSuite.scala      # 4 tests: show, hide, text, placement
-│   └── TopBarSuite.scala       # 4 tests: brand, renderer options, selection
+│   ├── AccordionSuite.scala       # 6 tests: open/close, single/multi mode
+│   ├── CardSuite.scala            # 4 tests: title, content, independence, type parameters
+│   ├── CounterSuite.scala         # 7 tests: init, custom init, increment, decrement, reset, accumulation
+│   ├── PageContainerSuite.scala   # 5 tests: title, description, content, independence, type parameters
+│   ├── ProgressSuite.scala        # 7 tests: value, percentage, bounds, reset
+│   ├── SidebarSuite.scala         # 8 tests: collapse toggle, navigation, isActive
+│   ├── TableSuite.scala           # 6 tests: headers, rows, empty table, independence, caption
+│   ├── TabsSuite.scala            # 8 tests: selection, navigation, wrapping
+│   ├── TagsInputSuite.scala       # 9 tests: add, remove, duplicates, max tags
+│   ├── ToggleSuite.scala          # 5 tests: toggle, setOn, setOff
+│   ├── TooltipSuite.scala         # 4 tests: show, hide, text, placement
+│   └── TopBarSuite.scala          # 4 tests: brand, renderer options, selection
 └── pages/
-    ├── FetchPageSuite.scala    # 11 tests: Circe decoding, FetchState, TableData
-    ├── PagesSuite.scala        # 12 tests: title/description for all pages
+    ├── FetchPageSuite.scala       # 16 tests: Circe decoding, FetchState, Table transformation
+    ├── PagesSuite.scala           # 12 tests: title/description for all pages
     └── UIShowcasePageSuite.scala  # 10 tests: composition, independent state
 ```
 
@@ -87,36 +90,40 @@ src/main/scala/com/example/
 ├── Page.scala             # Sealed trait: Dashboard | Metrics | Settings | Fetch | UIShowcase
 ├── headless/
 │   ├── components/        # Pure state/logic (no rendering)
-│   │   ├── Accordion.scala  # Expandable sections with single/multi mode
-│   │   ├── Card.scala     # Generic titled container Card[T, C] (no Laminar dependency)
-│   │   ├── Counter.scala  # Int state + increment()
-│   │   ├── Progress.scala # Bounded value with percentage computation
-│   │   ├── Sidebar.scala  # Collapsed state, current page, navigation
-│   │   ├── Tabs.scala     # Tab selection with keyboard navigation
-│   │   ├── TagsInput.scala # Tag list with add/remove/validation
-│   │   ├── Toggle.scala   # Boolean on/off switch
-│   │   ├── Tooltip.scala  # Hover-driven visibility state
-│   │   └── TopBar.scala   # Brand name, renderer selection (inline/coreui/tailwind)
+│   │   ├── Accordion.scala     # Expandable sections with single/multi mode
+│   │   ├── Card.scala          # Generic titled container Card[T, C] (no Laminar dependency)
+│   │   ├── Counter.scala       # Int state + increment()
+│   │   ├── FetchEndpoint.scala # Reusable JSON endpoint fetcher — decodes JSON arrays into Table
+│   │   ├── FetchState.scala    # ADT: Loading | Error(msg) | Success(data) for async operations
+│   │   ├── PageContainer.scala # Generic page wrapper PageContainer[C] (title + description + content)
+│   │   ├── Progress.scala      # Bounded value with percentage computation
+│   │   ├── Sidebar.scala       # Collapsed state, current page, navigation
+│   │   ├── Table.scala         # Data table: optional caption, headers, and string rows
+│   │   ├── Tabs.scala          # Tab selection with keyboard navigation
+│   │   ├── TagsInput.scala     # Tag list with add/remove/validation
+│   │   ├── Toggle.scala        # Boolean on/off switch
+│   │   ├── Tooltip.scala       # Hover-driven visibility state
+│   │   └── TopBar.scala        # Brand name, renderer selection (inline/coreui/tailwind)
 │   └── pages/             # Page-level state containers
 │       ├── DashboardPage.scala
-│       ├── FetchPage.scala    # Async data fetching with loading/error/success states
+│       ├── FetchPage.scala    # Async data fetching with loading/error/success states (uses FetchEndpoint + Table)
 │       ├── MetricsPage.scala
 │       ├── SettingsPage.scala
 │       └── UIShowcasePage.scala # Composes all headless components as a showcase
 └── theme/
-    ├── Theme.scala        # Trait defining render contract + ARIA accessibility
+    ├── Theme.scala        # Trait defining render contract + ARIA accessibility + app layout
     ├── inline/            # CSS-in-Scala theme (no external deps)
     │   ├── InlineTheme.scala
-    │   ├── components/    # InlineCounterView, InlineSidebarView, InlineTopbarView
-    │   └── pages/         # InlineDashboardPageView, InlineFetchPageView, etc.
+    │   ├── components/    # 12 views: Accordion, Card, Counter, PageContainer, Progress, Sidebar, Table, Tabs, TagsInput, Toggle, Tooltip, Topbar
+    │   └── pages/         # InlineDashboardPageView, InlineFetchPageView, InlineMetricsPageView, InlineSettingsPageView, InlineUIShowcasePageView
     ├── coreui/            # CoreUI CSS framework theme (v5.3.1 via CDN)
     │   ├── CoreUiTheme.scala
-    │   ├── components/    # CoreUiCounterView, CoreUiSidebarView, CoreUiTopbarView
-    │   └── pages/         # CoreUiDashboardPageView, CoreUiFetchPageView, etc.
+    │   ├── components/    # 12 views: same set as inline, prefixed with CoreUi
+    │   └── pages/         # CoreUiDashboardPageView, CoreUiFetchPageView, CoreUiMetricsPageView, CoreUiSettingsPageView, CoreUiUIShowcasePageView
     └── tailwind/          # Tailwind CSS theme (v4 via CDN)
         ├── TailwindTheme.scala
-        ├── components/    # TailwindCounterView, TailwindSidebarView, TailwindTopbarView
-        └── pages/         # TailwindDashboardPageView, TailwindFetchPageView, etc.
+        ├── components/    # 12 views: same set as inline, prefixed with Tailwind
+        └── pages/         # TailwindDashboardPageView, TailwindFetchPageView, TailwindMetricsPageView, TailwindSettingsPageView, TailwindUIShowcasePageView
 ```
 
 ## Architecture & Key Patterns
@@ -127,6 +134,10 @@ src/main/scala/com/example/
 - No DOM or rendering logic — purely state and behavior
 - Example: `Counter` owns `Var[Int]`, exposes `count: Signal[Int]` and `increment()` method
 - `Card[T, C]` is a generic case class with no Laminar dependency — themes concretize it as `Card[HtmlElement, HtmlElement]`
+- `PageContainer[C]` is a generic case class wrapping page-level structure (title + description + content)
+- `Table` is a case class holding optional caption, headers, and string rows
+- `FetchState[+T]` is a sealed ADT (`Loading | Error | Success`) for async operation states
+- `FetchEndpoint` is a utility object that fetches a JSON array endpoint, decodes it via Circe, and produces a `Table`
 
 ### Theme Layer
 - `Theme` trait defines a method per component/page returning `HtmlElement`
@@ -134,6 +145,8 @@ src/main/scala/com/example/
 - Themes are swappable at runtime without touching business logic
 - `Theme.all` lists all available themes; `Theme.forKey(key)` resolves by string key
 - `onActivate()` / `onDeactivate()` lifecycle hooks for CDN resource injection (CoreUI stylesheet, Tailwind script)
+- `appLayout()` is a final method that composes `topbar()`, `sidebar()`, and `mainContent()` into the full page layout
+- `table()`, `card()`, and `pageContainer()` have concrete default implementations that themes can override
 - ARIA accessibility: `topbar()`, `sidebar()`, `mainContent()`, and `fetchPage()` are final methods that wrap rendered output with `aria.label` attributes or lifecycle hooks
 
 ### Three Theme Implementations

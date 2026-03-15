@@ -53,6 +53,20 @@ state lives in a private `Var`, the outside world reads it through a `Signal`, a
 mutations happen through explicit methods. This is a small but meaningful
 discipline — it means you can *always* reason about where state changes come from.
 
+Not every headless component needs reactive state, though. Some are pure data
+containers — `Card[T, C]`, `Table`, and `PageContainer[C]` are simple case classes
+that capture structure without any `Var` or `Signal`. A `Table`, for instance, is
+just a caption, headers, and rows. A `PageContainer` is just a title, description,
+and content. Themes decide what to *do* with that data. The headless layer just
+holds it.
+
+There are also a few supporting pieces that round out the component library:
+`FetchState[+T]` is a sealed ADT that models the lifecycle of an async operation
+(`Loading`, `Error`, or `Success`), and `FetchEndpoint` is a utility that fetches
+a JSON array from a URL, decodes it with Circe, and produces a `Table`. These
+aren't UI components in the traditional sense, but they follow the same philosophy
+— pure logic, no rendering opinions.
+
 ### 2. Theme Layer — Presentation & the `Theme` Trait Contract
 
 A `Theme` trait defines how every headless component gets rendered. Each theme
@@ -60,7 +74,6 @@ implementation receives headless components and returns `HtmlElement` trees:
 
 ```scala
 trait Theme {
-  def card(card: Card[HtmlElement, HtmlElement]): HtmlElement
   def counter(counter: Counter): HtmlElement
   def tabs(tabs: Tabs): HtmlElement
   def accordion(accordion: Accordion): HtmlElement
@@ -68,6 +81,9 @@ trait Theme {
   def progress(progress: Progress): HtmlElement
   def tagsInput(tagsInput: TagsInput): HtmlElement
   def tooltip(tooltip: Tooltip): HtmlElement
+  def table(table: Table): HtmlElement
+  def card(card: Card[HtmlElement, HtmlElement]): HtmlElement
+  def pageContainer(container: PageContainer[HtmlElement]): HtmlElement
 
   def dashboardPage(page: DashboardPage): HtmlElement
   def metricsPage(page: MetricsPage): HtmlElement
@@ -82,6 +98,14 @@ component without declaring it in `Theme` means no theme can render it. Adding a
 page without a corresponding `Theme` method means the router has nothing to
 display. The compiler will remind you — `Theme` is the single source of truth for
 what the presentation layer is expected to render.
+
+Some methods — `table()`, `card()`, and `pageContainer()` — come with concrete
+default implementations, so themes only need to override them when they want
+something fancier than the fallback. Others are abstract and *must* be implemented
+by every theme. The `appLayout()` method ties everything together: it's a `final`
+method that composes the top bar, sidebar, and main content into a complete page
+shell, so individual themes only need to define `renderAppLayout()` with their
+own structural approach.
 
 The project ships with **three themes** to prove the point:
 
@@ -128,10 +152,11 @@ any given time.
 
 ### Accessibility
 
-The `Theme` trait includes `final` methods — `topbar()`, `sidebar()`, and
-`mainContent()` — that wrap each theme's rendered output with ARIA `role` and
-`aria-label` attributes. This means accessibility semantics are enforced at the
-trait level, not left up to individual theme implementations to remember.
+The `Theme` trait includes `final` methods — `topbar()`, `sidebar()`,
+`mainContent()`, and `fetchPage()` — that wrap each theme's rendered output with
+ARIA `role` and `aria-label` attributes. This means accessibility semantics are
+enforced at the trait level, not left up to individual theme implementations to
+remember.
 
 ## Extending the Project
 
@@ -142,7 +167,8 @@ together, and keeping it in sync is the one thing you genuinely can't skip.
 ### Adding a New Component
 
 1. **Create the headless component** in `headless/components/`. Define state with
-   `Var`, expose it through `Signal`, and provide methods for mutations.
+   `Var`, expose it through `Signal`, and provide methods for mutations. (Or, if
+   it's a pure data container like `Table`, a simple case class will do.)
 2. **Add a render method to the `Theme` trait** in `theme/Theme.scala`. This is
    what makes every theme aware that the component exists. Without this step, the
    component is invisible to the presentation layer.
@@ -206,8 +232,12 @@ src/main/scala/com/example/
 │   │   ├── Accordion.scala      # Expandable sections with single/multi mode
 │   │   ├── Card.scala           # Generic titled container Card[T, C]
 │   │   ├── Counter.scala        # Int state + increment()
+│   │   ├── FetchEndpoint.scala  # Reusable JSON endpoint fetcher — decodes into Table
+│   │   ├── FetchState.scala     # ADT: Loading | Error | Success for async operations
+│   │   ├── PageContainer.scala  # Generic page wrapper PageContainer[C] (title + desc + content)
 │   │   ├── Progress.scala       # Bounded value with percentage computation
 │   │   ├── Sidebar.scala        # Collapsed state, current page, navigation
+│   │   ├── Table.scala          # Data table: optional caption, headers, and string rows
 │   │   ├── Tabs.scala           # Tab selection with keyboard navigation
 │   │   ├── TagsInput.scala      # Tag list with add/remove/validation
 │   │   ├── Toggle.scala         # Boolean on/off switch
@@ -215,24 +245,24 @@ src/main/scala/com/example/
 │   │   └── TopBar.scala         # Brand name, renderer selection
 │   └── pages/                   # Page-level state containers
 │       ├── DashboardPage.scala
-│       ├── FetchPage.scala      # Async data fetching with loading/error/success states
+│       ├── FetchPage.scala      # Async multi-endpoint fetching (uses FetchEndpoint + Table)
 │       ├── MetricsPage.scala
 │       ├── SettingsPage.scala
 │       └── UIShowcasePage.scala  # Composes all headless components as a showcase
 └── theme/
-    ├── Theme.scala              # Trait defining the render contract
+    ├── Theme.scala              # Trait defining the render contract + ARIA + app layout
     ├── inline/                  # CSS-in-Scala theme (no external deps)
     │   ├── InlineTheme.scala
-    │   ├── components/          # InlineCounterView, InlineSidebarView, ...
-    │   └── pages/               # InlineDashboardPageView, ...
+    │   ├── components/          # 12 views (one per headless component)
+    │   └── pages/               # 5 page views
     ├── coreui/                  # CoreUI CSS framework theme
     │   ├── CoreUiTheme.scala
-    │   ├── components/          # CoreUiCounterView, CoreUiSidebarView, ...
-    │   └── pages/               # CoreUiDashboardPageView, ...
+    │   ├── components/          # 12 views
+    │   └── pages/               # 5 page views
     └── tailwind/                # Tailwind CSS utility theme
         ├── TailwindTheme.scala
-        ├── components/          # TailwindCounterView, TailwindSidebarView, ...
-        └── pages/               # TailwindDashboardPageView, ...
+        ├── components/          # 12 views
+        └── pages/               # 5 page views
 ```
 
 ## Getting Started
@@ -276,8 +306,8 @@ sbt fixall    # Lint + format (Scalafix + Scalafmt)
 ## Testing
 
 The project uses [MUnit](https://scalameta.org/munit/) to test all headless
-components and page containers — 95 tests across 13 suites. Tests focus purely on
-state and behavior. No DOM, no rendering, no browser required.
+components and page containers — 111 tests across 15 suites. Tests focus purely
+on state and behavior. No DOM, no rendering, no browser required.
 
 ```bash
 sbt test
@@ -285,26 +315,33 @@ sbt test
 
 ```
 src/test/scala/com/example/headless/
+├── TestHelpers.scala              # SignalHelpers trait for synchronously reading Signal values
 ├── components/
-│   ├── CardSuite.scala         # 4 tests: title, content, independence, type parameters
-│   ├── AccordionSuite.scala    # 6 tests: open/close, single/multi mode
-│   ├── CounterSuite.scala      # 7 tests: init, custom init, increment, decrement, reset, accumulation
-│   ├── ProgressSuite.scala     # 7 tests: value, percentage, bounds, reset
-│   ├── SidebarSuite.scala      # 8 tests: collapse toggle, navigation, isActive
-│   ├── TabsSuite.scala         # 8 tests: selection, navigation, wrapping
-│   ├── TagsInputSuite.scala    # 9 tests: add, remove, duplicates, max tags
-│   ├── ToggleSuite.scala       # 5 tests: toggle, setOn, setOff
-│   ├── TooltipSuite.scala      # 4 tests: show, hide, text, placement
-│   └── TopBarSuite.scala       # 4 tests: brand, renderer options, selection
+│   ├── AccordionSuite.scala       # 6 tests: open/close, single/multi mode
+│   ├── CardSuite.scala            # 4 tests: title, content, independence, type parameters
+│   ├── CounterSuite.scala         # 7 tests: init, custom init, increment, decrement, reset, accumulation
+│   ├── PageContainerSuite.scala   # 5 tests: title, description, content, independence, type parameters
+│   ├── ProgressSuite.scala        # 7 tests: value, percentage, bounds, reset
+│   ├── SidebarSuite.scala         # 8 tests: collapse toggle, navigation, isActive
+│   ├── TableSuite.scala           # 6 tests: headers, rows, empty table, independence, caption
+│   ├── TabsSuite.scala            # 8 tests: selection, navigation, wrapping
+│   ├── TagsInputSuite.scala       # 9 tests: add, remove, duplicates, max tags
+│   ├── ToggleSuite.scala          # 5 tests: toggle, setOn, setOff
+│   ├── TooltipSuite.scala         # 4 tests: show, hide, text, placement
+│   └── TopBarSuite.scala          # 4 tests: brand, renderer options, selection
 └── pages/
-    ├── FetchPageSuite.scala    # 11 tests: Circe decoding, FetchState, TableData
-    ├── PagesSuite.scala        # 12 tests: title/description for all pages
+    ├── FetchPageSuite.scala       # 16 tests: Circe decoding, FetchState, Table transformation
+    ├── PagesSuite.scala           # 12 tests: title/description for all pages
     └── UIShowcasePageSuite.scala  # 10 tests: composition, independent state
 ```
 
-This is one of the benefits of headless architecture — because state is just data,
-testing it is straightforward. No need to mount components, simulate clicks, or
-query the DOM. You call a method, read a signal, and assert.
+This is one of the real payoffs of headless architecture — because state is just
+data, testing it is straightforward. No need to mount components, simulate clicks,
+or query the DOM. You call a method, read a signal, and assert. The
+`SignalHelpers` trait (in `TestHelpers.scala`) makes this particularly clean: it
+lets you synchronously read the current value of any `Signal` by briefly
+subscribing through a `ManualOwner`, so tests read like plain unit tests even
+though the underlying system is fully reactive.
 
 ## Tech Stack
 
