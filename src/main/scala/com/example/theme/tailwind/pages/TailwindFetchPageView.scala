@@ -36,8 +36,8 @@ object TailwindFetchPageView {
               div(cls("font-semibold text-sm"), "Error"),
               div(cls("text-sm mt-1"), msg)
             )
-          case FetchState.Success(_, table) =>
-            theme.table(table)
+          case FetchState.Success(tables) =>
+            div(cls("space-y-6"), tables.map(t => theme.table(t)): _*)
         }
       )
     )
