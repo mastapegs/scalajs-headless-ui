@@ -1,21 +1,25 @@
 package com.example.theme.inline.pages
 
+import com.example.headless.components.PageContainer
 import com.example.headless.pages.{FetchPage, FetchState, TableData}
+import com.example.theme.Theme
 import com.raquo.laminar.api.L._
 
 object InlineFetchPageView {
-  def render(page: FetchPage): HtmlElement = div(
-    h1(marginBottom("16px"), page.title),
-    p(page.description),
-    div(
-      marginTop("24px"),
-      child <-- page.state.map {
-        case FetchState.Loading => p("Loading...")
-        case FetchState.Error(msg) =>
-          p(color("red"), s"Error: $msg")
-        case FetchState.Success(_, tableData) =>
-          renderTable(tableData)
-      }
+  def render(page: FetchPage, theme: Theme): HtmlElement = theme.pageContainer(
+    PageContainer(
+      page.title,
+      page.description,
+      div(
+        marginTop("24px"),
+        child <-- page.state.map {
+          case FetchState.Loading => p("Loading...")
+          case FetchState.Error(msg) =>
+            p(color("red"), s"Error: $msg")
+          case FetchState.Success(_, tableData) =>
+            renderTable(tableData)
+        }
+      )
     )
   )
 

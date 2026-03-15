@@ -60,27 +60,29 @@ object TailwindTheme extends Theme {
   }
 
   override def card(card: Card[HtmlElement, HtmlElement]): HtmlElement = TailwindCardView.render(card)
-  def counter(counter: Counter): HtmlElement                           = TailwindCounterView.render(counter)
-  def tabs(tabs: Tabs): HtmlElement                                    = TailwindTabsView.render(tabs)
-  def accordion(accordion: Accordion): HtmlElement                     = TailwindAccordionView.render(accordion)
-  def toggle(toggle: Toggle): HtmlElement                              = TailwindToggleView.render(toggle)
-  def progress(progress: Progress): HtmlElement                        = TailwindProgressView.render(progress)
-  def tagsInput(tagsInput: TagsInput): HtmlElement                     = TailwindTagsInputView.render(tagsInput)
-  def tooltip(tooltip: Tooltip): HtmlElement                           = TailwindTooltipView.render(tooltip)
-  protected def renderSidebar(sidebar: Sidebar): HtmlElement           = TailwindSidebarView.render(sidebar)
+  override def pageContainer(container: PageContainer[HtmlElement]): HtmlElement =
+    TailwindPageContainerView.render(container)
+  def counter(counter: Counter): HtmlElement                 = TailwindCounterView.render(counter)
+  def tabs(tabs: Tabs): HtmlElement                          = TailwindTabsView.render(tabs)
+  def accordion(accordion: Accordion): HtmlElement           = TailwindAccordionView.render(accordion)
+  def toggle(toggle: Toggle): HtmlElement                    = TailwindToggleView.render(toggle)
+  def progress(progress: Progress): HtmlElement              = TailwindProgressView.render(progress)
+  def tagsInput(tagsInput: TagsInput): HtmlElement           = TailwindTagsInputView.render(tagsInput)
+  def tooltip(tooltip: Tooltip): HtmlElement                 = TailwindTooltipView.render(tooltip)
+  protected def renderSidebar(sidebar: Sidebar): HtmlElement = TailwindSidebarView.render(sidebar)
   protected def renderTopbar(topBar: TopBar, sidebar: Sidebar): HtmlElement =
     TailwindTopbarView.render(topBar, () => sidebar.toggleCollapse())
 
   def dashboardPage(page: DashboardPage): HtmlElement =
     TailwindDashboardPageView.render(page, this)
   def metricsPage(page: MetricsPage): HtmlElement =
-    TailwindMetricsPageView.render(page)
+    TailwindMetricsPageView.render(page, this)
   def settingsPage(page: SettingsPage): HtmlElement =
-    TailwindSettingsPageView.render(page)
+    TailwindSettingsPageView.render(page, this)
   override def uiShowcasePage(page: UIShowcasePage): HtmlElement =
     TailwindUIShowcasePageView.render(page, this)
   protected def renderFetchPage(page: FetchPage): HtmlElement =
-    TailwindFetchPageView.render(page)
+    TailwindFetchPageView.render(page, this)
 
   protected def renderMainContent(content: Signal[HtmlElement]): Mod[HtmlElement] =
     Seq(

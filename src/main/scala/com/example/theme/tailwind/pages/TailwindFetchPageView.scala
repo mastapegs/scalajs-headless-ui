@@ -1,6 +1,8 @@
 package com.example.theme.tailwind.pages
 
+import com.example.headless.components.PageContainer
 import com.example.headless.pages.{FetchPage, FetchState, TableData}
+import com.example.theme.Theme
 import com.raquo.laminar.api.L._
 
 /** Tailwind fetch page with loading spinner, error alert, and a striped data table.
@@ -15,28 +17,29 @@ import com.raquo.laminar.api.L._
   *   - '''Uppercase tracking-wider headers''' follow the conventional Tailwind table-header pattern
   */
 object TailwindFetchPageView {
-  def render(page: FetchPage): HtmlElement = div(
-    cls("max-w-5xl mx-auto"),
-    h1(cls("text-2xl font-bold text-gray-900 mb-2"), page.title),
-    p(cls("text-gray-500 mb-8"), page.description),
-    div(
-      child <-- page.state.map {
-        case FetchState.Loading =>
-          div(
-            cls("flex justify-center py-12"),
+  def render(page: FetchPage, theme: Theme): HtmlElement = theme.pageContainer(
+    PageContainer(
+      page.title,
+      page.description,
+      div(
+        child <-- page.state.map {
+          case FetchState.Loading =>
             div(
-              cls("animate-spin rounded-full h-10 w-10 border-4 border-gray-200 border-t-indigo-600")
+              cls("flex justify-center py-12"),
+              div(
+                cls("animate-spin rounded-full h-10 w-10 border-4 border-gray-200 border-t-indigo-600")
+              )
             )
-          )
-        case FetchState.Error(msg) =>
-          div(
-            cls("bg-red-50 border-l-4 border-red-500 text-red-700 px-5 py-4 rounded-r-lg"),
-            div(cls("font-semibold text-sm"), "Error"),
-            div(cls("text-sm mt-1"), msg)
-          )
-        case FetchState.Success(_, tableData) =>
-          renderTable(tableData)
-      }
+          case FetchState.Error(msg) =>
+            div(
+              cls("bg-red-50 border-l-4 border-red-500 text-red-700 px-5 py-4 rounded-r-lg"),
+              div(cls("font-semibold text-sm"), "Error"),
+              div(cls("text-sm mt-1"), msg)
+            )
+          case FetchState.Success(_, tableData) =>
+            renderTable(tableData)
+        }
+      )
     )
   )
 

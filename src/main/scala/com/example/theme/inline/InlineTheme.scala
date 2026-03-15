@@ -10,7 +10,9 @@ import com.raquo.laminar.api.L._
 object InlineTheme extends Theme {
   val key: String = "inline"
 
-  override def card(card: Card[HtmlElement, HtmlElement]): HtmlElement      = InlineCardView.render(card)
+  override def card(card: Card[HtmlElement, HtmlElement]): HtmlElement = InlineCardView.render(card)
+  override def pageContainer(container: PageContainer[HtmlElement]): HtmlElement =
+    InlinePageContainerView.render(container)
   def counter(counter: Counter): HtmlElement                                = InlineCounterView.render(counter)
   def tabs(tabs: Tabs): HtmlElement                                         = InlineTabsView.render(tabs)
   def accordion(accordion: Accordion): HtmlElement                          = InlineAccordionView.render(accordion)
@@ -24,13 +26,13 @@ object InlineTheme extends Theme {
   def dashboardPage(page: DashboardPage): HtmlElement =
     InlineDashboardPageView.render(page, this)
   def metricsPage(page: MetricsPage): HtmlElement =
-    InlineMetricsPageView.render(page)
+    InlineMetricsPageView.render(page, this)
   def settingsPage(page: SettingsPage): HtmlElement =
-    InlineSettingsPageView.render(page)
+    InlineSettingsPageView.render(page, this)
   override def uiShowcasePage(page: UIShowcasePage): HtmlElement =
     InlineUIShowcasePageView.render(page, this)
   protected def renderFetchPage(page: FetchPage): HtmlElement =
-    InlineFetchPageView.render(page)
+    InlineFetchPageView.render(page, this)
 
   protected def renderMainContent(content: Signal[HtmlElement]): Mod[HtmlElement] =
     Seq(
