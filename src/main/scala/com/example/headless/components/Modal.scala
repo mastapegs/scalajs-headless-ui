@@ -19,7 +19,7 @@ import com.raquo.laminar.api.L._
   * @param closeOnOutsideClick
   *   whether clicking the backdrop should close the modal (theme layer reads this to decide whether to bind the click)
   */
-final class Modal[C](
+class Modal[C](
     val title: String,
     val content: C,
     val closeOnEscape: Boolean = true,

@@ -89,7 +89,7 @@ object InlineModalView {
           )
         ),
         role            := "dialog",
-        aria.modal      := true,
+        aria("modal")   := "true",
         aria.labelledBy := s"modal-title-${modal.title.hashCode}"
       )
     )

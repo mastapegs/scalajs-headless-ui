@@ -49,21 +49,7 @@ object TailwindModalView {
               "p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             ),
             aria.label := "Close",
-            // X icon (SVG)
-            htmlTag("svg")(
-              cls("w-5 h-5"),
-              htmlAttr("xmlns", StringAsIsCodec)   := "http://www.w3.org/2000/svg",
-              htmlAttr("viewBox", StringAsIsCodec) := "0 0 20 20",
-              htmlAttr("fill", StringAsIsCodec)    := "currentColor",
-              htmlTag("path")(
-                htmlAttr("fill-rule", StringAsIsCodec) := "evenodd",
-                htmlAttr(
-                  "d",
-                  StringAsIsCodec
-                ) := "M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z",
-                htmlAttr("clip-rule", StringAsIsCodec) := "evenodd"
-              )
-            ),
+            span(cls("text-xl leading-none"), "\u00d7"),
             onClick --> { _ => modal.close() }
           )
         ),
@@ -84,7 +70,7 @@ object TailwindModalView {
           )
         ),
         role            := "dialog",
-        aria.modal      := true,
+        aria("modal")   := "true",
         aria.labelledBy := s"modal-title-${modal.title.hashCode}"
       )
     )
