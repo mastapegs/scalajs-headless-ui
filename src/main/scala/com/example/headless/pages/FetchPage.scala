@@ -39,8 +39,9 @@ final class FetchPage {
         decode[List[Post]](responseText) match {
           case Right(posts) =>
             val table = Table(
+              caption = Some("JSONPlaceholder Posts"),
               headers = List("ID", "User ID", "Title", "Body"),
-              rows = posts.map(p => List(p.id.toString, p.userId.toString, p.title, p.body))
+              rows = posts.take(10).map(p => List(p.id.toString, p.userId.toString, p.title, p.body))
             )
             stateVar.set(FetchState.Success(posts, table))
           case Left(err) => stateVar.set(FetchState.Error(err.getMessage))
