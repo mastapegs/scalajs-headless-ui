@@ -2,6 +2,7 @@ package com.example.theme.inline.components
 
 import com.example.headless.components.Modal
 import com.raquo.laminar.api.L._
+import com.raquo.laminar.codecs.StringAsIsCodec
 
 object InlineModalView {
   def render(modal: Modal[HtmlElement]): HtmlElement = div(
@@ -88,9 +89,9 @@ object InlineModalView {
             onClick --> { _ => modal.close() }
           )
         ),
-        role            := "dialog",
-        aria("modal")   := "true",
-        aria.labelledBy := s"modal-title-${modal.title.hashCode}"
+        role                                    := "dialog",
+        htmlAttr("aria-modal", StringAsIsCodec) := "true",
+        aria.labelledBy                         := s"modal-title-${modal.title.hashCode}"
       )
     )
   )

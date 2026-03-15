@@ -2,6 +2,7 @@ package com.example.theme.tailwind.components
 
 import com.example.headless.components.Modal
 import com.raquo.laminar.api.L._
+import com.raquo.laminar.codecs.StringAsIsCodec
 
 /** Tailwind modal dialog with backdrop overlay, centered panel, and smooth transitions.
   *
@@ -69,9 +70,9 @@ object TailwindModalView {
             onClick --> { _ => modal.close() }
           )
         ),
-        role            := "dialog",
-        aria("modal")   := "true",
-        aria.labelledBy := s"modal-title-${modal.title.hashCode}"
+        role                                    := "dialog",
+        htmlAttr("aria-modal", StringAsIsCodec) := "true",
+        aria.labelledBy                         := s"modal-title-${modal.title.hashCode}"
       )
     )
   )
