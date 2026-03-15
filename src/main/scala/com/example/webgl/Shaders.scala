@@ -95,7 +95,7 @@ object Shaders {
       |      vec2 diff = local - particlePos - vec2(dx, dy);
       |      float dist = length(diff);
       |      float size = 0.03 + h * 0.04;
-      |      brightness += smoothstep(size, size * 0.2, dist) * (0.5 + h * 0.5);
+      |      brightness += (1.0 - smoothstep(size * 0.2, size, dist)) * (0.5 + h * 0.5);
       |    }
       |  }
       |
