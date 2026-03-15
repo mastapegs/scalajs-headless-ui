@@ -1,7 +1,6 @@
 package com.example.theme.coreui.pages
 
-import com.example.headless.components.PageContainer
-import com.example.headless.components.FetchState
+import com.example.headless.components.{FetchState, PageContainer}
 import com.example.headless.pages.FetchPage
 import com.example.theme.Theme
 import com.raquo.laminar.api.L._
