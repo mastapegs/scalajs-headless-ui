@@ -21,6 +21,10 @@ trait Theme {
   def progress(progress: Progress): HtmlElement
   def tagsInput(tagsInput: TagsInput): HtmlElement
   def tooltip(tooltip: Tooltip): HtmlElement
+  def table(table: Table): HtmlElement = htmlTag("table")(
+    thead(tr(table.headers.map(h => th(h)))),
+    tbody(table.rows.map(row => tr(row.map(cell => htmlTag("td")(cell)))))
+  )
   def card(card: Card[HtmlElement, HtmlElement]): HtmlElement = div(card.title, card.content)
   def pageContainer(container: PageContainer[HtmlElement]): HtmlElement =
     div(h1(container.title), p(container.description), container.content)
