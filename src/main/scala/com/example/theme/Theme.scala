@@ -22,6 +22,8 @@ trait Theme {
   def tagsInput(tagsInput: TagsInput): HtmlElement
   def tooltip(tooltip: Tooltip): HtmlElement
   def card(card: Card[HtmlElement, HtmlElement]): HtmlElement = div(card.title, card.content)
+  def pageContainer(container: PageContainer[HtmlElement]): HtmlElement =
+    div(h1(container.title), p(container.description), container.content)
 
   protected def renderTopbar(topBar: TopBar, sidebar: Sidebar): HtmlElement
 
@@ -38,7 +40,7 @@ trait Theme {
   def settingsPage(page: SettingsPage): HtmlElement
 
   def uiShowcasePage(page: UIShowcasePage): HtmlElement =
-    div(h1(page.title), p(page.description))
+    pageContainer(PageContainer(page.title, page.description, div()))
 
   protected def renderFetchPage(page: FetchPage): HtmlElement
 

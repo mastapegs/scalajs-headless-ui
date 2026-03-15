@@ -49,27 +49,29 @@ object CoreUiTheme extends Theme {
   }
 
   override def card(card: Card[HtmlElement, HtmlElement]): HtmlElement = CoreUiCardView.render(card)
-  def counter(counter: Counter): HtmlElement                           = CoreUiCounterView.render(counter)
-  def tabs(tabs: Tabs): HtmlElement                                    = CoreUiTabsView.render(tabs)
-  def accordion(accordion: Accordion): HtmlElement                     = CoreUiAccordionView.render(accordion)
-  def toggle(toggle: Toggle): HtmlElement                              = CoreUiToggleView.render(toggle)
-  def progress(progress: Progress): HtmlElement                        = CoreUiProgressView.render(progress)
-  def tagsInput(tagsInput: TagsInput): HtmlElement                     = CoreUiTagsInputView.render(tagsInput)
-  def tooltip(tooltip: Tooltip): HtmlElement                           = CoreUiTooltipView.render(tooltip)
-  protected def renderSidebar(sidebar: Sidebar): HtmlElement           = CoreUiSidebarView.render(sidebar)
+  override def pageContainer(container: PageContainer[HtmlElement]): HtmlElement =
+    CoreUiPageContainerView.render(container)
+  def counter(counter: Counter): HtmlElement                 = CoreUiCounterView.render(counter)
+  def tabs(tabs: Tabs): HtmlElement                          = CoreUiTabsView.render(tabs)
+  def accordion(accordion: Accordion): HtmlElement           = CoreUiAccordionView.render(accordion)
+  def toggle(toggle: Toggle): HtmlElement                    = CoreUiToggleView.render(toggle)
+  def progress(progress: Progress): HtmlElement              = CoreUiProgressView.render(progress)
+  def tagsInput(tagsInput: TagsInput): HtmlElement           = CoreUiTagsInputView.render(tagsInput)
+  def tooltip(tooltip: Tooltip): HtmlElement                 = CoreUiTooltipView.render(tooltip)
+  protected def renderSidebar(sidebar: Sidebar): HtmlElement = CoreUiSidebarView.render(sidebar)
   protected def renderTopbar(topBar: TopBar, sidebar: Sidebar): HtmlElement =
     CoreUiTopbarView.render(topBar, () => sidebar.toggleCollapse())
 
   def dashboardPage(page: DashboardPage): HtmlElement =
     CoreUiDashboardPageView.render(page, this)
   def metricsPage(page: MetricsPage): HtmlElement =
-    CoreUiMetricsPageView.render(page)
+    CoreUiMetricsPageView.render(page, this)
   def settingsPage(page: SettingsPage): HtmlElement =
-    CoreUiSettingsPageView.render(page)
+    CoreUiSettingsPageView.render(page, this)
   override def uiShowcasePage(page: UIShowcasePage): HtmlElement =
     CoreUiUIShowcasePageView.render(page, this)
   protected def renderFetchPage(page: FetchPage): HtmlElement =
-    CoreUiFetchPageView.render(page)
+    CoreUiFetchPageView.render(page, this)
 
   protected def renderMainContent(content: Signal[HtmlElement]): Mod[HtmlElement] =
     Seq(
