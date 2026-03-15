@@ -21,6 +21,7 @@ object InlineTheme extends Theme {
   def progress(progress: Progress): HtmlElement                             = InlineProgressView.render(progress)
   def tagsInput(tagsInput: TagsInput): HtmlElement                          = InlineTagsInputView.render(tagsInput)
   def tooltip(tooltip: Tooltip): HtmlElement                                = InlineTooltipView.render(tooltip)
+  def modal(modal: Modal[HtmlElement]): HtmlElement                         = InlineModalView.render(modal)
   protected def renderSidebar(sidebar: Sidebar): HtmlElement                = InlineSidebarView.render(sidebar)
   protected def renderTopbar(topBar: TopBar, sidebar: Sidebar): HtmlElement = InlineTopbarView.render(topBar)
 

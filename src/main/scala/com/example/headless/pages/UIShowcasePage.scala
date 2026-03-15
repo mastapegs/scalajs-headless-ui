@@ -44,4 +44,9 @@ final class UIShowcasePage {
   val tagsInput: TagsInput = new TagsInput("Skills", initialTags = List("Scala", "Laminar"), maxTags = 8)
 
   val tooltip: Tooltip = new Tooltip("This button has a headless tooltip attached to it!", placement = "top")
+
+  val modal: Modal[String] = new Modal(
+    "Example Modal",
+    "This modal demonstrates headless open/close state management. The visual presentation — backdrop, animations, focus trapping — is handled entirely by the theme layer."
+  )
 }

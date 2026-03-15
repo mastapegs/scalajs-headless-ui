@@ -59,6 +59,7 @@ object CoreUiTheme extends Theme {
   def progress(progress: Progress): HtmlElement              = CoreUiProgressView.render(progress)
   def tagsInput(tagsInput: TagsInput): HtmlElement           = CoreUiTagsInputView.render(tagsInput)
   def tooltip(tooltip: Tooltip): HtmlElement                 = CoreUiTooltipView.render(tooltip)
+  def modal(modal: Modal[HtmlElement]): HtmlElement          = CoreUiModalView.render(modal)
   protected def renderSidebar(sidebar: Sidebar): HtmlElement = CoreUiSidebarView.render(sidebar)
   protected def renderTopbar(topBar: TopBar, sidebar: Sidebar): HtmlElement =
     CoreUiTopbarView.render(topBar, () => sidebar.toggleCollapse())

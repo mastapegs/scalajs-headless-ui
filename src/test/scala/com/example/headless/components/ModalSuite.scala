@@ -84,4 +84,31 @@ class ModalSuite extends FunSuite with SignalHelpers {
     assertEquals(modal.closeOnEscape, true)
     assertEquals(modal.closeOnOutsideClick, true)
   }
+
+  test("mapContent transforms content") {
+    val modal  = new Modal("Test", "hello")
+    val mapped = modal.mapContent(_.length)
+    assertEquals(mapped.content, 5)
+    assertEquals(mapped.title, "Test")
+  }
+
+  test("mapContent shares open/close state with source") {
+    val modal  = new Modal("Test", "hello")
+    val mapped = modal.mapContent(_.toUpperCase)
+    mapped.open()
+    assertEquals(signalNow(modal.isOpen), true)
+    assertEquals(signalNow(mapped.isOpen), true)
+    modal.close()
+    assertEquals(signalNow(mapped.isOpen), false)
+  }
+
+  test("mapContent preserves close policies") {
+    val modal  = new Modal("Test", "body", closeOnEscape = false, closeOnOutsideClick = true)
+    val mapped = modal.mapContent(_.toUpperCase)
+    mapped.open()
+    mapped.requestCloseEscape()
+    assertEquals(signalNow(modal.isOpen), true)
+    mapped.requestCloseOutside()
+    assertEquals(signalNow(modal.isOpen), false)
+  }
 }

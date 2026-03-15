@@ -44,4 +44,21 @@ final class Modal[C](
   /** Request to close from a backdrop/outside click. Respects `closeOnOutsideClick` policy. */
   def requestCloseOutside(): Unit =
     if (closeOnOutsideClick) close()
+
+  /** Create a new view over this modal with transformed content, sharing the same open/close state.
+    *
+    * This is useful when a headless page holds `Modal[String]` and a theme view needs `Modal[HtmlElement]` — the view
+    * calls `modal.mapContent(text => span(text))` to obtain a presentation-typed modal that delegates all state
+    * operations to the original.
+    */
+  def mapContent[D](f: C => D): Modal[D] = {
+    val source = this
+    new Modal[D](title, f(content), closeOnEscape, closeOnOutsideClick) {
+      override def open(): Unit                = source.open()
+      override def close(): Unit               = source.close()
+      override def requestCloseEscape(): Unit  = source.requestCloseEscape()
+      override def requestCloseOutside(): Unit = source.requestCloseOutside()
+      override val isOpen: Signal[Boolean]     = source.isOpen
+    }
+  }
 }

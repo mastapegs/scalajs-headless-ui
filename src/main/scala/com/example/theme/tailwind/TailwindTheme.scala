@@ -70,6 +70,7 @@ object TailwindTheme extends Theme {
   def progress(progress: Progress): HtmlElement              = TailwindProgressView.render(progress)
   def tagsInput(tagsInput: TagsInput): HtmlElement           = TailwindTagsInputView.render(tagsInput)
   def tooltip(tooltip: Tooltip): HtmlElement                 = TailwindTooltipView.render(tooltip)
+  def modal(modal: Modal[HtmlElement]): HtmlElement          = TailwindModalView.render(modal)
   protected def renderSidebar(sidebar: Sidebar): HtmlElement = TailwindSidebarView.render(sidebar)
   protected def renderTopbar(topBar: TopBar, sidebar: Sidebar): HtmlElement =
     TailwindTopbarView.render(topBar, () => sidebar.toggleCollapse())
