@@ -18,7 +18,7 @@ object CoreUiFetchPageView {
           case FetchState.Error(msg) =>
             div(cls("alert alert-danger"), s"Error: $msg")
           case FetchState.Success(tables) =>
-            div(tables.map(t => div(cls("mb-4"), theme.table(t))): _*)
+            div(tables.map(t => div(cls("mb-4"), theme.table(t))))
         }
       )
     )
