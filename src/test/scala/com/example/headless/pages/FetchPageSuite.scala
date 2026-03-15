@@ -1,14 +1,14 @@
 package com.example.headless.pages
 
 import com.example.headless.SignalHelpers
-import com.example.headless.components.{Table, TableData}
+import com.example.headless.components.Table
 import io.circe.generic.auto._
 import io.circe.parser.decode
 import munit.FunSuite
 
 class FetchPageSuite extends FunSuite with SignalHelpers {
 
-  private def tableDataFromPosts(posts: List[Post]): TableData = TableData(
+  private def tableFromPosts(posts: List[Post]): Table = Table(
     headers = List("ID", "User ID", "Title", "Body"),
     rows = posts.map(p => List(p.id.toString, p.userId.toString, p.title, p.body))
   )
@@ -64,26 +64,26 @@ class FetchPageSuite extends FunSuite with SignalHelpers {
     assertEquals(result, Right(List.empty[Post]))
   }
 
-  // -- TableData tests --
+  // -- Table tests --
 
-  test("TableData.fromPosts transforms posts correctly") {
+  test("tableFromPosts transforms posts correctly") {
     val posts = List(Post(1, 10, "Hello", "World"), Post(2, 20, "Foo", "Bar"))
-    val td    = tableDataFromPosts(posts)
-    assertEquals(td.headers, List("ID", "User ID", "Title", "Body"))
-    assertEquals(td.rows.length, 2)
-    assertEquals(td.rows.head, List("10", "1", "Hello", "World"))
-    assertEquals(td.rows(1), List("20", "2", "Foo", "Bar"))
+    val t     = tableFromPosts(posts)
+    assertEquals(t.headers, List("ID", "User ID", "Title", "Body"))
+    assertEquals(t.rows.length, 2)
+    assertEquals(t.rows.head, List("10", "1", "Hello", "World"))
+    assertEquals(t.rows(1), List("20", "2", "Foo", "Bar"))
   }
 
   test("Success state includes table with correct headers") {
     val posts   = List(Post(1, 1, "t", "b"))
-    val success = FetchState.Success(posts, Table(tableDataFromPosts(posts)))
-    assertEquals(success.table.data.headers, List("ID", "User ID", "Title", "Body"))
+    val success = FetchState.Success(posts, tableFromPosts(posts))
+    assertEquals(success.table.headers, List("ID", "User ID", "Title", "Body"))
   }
 
   test("Success state includes table with correct rows") {
     val posts   = List(Post(3, 42, "title", "body"))
-    val success = FetchState.Success(posts, Table(tableDataFromPosts(posts)))
-    assertEquals(success.table.data.rows, List(List("42", "3", "title", "body")))
+    val success = FetchState.Success(posts, tableFromPosts(posts))
+    assertEquals(success.table.rows, List(List("42", "3", "title", "body")))
   }
 }

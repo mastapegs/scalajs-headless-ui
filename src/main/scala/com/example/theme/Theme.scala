@@ -22,8 +22,8 @@ trait Theme {
   def tagsInput(tagsInput: TagsInput): HtmlElement
   def tooltip(tooltip: Tooltip): HtmlElement
   def table(table: Table): HtmlElement = htmlTag("table")(
-    thead(tr(table.data.headers.map(h => th(h)))),
-    tbody(table.data.rows.map(row => tr(row.map(cell => htmlTag("td")(cell)))))
+    thead(tr(table.headers.map(h => th(h)))),
+    tbody(table.rows.map(row => tr(row.map(cell => htmlTag("td")(cell)))))
   )
   def card(card: Card[HtmlElement, HtmlElement]): HtmlElement = div(card.title, card.content)
   def pageContainer(container: PageContainer[HtmlElement]): HtmlElement =

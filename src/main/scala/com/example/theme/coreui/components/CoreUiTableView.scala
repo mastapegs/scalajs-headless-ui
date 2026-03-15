@@ -10,10 +10,10 @@ object CoreUiTableView {
       table(
         cls("table table-striped table-hover"),
         thead(
-          tr(t.data.headers.map(h => th(cls("text-nowrap"), h)))
+          tr(t.headers.map(h => th(cls("text-nowrap"), h)))
         ),
         tbody(
-          t.data.rows.map(row => tr(row.map(cell => htmlTag("td")(cell))))
+          t.rows.map(row => tr(row.map(cell => htmlTag("td")(cell))))
         )
       )
     )

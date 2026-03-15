@@ -1,6 +1,6 @@
 package com.example.headless.pages
 
-import com.example.headless.components.{Table, TableData}
+import com.example.headless.components.Table
 import com.raquo.airstream.web.FetchStream
 import com.raquo.laminar.api.L._
 import io.circe.generic.auto._
@@ -38,11 +38,11 @@ final class FetchPage {
       .map { responseText =>
         decode[List[Post]](responseText) match {
           case Right(posts) =>
-            val td = TableData(
+            val table = Table(
               headers = List("ID", "User ID", "Title", "Body"),
               rows = posts.map(p => List(p.id.toString, p.userId.toString, p.title, p.body))
             )
-            stateVar.set(FetchState.Success(posts, Table(td)))
+            stateVar.set(FetchState.Success(posts, table))
           case Left(err) => stateVar.set(FetchState.Error(err.getMessage))
         }
       }

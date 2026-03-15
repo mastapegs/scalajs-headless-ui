@@ -10,7 +10,7 @@ object InlineTableView {
       borderCollapse("collapse"),
       thead(
         tr(
-          t.data.headers.map(h =>
+          t.headers.map(h =>
             th(
               padding("8px 12px"),
               borderBottom("2px solid #ccc"),
@@ -22,7 +22,7 @@ object InlineTableView {
         )
       ),
       tbody(
-        t.data.rows.map(row =>
+        t.rows.map(row =>
           tr(
             row.map(cell =>
               htmlTag("td")(

@@ -22,7 +22,7 @@ object TailwindTableView {
           thead(
             cls("bg-gray-50"),
             tr(
-              t.data.headers.map(h =>
+              t.headers.map(h =>
                 th(
                   cls(
                     "px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider"
@@ -34,7 +34,7 @@ object TailwindTableView {
           ),
           tbody(
             cls("bg-white divide-y divide-gray-100"),
-            t.data.rows.map(row =>
+            t.rows.map(row =>
               tr(
                 cls("hover:bg-gray-50 transition-colors duration-100"),
                 row.map(cell => htmlTag("td")(cls("px-6 py-4 whitespace-nowrap text-sm text-gray-700"), cell))
