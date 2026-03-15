@@ -17,13 +17,6 @@ object FetchState {
   final case class Success(posts: List[Post], table: Table) extends FetchState
 }
 
-object TableData {
-  def fromPosts(posts: List[Post]): TableData = TableData(
-    headers = List("ID", "User ID", "Title", "Body"),
-    rows = posts.map(p => List(p.id.toString, p.userId.toString, p.title, p.body))
-  )
-}
-
 /** Headless fetch showcase page: manages async data fetching state and logic, no rendering. */
 final class FetchPage {
 
@@ -44,8 +37,13 @@ final class FetchPage {
       .get("https://jsonplaceholder.typicode.com/posts")
       .map { responseText =>
         decode[List[Post]](responseText) match {
-          case Right(posts) => stateVar.set(FetchState.Success(posts, Table(TableData.fromPosts(posts))))
-          case Left(err)    => stateVar.set(FetchState.Error(err.getMessage))
+          case Right(posts) =>
+            val td = TableData(
+              headers = List("ID", "User ID", "Title", "Body"),
+              rows = posts.map(p => List(p.id.toString, p.userId.toString, p.title, p.body))
+            )
+            stateVar.set(FetchState.Success(posts, Table(td)))
+          case Left(err) => stateVar.set(FetchState.Error(err.getMessage))
         }
       }
       .recover { case err: Throwable =>

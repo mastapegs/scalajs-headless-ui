@@ -8,6 +8,11 @@ import munit.FunSuite
 
 class FetchPageSuite extends FunSuite with SignalHelpers {
 
+  private def tableDataFromPosts(posts: List[Post]): TableData = TableData(
+    headers = List("ID", "User ID", "Title", "Body"),
+    rows = posts.map(p => List(p.id.toString, p.userId.toString, p.title, p.body))
+  )
+
   test("FetchPage has correct title") {
     val page = new FetchPage()
     assertEquals(page.title, "Fetch Showcase")
@@ -63,7 +68,7 @@ class FetchPageSuite extends FunSuite with SignalHelpers {
 
   test("TableData.fromPosts transforms posts correctly") {
     val posts = List(Post(1, 10, "Hello", "World"), Post(2, 20, "Foo", "Bar"))
-    val td    = TableData.fromPosts(posts)
+    val td    = tableDataFromPosts(posts)
     assertEquals(td.headers, List("ID", "User ID", "Title", "Body"))
     assertEquals(td.rows.length, 2)
     assertEquals(td.rows.head, List("10", "1", "Hello", "World"))
@@ -72,13 +77,13 @@ class FetchPageSuite extends FunSuite with SignalHelpers {
 
   test("Success state includes table with correct headers") {
     val posts   = List(Post(1, 1, "t", "b"))
-    val success = FetchState.Success(posts, Table(TableData.fromPosts(posts)))
+    val success = FetchState.Success(posts, Table(tableDataFromPosts(posts)))
     assertEquals(success.table.data.headers, List("ID", "User ID", "Title", "Body"))
   }
 
   test("Success state includes table with correct rows") {
     val posts   = List(Post(3, 42, "title", "body"))
-    val success = FetchState.Success(posts, Table(TableData.fromPosts(posts)))
+    val success = FetchState.Success(posts, Table(tableDataFromPosts(posts)))
     assertEquals(success.table.data.rows, List(List("42", "3", "title", "body")))
   }
 }
