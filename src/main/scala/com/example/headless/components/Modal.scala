@@ -4,18 +4,24 @@ import com.raquo.laminar.api.L._
 
 /** Headless modal dialog component.
   *
-  * Manages open/close state and policy flags. All rendering concerns (backdrop, focus trapping, scroll locking, ARIA
-  * attributes, animations) belong to the theme layer.
+  * Combines a generic content container (like `Card[T, C]` / `PageContainer[C]`) with stateful open/close management
+  * (like `Toggle`). Themes concretize `C` as `HtmlElement`. All rendering concerns (backdrop, focus trapping, scroll
+  * locking, ARIA attributes, animations) belong to the theme layer.
   *
+  * @tparam C
+  *   the type of the modal body content — themes concretize as `HtmlElement`
   * @param title
   *   dialog title (used by themes for `aria-labelledby`)
+  * @param content
+  *   the body content rendered inside the dialog
   * @param closeOnEscape
   *   whether pressing Escape should close the modal (theme layer reads this to decide whether to bind the key)
   * @param closeOnOutsideClick
   *   whether clicking the backdrop should close the modal (theme layer reads this to decide whether to bind the click)
   */
-final class Modal(
+final class Modal[C](
     val title: String,
+    val content: C,
     val closeOnEscape: Boolean = true,
     val closeOnOutsideClick: Boolean = true
 ) {
