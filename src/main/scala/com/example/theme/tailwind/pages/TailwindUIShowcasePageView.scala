@@ -36,7 +36,10 @@ object TailwindUIShowcasePageView {
         ),
         theme.card(Card(span("Progress"), theme.progress(page.progress))),
         theme.card(Card(span("Tags Input"), theme.tagsInput(page.tagsInput))),
-        theme.card(Card(span("Tooltip"), theme.tooltip(page.tooltip))).amend(overflow.visible)
+        theme.card(Card(span("Tooltip"), theme.tooltip(page.tooltip))).amend(overflow.visible),
+        theme.card(
+          Card(span("Modal"), theme.modal(page.modal.mapContent(text => p(cls("text-gray-600 leading-relaxed"), text))))
+        )
       )
     )
   )

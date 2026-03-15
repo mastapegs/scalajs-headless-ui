@@ -52,6 +52,13 @@ class UIShowcasePageSuite extends FunSuite with SignalHelpers {
     assert(page.tooltip.text.nonEmpty)
   }
 
+  test("composes modal") {
+    val page = new UIShowcasePage()
+    assertEquals(page.modal.title, "Example Modal")
+    assert(page.modal.content.nonEmpty)
+    assertEquals(signalNow(page.modal.isOpen), false)
+  }
+
   test("all components have independent state") {
     val page = new UIShowcasePage()
     page.toggleDarkMode.toggle()

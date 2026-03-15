@@ -21,6 +21,7 @@ trait Theme {
   def progress(progress: Progress): HtmlElement
   def tagsInput(tagsInput: TagsInput): HtmlElement
   def tooltip(tooltip: Tooltip): HtmlElement
+  def modal(modal: Modal[HtmlElement]): HtmlElement
   def table(table: Table): HtmlElement = htmlTag("table")(
     table.caption.map(c => htmlTag("caption")(c)),
     thead(tr(table.headers.map(h => th(h)))),
