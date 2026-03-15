@@ -1,7 +1,14 @@
 package com.example.theme.coreui
 
 import com.example.headless.components._
-import com.example.headless.pages.{DashboardPage, FetchPage, MetricsPage, SettingsPage, UIShowcasePage}
+import com.example.headless.pages.{
+  DashboardPage,
+  FetchPage,
+  MetricsPage,
+  SettingsPage,
+  UIShowcasePage,
+  VisualizationPage
+}
 import com.example.theme.Theme
 import com.example.theme.coreui.components._
 import com.example.theme.coreui.pages._
@@ -72,6 +79,8 @@ object CoreUiTheme extends Theme {
     CoreUiSettingsPageView.render(page, this)
   override def uiShowcasePage(page: UIShowcasePage): HtmlElement =
     CoreUiUIShowcasePageView.render(page, this)
+  override def visualizationPage(page: VisualizationPage): HtmlElement =
+    CoreUiVisualizationPageView.render(page, this)
   protected def renderFetchPage(page: FetchPage): HtmlElement =
     CoreUiFetchPageView.render(page, this)
 
