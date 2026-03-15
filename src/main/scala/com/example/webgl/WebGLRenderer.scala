@@ -112,8 +112,8 @@ object WebGLRenderer {
     }
 
     canvasTag(
-      width     := 800,
-      height    := 600,
+      width     := "800",
+      height    := "600",
       styleAttr := "width: 100%; height: 100%; display: block;",
       onMountCallback { ctx =>
         val canvas = ctx.thisNode.ref.asInstanceOf[dom.HTMLCanvasElement]
@@ -126,56 +126,59 @@ object WebGLRenderer {
         canvas.height = (h * dpr).toInt
 
         glCtx = canvas.getContext("webgl").asInstanceOf[GL]
-        if (glCtx == null) return
+        if (glCtx == null) {
+          dom.console.error("WebGL not supported")
+        } else {
 
-        // Set up full-screen quad geometry
-        val buffer = glCtx.createBuffer()
-        glCtx.bindBuffer(GL.ARRAY_BUFFER, buffer)
-        val vertices = js.Array[Float](-1f, -1f, 1f, -1f, -1f, 1f, -1f, 1f, 1f, -1f, 1f, 1f)
-        glCtx.bufferData(GL.ARRAY_BUFFER, new js.typedarray.Float32Array(vertices), GL.STATIC_DRAW)
+          // Set up full-screen quad geometry
+          val buffer = glCtx.createBuffer()
+          glCtx.bindBuffer(GL.ARRAY_BUFFER, buffer)
+          val vertices = js.Array[Float](-1f, -1f, 1f, -1f, -1f, 1f, -1f, 1f, 1f, -1f, 1f, 1f)
+          glCtx.bufferData(GL.ARRAY_BUFFER, new js.typedarray.Float32Array(vertices), GL.STATIC_DRAW)
 
-        // Compile initial program
-        currentProgram = compileProgram(glCtx, Shaders.fragmentShaderFor(Pattern.Waves))
+          // Compile initial program
+          currentProgram = compileProgram(glCtx, Shaders.fragmentShaderFor(Pattern.Waves))
 
-        // Subscribe to signals
-        viz.speed.foreach(s => currentSpeed = s)(ctx.owner)
-        viz.complexity.foreach(c => currentComplexity = c)(ctx.owner)
-        viz.colorScheme.foreach(cs => currentColors = colorColorsFor(cs))(ctx.owner)
-        viz.mouseInfluence.foreach(m => mouseEnabled = m)(ctx.owner)
-        viz.pattern.foreach { p =>
-          val newProg = compileProgram(glCtx, Shaders.fragmentShaderFor(p))
-          if (newProg != null) currentProgram = newProg
-        }(ctx.owner)
+          // Subscribe to signals
+          viz.speed.foreach(s => currentSpeed = s)(ctx.owner)
+          viz.complexity.foreach(c => currentComplexity = c)(ctx.owner)
+          viz.colorScheme.foreach(cs => currentColors = colorColorsFor(cs))(ctx.owner)
+          viz.mouseInfluence.foreach(m => mouseEnabled = m)(ctx.owner)
+          viz.pattern.foreach { p =>
+            val newProg = compileProgram(glCtx, Shaders.fragmentShaderFor(p))
+            if (newProg != null) currentProgram = newProg
+          }(ctx.owner)
 
-        // Mouse tracking
-        canvas.addEventListener(
-          "mousemove",
-          (e: dom.MouseEvent) =>
-            if (mouseEnabled) {
-              val rect = canvas.getBoundingClientRect()
-              currentMouseX = (e.clientX - rect.left) / rect.width
-              currentMouseY = 1.0 - (e.clientY - rect.top) / rect.height
+          // Mouse tracking
+          canvas.addEventListener(
+            "mousemove",
+            (e: dom.MouseEvent) =>
+              if (mouseEnabled) {
+                val rect = canvas.getBoundingClientRect()
+                currentMouseX = (e.clientX - rect.left) / rect.width
+                currentMouseY = 1.0 - (e.clientY - rect.top) / rect.height
+              }
+          )
+
+          canvas.addEventListener(
+            "mouseleave",
+            { (_: dom.MouseEvent) =>
+              currentMouseX = 0.5
+              currentMouseY = 0.5
             }
-        )
+          )
 
-        canvas.addEventListener(
-          "mouseleave",
-          { (_: dom.MouseEvent) =>
-            currentMouseX = 0.5
-            currentMouseY = 0.5
+          // Animation loop
+          val startTime = dom.window.performance.now()
+
+          def loop(timestamp: Double): Unit = {
+            val time = (timestamp - startTime) / 1000.0
+            render(glCtx, currentProgram, time)
+            animFrameId = dom.window.requestAnimationFrame(loop _)
           }
-        )
 
-        // Animation loop
-        val startTime = dom.window.performance.now()
-
-        def loop(timestamp: Double): Unit = {
-          val time = (timestamp - startTime) / 1000.0
-          render(glCtx, currentProgram, time)
           animFrameId = dom.window.requestAnimationFrame(loop _)
-        }
-
-        animFrameId = dom.window.requestAnimationFrame(loop _)
+        } // end else (WebGL supported)
       },
       onUnmountCallback { _ =>
         dom.window.cancelAnimationFrame(animFrameId)
