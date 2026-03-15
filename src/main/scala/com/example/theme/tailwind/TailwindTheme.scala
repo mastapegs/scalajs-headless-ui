@@ -59,6 +59,7 @@ object TailwindTheme extends Theme {
     if (existing != null) existing.parentNode.removeChild(existing)
   }
 
+  override def table(table: Table): HtmlElement                        = TailwindTableView.render(table)
   override def card(card: Card[HtmlElement, HtmlElement]): HtmlElement = TailwindCardView.render(card)
   override def pageContainer(container: PageContainer[HtmlElement]): HtmlElement =
     TailwindPageContainerView.render(container)

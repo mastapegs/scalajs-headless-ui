@@ -10,6 +10,7 @@ import com.raquo.laminar.api.L._
 object InlineTheme extends Theme {
   val key: String = "inline"
 
+  override def table(table: Table): HtmlElement                        = InlineTableView.render(table)
   override def card(card: Card[HtmlElement, HtmlElement]): HtmlElement = InlineCardView.render(card)
   override def pageContainer(container: PageContainer[HtmlElement]): HtmlElement =
     InlinePageContainerView.render(container)

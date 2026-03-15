@@ -1,7 +1,7 @@
 package com.example.theme.tailwind.pages
 
 import com.example.headless.components.PageContainer
-import com.example.headless.pages.{FetchPage, FetchState, TableData}
+import com.example.headless.pages.{FetchPage, FetchState}
 import com.example.theme.Theme
 import com.raquo.laminar.api.L._
 
@@ -36,43 +36,10 @@ object TailwindFetchPageView {
               div(cls("font-semibold text-sm"), "Error"),
               div(cls("text-sm mt-1"), msg)
             )
-          case FetchState.Success(_, tableData) =>
-            renderTable(tableData)
+          case FetchState.Success(_, table) =>
+            theme.table(table)
         }
       )
     )
   )
-
-  private def renderTable(td: TableData): HtmlElement =
-    div(
-      cls("bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden"),
-      div(
-        cls("overflow-x-auto"),
-        table(
-          cls("min-w-full divide-y divide-gray-200"),
-          thead(
-            cls("bg-gray-50"),
-            tr(
-              td.headers.map(h =>
-                th(
-                  cls(
-                    "px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider"
-                  ),
-                  h
-                )
-              )
-            )
-          ),
-          tbody(
-            cls("bg-white divide-y divide-gray-100"),
-            td.rows.map(row =>
-              tr(
-                cls("hover:bg-gray-50 transition-colors duration-100"),
-                row.map(cell => htmlTag("td")(cls("px-6 py-4 whitespace-nowrap text-sm text-gray-700"), cell))
-              )
-            )
-          )
-        )
-      )
-    )
 }

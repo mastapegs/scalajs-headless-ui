@@ -48,6 +48,7 @@ object CoreUiTheme extends Theme {
     if (helper != null) helper.parentNode.removeChild(helper)
   }
 
+  override def table(table: Table): HtmlElement                        = CoreUiTableView.render(table)
   override def card(card: Card[HtmlElement, HtmlElement]): HtmlElement = CoreUiCardView.render(card)
   override def pageContainer(container: PageContainer[HtmlElement]): HtmlElement =
     CoreUiPageContainerView.render(container)

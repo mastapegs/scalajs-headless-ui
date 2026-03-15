@@ -1,6 +1,7 @@
 package com.example.headless.pages
 
 import com.example.headless.SignalHelpers
+import com.example.headless.components.{Table, TableData}
 import io.circe.generic.auto._
 import io.circe.parser.decode
 import munit.FunSuite
@@ -69,15 +70,15 @@ class FetchPageSuite extends FunSuite with SignalHelpers {
     assertEquals(td.rows(1), List("20", "2", "Foo", "Bar"))
   }
 
-  test("Success state includes tableData with correct headers") {
+  test("Success state includes table with correct headers") {
     val posts   = List(Post(1, 1, "t", "b"))
-    val success = FetchState.Success(posts, TableData.fromPosts(posts))
-    assertEquals(success.tableData.headers, List("ID", "User ID", "Title", "Body"))
+    val success = FetchState.Success(posts, Table(TableData.fromPosts(posts)))
+    assertEquals(success.table.data.headers, List("ID", "User ID", "Title", "Body"))
   }
 
-  test("Success state includes tableData with correct rows") {
+  test("Success state includes table with correct rows") {
     val posts   = List(Post(3, 42, "title", "body"))
-    val success = FetchState.Success(posts, TableData.fromPosts(posts))
-    assertEquals(success.tableData.rows, List(List("42", "3", "title", "body")))
+    val success = FetchState.Success(posts, Table(TableData.fromPosts(posts)))
+    assertEquals(success.table.data.rows, List(List("42", "3", "title", "body")))
   }
 }
