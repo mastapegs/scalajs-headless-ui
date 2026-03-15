@@ -5,6 +5,7 @@ import com.example.headless.pages.VisualizationPage
 import com.example.theme.Theme
 import com.example.webgl.WebGLRenderer
 import com.raquo.laminar.api.L._
+import com.raquo.laminar.codecs.StringAsIsCodec
 
 object InlineVisualizationPageView {
 
@@ -76,11 +77,11 @@ object InlineVisualizationPageView {
                 child.text <-- viz.speed.map(s => f"$s%.1f")
               ),
               input(
-                typ                            := "range",
-                htmlAttr("min", stringCodec)   := "0.1",
-                htmlAttr("max", stringCodec)   := "5.0",
-                htmlAttr("step", stringCodec)  := "0.1",
-                htmlAttr("value", stringCodec) := "1.0",
+                typ                                := "range",
+                htmlAttr("min", StringAsIsCodec)   := "0.1",
+                htmlAttr("max", StringAsIsCodec)   := "5.0",
+                htmlAttr("step", StringAsIsCodec)  := "0.1",
+                htmlAttr("value", StringAsIsCodec) := "1.0",
                 width("100%"),
                 onInput.mapToValue.map(_.toDouble) --> { v => viz.setSpeed(v) }
               )
@@ -125,11 +126,11 @@ object InlineVisualizationPageView {
                 child.text <-- viz.complexity.map(_.toString)
               ),
               input(
-                typ                            := "range",
-                htmlAttr("min", stringCodec)   := "1",
-                htmlAttr("max", stringCodec)   := "10",
-                htmlAttr("step", stringCodec)  := "1",
-                htmlAttr("value", stringCodec) := "5",
+                typ                                := "range",
+                htmlAttr("min", StringAsIsCodec)   := "1",
+                htmlAttr("max", StringAsIsCodec)   := "10",
+                htmlAttr("step", StringAsIsCodec)  := "1",
+                htmlAttr("value", StringAsIsCodec) := "5",
                 width("100%"),
                 onInput.mapToValue.map(_.toInt) --> { v => viz.setComplexity(v) }
               )
