@@ -7,6 +7,6 @@ import com.raquo.laminar.api.L._
 
 object CoreUiMetricsPageView {
   def render(page: MetricsPage, theme: Theme): HtmlElement = theme.pageContainer(
-    PageContainer(page.title, page.description, emptyNode)
+    PageContainer(page.title, page.description, div())
   )
 }

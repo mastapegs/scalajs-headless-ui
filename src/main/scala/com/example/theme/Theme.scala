@@ -40,7 +40,7 @@ trait Theme {
   def settingsPage(page: SettingsPage): HtmlElement
 
   def uiShowcasePage(page: UIShowcasePage): HtmlElement =
-    pageContainer(PageContainer(page.title, page.description, emptyNode))
+    pageContainer(PageContainer(page.title, page.description, div()))
 
   protected def renderFetchPage(page: FetchPage): HtmlElement
 
