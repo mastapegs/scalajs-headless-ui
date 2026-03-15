@@ -1,7 +1,7 @@
 package com.example.headless.pages
 
 import com.example.headless.SignalHelpers
-import com.example.headless.components.Table
+import com.example.headless.components.{FetchState, Table}
 import io.circe.generic.auto._
 import io.circe.parser.decode
 import munit.FunSuite
