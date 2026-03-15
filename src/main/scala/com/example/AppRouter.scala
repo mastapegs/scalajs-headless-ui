@@ -1,6 +1,13 @@
 package com.example
 
-import com.example.headless.pages.{DashboardPage, FetchPage, MetricsPage, SettingsPage, UIShowcasePage}
+import com.example.headless.pages.{
+  DashboardPage,
+  FetchPage,
+  MetricsPage,
+  SettingsPage,
+  UIShowcasePage,
+  VisualizationPage
+}
 import com.example.theme.Theme
 import com.raquo.laminar.api.L._
 import com.raquo.waypoint._
@@ -37,26 +44,34 @@ object AppRouter {
     basePath = Router.localFragmentBasePath
   )
 
+  private val visualizationsRoute = Route.static(
+    Page.Visualizations,
+    root / "visualizations" / endOfSegments,
+    basePath = Router.localFragmentBasePath
+  )
+
   val router = new Router[Page](
-    routes = List(dashboardRoute, metricsRoute, settingsRoute, fetchRoute, uiShowcaseRoute),
+    routes = List(dashboardRoute, metricsRoute, settingsRoute, fetchRoute, uiShowcaseRoute, visualizationsRoute),
     serializePage = Page.serialize _,
     deserializePage = Page.deserialize _,
     getPageTitle = page => s"${Page.label(page)} | UI Template"
   )
 
-  private val dashboardPage  = new DashboardPage()
-  private val metricsPage    = new MetricsPage()
-  private val settingsPage   = new SettingsPage()
-  private val fetchPage      = new FetchPage()
-  private val uiShowcasePage = new UIShowcasePage()
+  private val dashboardPage     = new DashboardPage()
+  private val metricsPage       = new MetricsPage()
+  private val settingsPage      = new SettingsPage()
+  private val fetchPage         = new FetchPage()
+  private val uiShowcasePage    = new UIShowcasePage()
+  private val visualizationPage = new VisualizationPage()
 
   private def pageContent(page: Page, theme: Theme): HtmlElement =
     page match {
-      case Page.Dashboard  => theme.dashboardPage(dashboardPage)
-      case Page.Metrics    => theme.metricsPage(metricsPage)
-      case Page.Settings   => theme.settingsPage(settingsPage)
-      case Page.Fetch      => theme.fetchPage(fetchPage)
-      case Page.UIShowcase => theme.uiShowcasePage(uiShowcasePage)
+      case Page.Dashboard      => theme.dashboardPage(dashboardPage)
+      case Page.Metrics        => theme.metricsPage(metricsPage)
+      case Page.Settings       => theme.settingsPage(settingsPage)
+      case Page.Fetch          => theme.fetchPage(fetchPage)
+      case Page.UIShowcase     => theme.uiShowcasePage(uiShowcasePage)
+      case Page.Visualizations => theme.visualizationPage(visualizationPage)
     }
 
   def pageContentSignal(theme: Theme): Signal[HtmlElement] =

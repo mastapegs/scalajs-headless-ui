@@ -1,7 +1,14 @@
 package com.example.theme.inline
 
 import com.example.headless.components._
-import com.example.headless.pages.{DashboardPage, FetchPage, MetricsPage, SettingsPage, UIShowcasePage}
+import com.example.headless.pages.{
+  DashboardPage,
+  FetchPage,
+  MetricsPage,
+  SettingsPage,
+  UIShowcasePage,
+  VisualizationPage
+}
 import com.example.theme.Theme
 import com.example.theme.inline.components._
 import com.example.theme.inline.pages._
@@ -33,6 +40,8 @@ object InlineTheme extends Theme {
     InlineSettingsPageView.render(page, this)
   override def uiShowcasePage(page: UIShowcasePage): HtmlElement =
     InlineUIShowcasePageView.render(page, this)
+  override def visualizationPage(page: VisualizationPage): HtmlElement =
+    InlineVisualizationPageView.render(page, this)
   protected def renderFetchPage(page: FetchPage): HtmlElement =
     InlineFetchPageView.render(page, this)
 

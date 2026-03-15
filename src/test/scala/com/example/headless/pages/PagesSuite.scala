@@ -72,4 +72,19 @@ class PagesSuite extends FunSuite with SignalHelpers {
     val page = new UIShowcasePage()
     assert(page.description.contains("headless UI components"))
   }
+
+  test("VisualizationPage has correct title") {
+    val page = new VisualizationPage()
+    assertEquals(page.title, "Visualizations")
+  }
+
+  test("VisualizationPage has correct description") {
+    val page = new VisualizationPage()
+    assert(page.description.contains("WebGL"))
+  }
+
+  test("VisualizationPage owns a Visualization instance") {
+    val page = new VisualizationPage()
+    assert(page.visualization != null)
+  }
 }

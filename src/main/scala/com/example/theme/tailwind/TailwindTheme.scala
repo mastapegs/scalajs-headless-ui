@@ -1,7 +1,14 @@
 package com.example.theme.tailwind
 
 import com.example.headless.components._
-import com.example.headless.pages.{DashboardPage, FetchPage, MetricsPage, SettingsPage, UIShowcasePage}
+import com.example.headless.pages.{
+  DashboardPage,
+  FetchPage,
+  MetricsPage,
+  SettingsPage,
+  UIShowcasePage,
+  VisualizationPage
+}
 import com.example.theme.Theme
 import com.example.theme.tailwind.components._
 import com.example.theme.tailwind.pages._
@@ -83,6 +90,8 @@ object TailwindTheme extends Theme {
     TailwindSettingsPageView.render(page, this)
   override def uiShowcasePage(page: UIShowcasePage): HtmlElement =
     TailwindUIShowcasePageView.render(page, this)
+  override def visualizationPage(page: VisualizationPage): HtmlElement =
+    TailwindVisualizationPageView.render(page, this)
   protected def renderFetchPage(page: FetchPage): HtmlElement =
     TailwindFetchPageView.render(page, this)
 
