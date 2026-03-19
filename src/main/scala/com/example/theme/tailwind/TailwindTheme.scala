@@ -1,10 +1,9 @@
 package com.example.theme.tailwind
 
 import com.example.headless.components._
-import com.example.headless.pages.{FetchPage, MetricsPage, SettingsPage}
+import com.example.headless.pages.{MetricsPage, SettingsPage}
 import com.example.theme.Theme
 import com.example.theme.tailwind.components._
-import com.example.theme.tailwind.pages.{TailwindFetchPageView, TailwindMetricsPageView, TailwindSettingsPageView}
 import com.raquo.laminar.api.L._
 import org.scalajs.dom
 
@@ -84,12 +83,42 @@ object TailwindTheme extends Theme {
   protected def renderTopbar(topBar: TopBar, sidebar: Sidebar): HtmlElement =
     TailwindTopbarView.render(topBar, () => sidebar.toggleCollapse())
 
-  def metricsPage(page: MetricsPage): HtmlElement =
-    TailwindMetricsPageView.render(page, this)
-  def settingsPage(page: SettingsPage): HtmlElement =
-    TailwindSettingsPageView.render(page, this)
-  protected def renderFetchPage(page: FetchPage): HtmlElement =
-    TailwindFetchPageView.render(page, this)
+  override def metricsPage(page: MetricsPage): HtmlElement =
+    pageContainer(
+      PageContainer(
+        page.title,
+        page.description,
+        div(
+          cls("bg-white rounded-xl shadow-md border border-gray-200 p-7"),
+          p(cls("text-gray-600 text-sm leading-relaxed"), "Metrics content will appear here.")
+        )
+      )
+    )
+  override def settingsPage(page: SettingsPage): HtmlElement =
+    pageContainer(
+      PageContainer(
+        page.title,
+        page.description,
+        div(
+          cls("bg-white rounded-xl shadow-md border border-gray-200 p-7"),
+          p(cls("text-gray-600 text-sm leading-relaxed"), "Settings content will appear here.")
+        )
+      )
+    )
+
+  override def fetchLoading: HtmlElement =
+    div(
+      cls("flex justify-center py-12"),
+      div(cls("animate-spin rounded-full h-10 w-10 border-4 border-gray-200 border-t-indigo-600"))
+    )
+  override def fetchError(msg: String): HtmlElement =
+    div(
+      cls("bg-red-50 border-l-4 border-red-500 text-red-700 px-5 py-4 rounded-r-lg"),
+      div(cls("font-semibold text-sm"), "Error"),
+      div(cls("text-sm mt-1"), msg)
+    )
+  override def fetchTableList(tables: List[Table]): HtmlElement =
+    div(cls("space-y-6"), tables.map(t => table(t)))
 
   protected def renderMainContent(content: Signal[HtmlElement]): Mod[HtmlElement] =
     Seq(

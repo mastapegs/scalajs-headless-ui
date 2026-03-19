@@ -53,8 +53,10 @@ trait Theme {
     pageContainer(
       PageContainer(page.title, page.description, stack(page.counters.map(c => counter(c)): _*))
     )
-  def metricsPage(page: MetricsPage): HtmlElement
-  def settingsPage(page: SettingsPage): HtmlElement
+  def metricsPage(page: MetricsPage): HtmlElement =
+    pageContainer(PageContainer(page.title, page.description, div()))
+  def settingsPage(page: SettingsPage): HtmlElement =
+    pageContainer(PageContainer(page.title, page.description, div()))
 
   def uiShowcasePage(page: UIShowcasePage): HtmlElement =
     pageContainer(
@@ -73,7 +75,25 @@ trait Theme {
       )
     )
 
-  protected def renderFetchPage(page: FetchPage): HtmlElement
+  def fetchLoading: HtmlElement            = p("Loading...")
+  def fetchError(msg: String): HtmlElement = p(color("red"), s"Error: $msg")
+  def fetchTableList(tables: List[Table]): HtmlElement =
+    div(tables.map(t => div(marginBottom("24px"), table(t))))
+
+  protected def renderFetchPage(page: FetchPage): HtmlElement =
+    pageContainer(
+      PageContainer(
+        page.title,
+        page.description,
+        div(
+          child <-- page.state.map {
+            case FetchState.Loading       => fetchLoading
+            case FetchState.Error(msg)    => fetchError(msg)
+            case FetchState.Success(tbls) => fetchTableList(tbls)
+          }
+        )
+      )
+    )
 
   final def fetchPage(page: FetchPage): HtmlElement =
     renderFetchPage(page).amend(

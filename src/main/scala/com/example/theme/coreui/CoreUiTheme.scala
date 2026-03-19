@@ -1,10 +1,8 @@
 package com.example.theme.coreui
 
 import com.example.headless.components._
-import com.example.headless.pages.{FetchPage, MetricsPage, SettingsPage}
 import com.example.theme.Theme
 import com.example.theme.coreui.components._
-import com.example.theme.coreui.pages.{CoreUiFetchPageView, CoreUiMetricsPageView, CoreUiSettingsPageView}
 import com.raquo.laminar.api.L._
 import org.scalajs.dom
 
@@ -67,12 +65,12 @@ object CoreUiTheme extends Theme {
   protected def renderTopbar(topBar: TopBar, sidebar: Sidebar): HtmlElement =
     CoreUiTopbarView.render(topBar, () => sidebar.toggleCollapse())
 
-  def metricsPage(page: MetricsPage): HtmlElement =
-    CoreUiMetricsPageView.render(page, this)
-  def settingsPage(page: SettingsPage): HtmlElement =
-    CoreUiSettingsPageView.render(page, this)
-  protected def renderFetchPage(page: FetchPage): HtmlElement =
-    CoreUiFetchPageView.render(page, this)
+  override def fetchLoading: HtmlElement =
+    div(cls("text-center"), div(cls("spinner-border"), role("status")))
+  override def fetchError(msg: String): HtmlElement =
+    div(cls("alert alert-danger"), s"Error: $msg")
+  override def fetchTableList(tables: List[Table]): HtmlElement =
+    div(tables.map(t => div(cls("mb-4"), table(t))))
 
   protected def renderMainContent(content: Signal[HtmlElement]): Mod[HtmlElement] =
     Seq(

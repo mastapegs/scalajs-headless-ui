@@ -1,10 +1,8 @@
 package com.example.theme.inline
 
 import com.example.headless.components._
-import com.example.headless.pages.{FetchPage, MetricsPage, SettingsPage}
 import com.example.theme.Theme
 import com.example.theme.inline.components._
-import com.example.theme.inline.pages.{InlineFetchPageView, InlineMetricsPageView, InlineSettingsPageView}
 import com.raquo.laminar.api.L._
 
 object InlineTheme extends Theme {
@@ -24,13 +22,6 @@ object InlineTheme extends Theme {
   def modal(modal: Modal[HtmlElement]): HtmlElement                         = InlineModalView.render(modal)
   protected def renderSidebar(sidebar: Sidebar): HtmlElement                = InlineSidebarView.render(sidebar)
   protected def renderTopbar(topBar: TopBar, sidebar: Sidebar): HtmlElement = InlineTopbarView.render(topBar)
-
-  def metricsPage(page: MetricsPage): HtmlElement =
-    InlineMetricsPageView.render(page, this)
-  def settingsPage(page: SettingsPage): HtmlElement =
-    InlineSettingsPageView.render(page, this)
-  protected def renderFetchPage(page: FetchPage): HtmlElement =
-    InlineFetchPageView.render(page, this)
 
   protected def renderMainContent(content: Signal[HtmlElement]): Mod[HtmlElement] =
     Seq(
