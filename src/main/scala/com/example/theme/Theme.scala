@@ -31,6 +31,17 @@ trait Theme {
   def pageContainer(container: PageContainer[HtmlElement]): HtmlElement =
     div(h1(container.title), p(container.description), container.content)
 
+  def cardStack(children: HtmlElement*): HtmlElement =
+    div(display.flex, flexDirection.column, gap("16px"), children)
+
+  def toggleGroup(toggles: Toggle*): HtmlElement =
+    div(display.flex, flexDirection.column, gap("16px"), toggles.map(t => toggle(t)))
+
+  def modalText(text: String): HtmlElement = p(text)
+
+  def tooltipCard(card: Card[HtmlElement, HtmlElement]): HtmlElement =
+    this.card(card).amend(overflow.visible)
+
   protected def renderTopbar(topBar: TopBar, sidebar: Sidebar): HtmlElement
 
   final def topbar(topBar: TopBar, sidebar: Sidebar): HtmlElement =
@@ -41,12 +52,29 @@ trait Theme {
   final def sidebar(sidebar: Sidebar): HtmlElement =
     renderSidebar(sidebar).amend(aria.label := "Main navigation")
 
-  def dashboardPage(page: DashboardPage): HtmlElement
+  def dashboardPage(page: DashboardPage): HtmlElement =
+    pageContainer(
+      PageContainer(page.title, page.description, cardStack(page.counters.map(c => counter(c)): _*))
+    )
   def metricsPage(page: MetricsPage): HtmlElement
   def settingsPage(page: SettingsPage): HtmlElement
 
   def uiShowcasePage(page: UIShowcasePage): HtmlElement =
-    pageContainer(PageContainer(page.title, page.description, div()))
+    pageContainer(
+      PageContainer(
+        page.title,
+        page.description,
+        cardStack(
+          card(Card(span("Tabs"), tabs(page.tabs))),
+          card(Card(span("Accordion"), accordion(page.accordion))),
+          card(Card(span("Toggle / Switch"), toggleGroup(page.toggleDarkMode, page.toggleNotifications))),
+          card(Card(span("Progress"), progress(page.progress))),
+          card(Card(span("Tags Input"), tagsInput(page.tagsInput))),
+          tooltipCard(Card(span("Tooltip"), tooltip(page.tooltip))),
+          card(Card(span("Modal"), modal(page.modal.mapContent(modalText))))
+        )
+      )
+    )
 
   protected def renderFetchPage(page: FetchPage): HtmlElement
 

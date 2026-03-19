@@ -1,10 +1,10 @@
 package com.example.theme.tailwind
 
 import com.example.headless.components._
-import com.example.headless.pages.{DashboardPage, FetchPage, MetricsPage, SettingsPage, UIShowcasePage}
+import com.example.headless.pages.{FetchPage, MetricsPage, SettingsPage}
 import com.example.theme.Theme
 import com.example.theme.tailwind.components._
-import com.example.theme.tailwind.pages._
+import com.example.theme.tailwind.pages.{TailwindFetchPageView, TailwindMetricsPageView, TailwindSettingsPageView}
 import com.raquo.laminar.api.L._
 import org.scalajs.dom
 
@@ -63,6 +63,15 @@ object TailwindTheme extends Theme {
   override def card(card: Card[HtmlElement, HtmlElement]): HtmlElement = TailwindCardView.render(card)
   override def pageContainer(container: PageContainer[HtmlElement]): HtmlElement =
     TailwindPageContainerView.render(container)
+  override def cardStack(children: HtmlElement*): HtmlElement =
+    div(cls("flex flex-col gap-8"), children)
+
+  override def toggleGroup(toggles: Toggle*): HtmlElement =
+    div(cls("flex flex-col gap-6"), toggles.map(t => toggle(t)))
+
+  override def modalText(text: String): HtmlElement =
+    p(cls("text-gray-600 leading-relaxed"), text)
+
   def counter(counter: Counter): HtmlElement                 = TailwindCounterView.render(counter)
   def tabs(tabs: Tabs): HtmlElement                          = TailwindTabsView.render(tabs)
   def accordion(accordion: Accordion): HtmlElement           = TailwindAccordionView.render(accordion)
@@ -75,14 +84,10 @@ object TailwindTheme extends Theme {
   protected def renderTopbar(topBar: TopBar, sidebar: Sidebar): HtmlElement =
     TailwindTopbarView.render(topBar, () => sidebar.toggleCollapse())
 
-  def dashboardPage(page: DashboardPage): HtmlElement =
-    TailwindDashboardPageView.render(page, this)
   def metricsPage(page: MetricsPage): HtmlElement =
     TailwindMetricsPageView.render(page, this)
   def settingsPage(page: SettingsPage): HtmlElement =
     TailwindSettingsPageView.render(page, this)
-  override def uiShowcasePage(page: UIShowcasePage): HtmlElement =
-    TailwindUIShowcasePageView.render(page, this)
   protected def renderFetchPage(page: FetchPage): HtmlElement =
     TailwindFetchPageView.render(page, this)
 
