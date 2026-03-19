@@ -31,6 +31,14 @@ trait Theme {
   def pageContainer(container: PageContainer[HtmlElement]): HtmlElement =
     div(h1(container.title), p(container.description), container.content)
 
+  def stack(children: HtmlElement*): HtmlElement =
+    div(display.flex, flexDirection.column, gap("16px"), children)
+
+  def toggleGroup(toggles: Toggle*): HtmlElement =
+    div(display.flex, flexDirection.column, gap("16px"), toggles.map(t => toggle(t)))
+
+  def modalText(text: String): HtmlElement = p(text)
+
   protected def renderTopbar(topBar: TopBar, sidebar: Sidebar): HtmlElement
 
   final def topbar(topBar: TopBar, sidebar: Sidebar): HtmlElement =
@@ -41,14 +49,51 @@ trait Theme {
   final def sidebar(sidebar: Sidebar): HtmlElement =
     renderSidebar(sidebar).amend(aria.label := "Main navigation")
 
-  def dashboardPage(page: DashboardPage): HtmlElement
-  def metricsPage(page: MetricsPage): HtmlElement
-  def settingsPage(page: SettingsPage): HtmlElement
-
-  def uiShowcasePage(page: UIShowcasePage): HtmlElement =
+  def dashboardPage(page: DashboardPage): HtmlElement =
+    pageContainer(
+      PageContainer(page.title, page.description, stack(page.counters.map(c => counter(c)): _*))
+    )
+  def metricsPage(page: MetricsPage): HtmlElement =
+    pageContainer(PageContainer(page.title, page.description, div()))
+  def settingsPage(page: SettingsPage): HtmlElement =
     pageContainer(PageContainer(page.title, page.description, div()))
 
-  protected def renderFetchPage(page: FetchPage): HtmlElement
+  def uiShowcasePage(page: UIShowcasePage): HtmlElement =
+    pageContainer(
+      PageContainer(
+        page.title,
+        page.description,
+        stack(
+          card(Card(span("Tabs"), tabs(page.tabs))),
+          card(Card(span("Accordion"), accordion(page.accordion))),
+          card(Card(span("Toggle / Switch"), toggleGroup(page.toggleDarkMode, page.toggleNotifications))),
+          card(Card(span("Progress"), progress(page.progress))),
+          card(Card(span("Tags Input"), tagsInput(page.tagsInput))),
+          card(Card(span("Tooltip"), tooltip(page.tooltip))).amend(overflow.visible),
+          card(Card(span("Modal"), modal(page.modal.mapContent(modalText))))
+        )
+      )
+    )
+
+  def fetchLoading: HtmlElement            = p("Loading...")
+  def fetchError(msg: String): HtmlElement = p(color("red"), s"Error: $msg")
+  def fetchTableList(tables: List[Table]): HtmlElement =
+    div(tables.map(t => div(marginBottom("24px"), table(t))))
+
+  protected def renderFetchPage(page: FetchPage): HtmlElement =
+    pageContainer(
+      PageContainer(
+        page.title,
+        page.description,
+        div(
+          child <-- page.state.map {
+            case FetchState.Loading       => fetchLoading
+            case FetchState.Error(msg)    => fetchError(msg)
+            case FetchState.Success(tbls) => fetchTableList(tbls)
+          }
+        )
+      )
+    )
 
   final def fetchPage(page: FetchPage): HtmlElement =
     renderFetchPage(page).amend(

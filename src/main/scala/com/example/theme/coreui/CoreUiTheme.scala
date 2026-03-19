@@ -1,10 +1,8 @@
 package com.example.theme.coreui
 
 import com.example.headless.components._
-import com.example.headless.pages.{DashboardPage, FetchPage, MetricsPage, SettingsPage, UIShowcasePage}
 import com.example.theme.Theme
 import com.example.theme.coreui.components._
-import com.example.theme.coreui.pages._
 import com.raquo.laminar.api.L._
 import org.scalajs.dom
 
@@ -52,6 +50,9 @@ object CoreUiTheme extends Theme {
   override def card(card: Card[HtmlElement, HtmlElement]): HtmlElement = CoreUiCardView.render(card)
   override def pageContainer(container: PageContainer[HtmlElement]): HtmlElement =
     CoreUiPageContainerView.render(container)
+  override def stack(children: HtmlElement*): HtmlElement =
+    div(cls("d-flex flex-column gap-3"), children)
+
   def counter(counter: Counter): HtmlElement                 = CoreUiCounterView.render(counter)
   def tabs(tabs: Tabs): HtmlElement                          = CoreUiTabsView.render(tabs)
   def accordion(accordion: Accordion): HtmlElement           = CoreUiAccordionView.render(accordion)
@@ -64,16 +65,12 @@ object CoreUiTheme extends Theme {
   protected def renderTopbar(topBar: TopBar, sidebar: Sidebar): HtmlElement =
     CoreUiTopbarView.render(topBar, () => sidebar.toggleCollapse())
 
-  def dashboardPage(page: DashboardPage): HtmlElement =
-    CoreUiDashboardPageView.render(page, this)
-  def metricsPage(page: MetricsPage): HtmlElement =
-    CoreUiMetricsPageView.render(page, this)
-  def settingsPage(page: SettingsPage): HtmlElement =
-    CoreUiSettingsPageView.render(page, this)
-  override def uiShowcasePage(page: UIShowcasePage): HtmlElement =
-    CoreUiUIShowcasePageView.render(page, this)
-  protected def renderFetchPage(page: FetchPage): HtmlElement =
-    CoreUiFetchPageView.render(page, this)
+  override def fetchLoading: HtmlElement =
+    div(cls("text-center"), div(cls("spinner-border"), role("status")))
+  override def fetchError(msg: String): HtmlElement =
+    div(cls("alert alert-danger"), s"Error: $msg")
+  override def fetchTableList(tables: List[Table]): HtmlElement =
+    div(tables.map(t => div(cls("mb-4"), table(t))))
 
   protected def renderMainContent(content: Signal[HtmlElement]): Mod[HtmlElement] =
     Seq(
