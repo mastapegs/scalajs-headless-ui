@@ -63,7 +63,7 @@ object TailwindTheme extends Theme {
   override def card(card: Card[HtmlElement, HtmlElement]): HtmlElement = TailwindCardView.render(card)
   override def pageContainer(container: PageContainer[HtmlElement]): HtmlElement =
     TailwindPageContainerView.render(container)
-  override def cardStack(children: HtmlElement*): HtmlElement =
+  override def stack(children: HtmlElement*): HtmlElement =
     div(cls("flex flex-col gap-8"), children)
 
   override def toggleGroup(toggles: Toggle*): HtmlElement =

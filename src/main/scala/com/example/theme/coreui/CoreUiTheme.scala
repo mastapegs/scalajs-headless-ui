@@ -52,7 +52,7 @@ object CoreUiTheme extends Theme {
   override def card(card: Card[HtmlElement, HtmlElement]): HtmlElement = CoreUiCardView.render(card)
   override def pageContainer(container: PageContainer[HtmlElement]): HtmlElement =
     CoreUiPageContainerView.render(container)
-  override def cardStack(children: HtmlElement*): HtmlElement =
+  override def stack(children: HtmlElement*): HtmlElement =
     div(cls("d-flex flex-column gap-3"), children)
 
   def counter(counter: Counter): HtmlElement                 = CoreUiCounterView.render(counter)

@@ -31,16 +31,13 @@ trait Theme {
   def pageContainer(container: PageContainer[HtmlElement]): HtmlElement =
     div(h1(container.title), p(container.description), container.content)
 
-  def cardStack(children: HtmlElement*): HtmlElement =
+  def stack(children: HtmlElement*): HtmlElement =
     div(display.flex, flexDirection.column, gap("16px"), children)
 
   def toggleGroup(toggles: Toggle*): HtmlElement =
     div(display.flex, flexDirection.column, gap("16px"), toggles.map(t => toggle(t)))
 
   def modalText(text: String): HtmlElement = p(text)
-
-  def tooltipCard(card: Card[HtmlElement, HtmlElement]): HtmlElement =
-    this.card(card).amend(overflow.visible)
 
   protected def renderTopbar(topBar: TopBar, sidebar: Sidebar): HtmlElement
 
@@ -54,7 +51,7 @@ trait Theme {
 
   def dashboardPage(page: DashboardPage): HtmlElement =
     pageContainer(
-      PageContainer(page.title, page.description, cardStack(page.counters.map(c => counter(c)): _*))
+      PageContainer(page.title, page.description, stack(page.counters.map(c => counter(c)): _*))
     )
   def metricsPage(page: MetricsPage): HtmlElement
   def settingsPage(page: SettingsPage): HtmlElement
@@ -64,13 +61,13 @@ trait Theme {
       PageContainer(
         page.title,
         page.description,
-        cardStack(
+        stack(
           card(Card(span("Tabs"), tabs(page.tabs))),
           card(Card(span("Accordion"), accordion(page.accordion))),
           card(Card(span("Toggle / Switch"), toggleGroup(page.toggleDarkMode, page.toggleNotifications))),
           card(Card(span("Progress"), progress(page.progress))),
           card(Card(span("Tags Input"), tagsInput(page.tagsInput))),
-          tooltipCard(Card(span("Tooltip"), tooltip(page.tooltip))),
+          card(Card(span("Tooltip"), tooltip(page.tooltip))).amend(overflow.visible),
           card(Card(span("Modal"), modal(page.modal.mapContent(modalText))))
         )
       )
